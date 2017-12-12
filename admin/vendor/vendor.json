@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "FEd2In9AE5rb3cwKUCs6nM7Ltwk=",
+			"path": "github.com/davidkhala/fabric-common-chaincode",
+			"revision": "0c57fcfcd066de8c3c49b8c44023ef6d5aae5f52",
+			"revisionTime": "2017-12-12T08:40:12Z"
+		}
+	],
+	"rootPath": "github.com/davidkhala/chaincode/admin"
+}
