@@ -6,29 +6,29 @@ import (
 )
 
 const (
-	name = "delphi_cc"
+	name = "stress"
 )
 
 var logger = shim.NewLogger(name)
 
-type DelphiChaincode struct {
+type StressChaincode struct {
 }
 
-func (t *DelphiChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *StressChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Info("########### " + name + " Init ###########")
 	return shim.Success(nil)
 
 }
 
 // Transaction makes payment of X units from A to B
-func (t *DelphiChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *StressChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Info("########### " + name + " Invoke ###########")
 
 	return shim.Success(nil)
 }
 
 func main() {
-	err := shim.Start(new(DelphiChaincode))
+	err := shim.Start(new(StressChaincode))
 	if err != nil {
 		logger.Errorf("Error starting Simple chaincode: %s", err)
 	}

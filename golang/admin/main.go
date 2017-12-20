@@ -4,16 +4,10 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
 	"strconv"
-	common "github.com/davidkhala/fabric-common-chaincode"
+	common "github.com/davidkhala/fabric-common-chaincode/golang"
 	"net/http"
 )
 
-//Error: error starting container:
-// Failed to generate platform-specific docker build: Error returned from build: 1 "chaincode/input/src/github.com/admin/main.go:7:2:
-// cannot find package "github.com/davidkhala/fabric-common/golang/chaincode-common" in any of:
-// /opt/go/src/github.com/davidkhala/fabric-common/golang/chaincode-common (from $GOROOT)
-// /chaincode/input/src/github.com/davidkhala/fabric-common/golang/chaincode-common (from $GOPATH)
-// /opt/gopath/src/github.com/davidkhala/fabric-common/golang/chaincode-common
 const (
 	name       = "admincc"
 	counterKey = "invokeCounter"
@@ -74,17 +68,7 @@ func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	return shim.Success([]byte(state))
 }
 
-func logQueryIterrator(iterator shim.StateQueryIteratorInterface) {
-	for {
-		if (iterator.HasNext()) {
-			kv, _ := iterator.Next()
-			logger.Info("kv==", kv);
-		} else {
-			iterator.Close();
-			break;
-		}
-	}
-}
+
 
 func main() {
 	err := shim.Start(new(AdminChaincode))
