@@ -3,11 +3,11 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "FEd2In9AE5rb3cwKUCs6nM7Ltwk=",
-			"path": "github.com/davidkhala/fabric-common-chaincode",
-			"revision": "0c57fcfcd066de8c3c49b8c44023ef6d5aae5f52",
-			"revisionTime": "2017-12-12T08:40:12Z"
+			"checksumSHA1": "TKwAv1whCLhZRDLm8OnVVk6+HPY=",
+			"path": "github.com/davidkhala/fabric-common-chaincode/golang",
+			"revision": "94367d966bca39d6f962057c5c922ed260aeedb4",
+			"revisionTime": "2017-12-20T08:31:19Z"
 		}
 	],
-	"rootPath": "github.com/davidkhala/chaincode/admin"
+	"rootPath": "github.com/davidkhala/chaincode/golang/admin"
 }

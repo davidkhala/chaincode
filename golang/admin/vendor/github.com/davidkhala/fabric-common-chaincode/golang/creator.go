@@ -1,4 +1,4 @@
-package chaincode
+package golang
 
 import (
 	"bytes"
