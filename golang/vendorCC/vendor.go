@@ -20,7 +20,7 @@ import (
 	"encoding/json"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
-	common "github.com/davidkhala/fabric-common/golang/chaincode-common"
+	common "github.com/davidkhala/fabric-common-chaincode/golang"
 )
 
 const (
