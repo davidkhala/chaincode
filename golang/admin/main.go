@@ -1,11 +1,12 @@
 package main
 
 import (
+	"net/http"
+	"strconv"
+
+	common "github.com/davidkhala/fabric-common-chaincode/golang"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
-	"strconv"
-	common "github.com/davidkhala/fabric-common-chaincode/golang"
-	"net/http"
 )
 
 const (
@@ -52,14 +53,15 @@ func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 	creator, err := common.ParseCreator(creatorBytes)
 	if err != nil {
-		return shim.Error(err.Error())
-	}
-	cert := creator.Certificate
-	logger.Info("issuer")
-	logger.Info(cert.Issuer.CommonName)
+		logger.Info(err.Error())
+	} else {
+		cert := creator.Certificate
+		logger.Info("issuer")
+		logger.Info(cert.Issuer.CommonName)
 
-	logger.Info("subject")
-	logger.Info(cert.Subject.CommonName)
+		logger.Info("subject")
+		logger.Info(cert.Subject.CommonName)
+	}
 
 	stateInt, _ := strconv.Atoi(state)
 	stateInt++
@@ -67,8 +69,6 @@ func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	stub.PutState(counterKey, []byte(state))
 	return shim.Success([]byte(state))
 }
-
-
 
 func main() {
 	err := shim.Start(new(AdminChaincode))
