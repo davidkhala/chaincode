@@ -53,7 +53,8 @@ func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 	creator, err := common.ParseCreator(creatorBytes)
 	if err != nil {
-		logger.Info(err.Error())
+		logger.Error(err.Error())
+		logger.Error(string(creatorBytes[:]))
 	} else {
 		cert := creator.Certificate
 		logger.Info("issuer")
