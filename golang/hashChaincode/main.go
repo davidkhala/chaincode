@@ -11,6 +11,7 @@ import (
 
 const (
 	name = "hashCC"
+	superMSP="TkMSP"
 )
 
 var logger = shim.NewLogger(name)
@@ -54,7 +55,7 @@ func ParseCreator(creator []byte) (*Creator, error) {
 
 	block, rest := pem.Decode(certificateBuffer.Bytes())
 
-	if rest != nil {
+	if rest != nil && len(rest) > 0 {
 		return nil, errors.New("pem decode failed:" + string(rest))
 	}
 	certificate, err := x509.ParseCertificate(block.Bytes)
@@ -89,12 +90,12 @@ func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	// logger.Info("id " + id)
 	// logger.Info("mspid " + mspid)
 	// logger.Info("cert " + cert)
-	creatorBytes,err:= stub.GetCreator();
+	creatorBytes, err := stub.GetCreator();
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 	logger.Info(string(creatorBytes))
-	creator,err:=ParseCreator(creatorBytes)
+	creator, err := ParseCreator(creatorBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -102,20 +103,31 @@ func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Info("###########" + name + " Invoke :" + "###########")
 	fcn, args := stub.GetFunctionAndParameters()
 	var result string
+	accessor := []string{creator.Msp};
+	compositKey, err := stub.CreateCompositeKey(args[0], accessor)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
 	if fcn == "read" {
-		resultBytes, err := stub.GetState(args[0])
+		if creator.Msp == superMSP {
+			compositKey, err = stub.CreateCompositeKey(args[0], []string{args[1]})
+			if err != nil {
+				return shim.Error(err.Error())
+			}
+		}
+		resultBytes, err := stub.GetState(compositKey)
 		if err != nil {
 			return shim.Error(err.Error())
 		}
 		result = string(resultBytes[:])
 	} else if fcn == "write" {
-		err := stub.PutState(args[0], []byte(args[1]))
+		err := stub.PutState(compositKey, []byte(args[1]))
 		if err != nil {
 			return shim.Error(err.Error())
 		}
 		result = args[0] + "=>" + args[1]
 	} else if fcn == "delete" {
-		err := stub.DelState(args[0])
+		err := stub.DelState(compositKey)
 		if err != nil {
 			return shim.Error(err.Error())
 		}
