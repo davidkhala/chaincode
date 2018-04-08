@@ -3,7 +3,10 @@ package main
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	pb "github.com/hyperledger/fabric/protos/peer"
-	common "github.com/davidkhala/fabric-common-chaincode/golang"
+	"crypto/x509"
+	"bytes"
+	"encoding/pem"
+	"errors"
 )
 
 const (
@@ -13,6 +16,53 @@ const (
 var logger = shim.NewLogger(name)
 
 type HashChaincode struct {
+}
+
+type Creator struct {
+	Msp            string
+	CertificatePem string
+	Certificate    x509.Certificate
+}
+
+func ParseCreator(creator []byte) (*Creator, error) {
+
+	var msp bytes.Buffer
+
+	var certificateBuffer bytes.Buffer
+	var mspReady bool
+	mspReady = false
+
+	for i := 0; i < len(creator); i++ {
+		char := creator[i]
+		if char < 127 && char > 31 {
+			if !mspReady {
+				msp.WriteByte(char)
+			} else {
+				certificateBuffer.WriteByte(char)
+			}
+		} else if char == 10 {
+			if (mspReady) {
+				certificateBuffer.WriteByte(char)
+			}
+		} else {
+			if msp.Len() > 0 {
+				mspReady = true
+			}
+
+		}
+	}
+
+	block, rest := pem.Decode(certificateBuffer.Bytes())
+
+	if rest != nil {
+		return nil, errors.New("pem decode failed:" + string(rest))
+	}
+	certificate, err := x509.ParseCertificate(block.Bytes)
+	if err != nil {
+		return nil, errors.New("pem decode failed:" + err.Error())
+	}
+	return &Creator{Msp: msp.String(), CertificatePem: certificateBuffer.String(), Certificate: *certificate}, nil
+
 }
 
 func (t *HashChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
@@ -44,7 +94,7 @@ func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return shim.Error(err.Error())
 	}
 	logger.Info(string(creatorBytes))
-	creator,err:=common.ParseCreator(creatorBytes)
+	creator,err:=ParseCreator(creatorBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
