@@ -7,8 +7,8 @@ import (
 	"bytes"
 	"encoding/pem"
 	"errors"
-	"github.com/hyperledger/fabric/protos/ledger/queryresult"
 	"encoding/json"
+	"strings"
 )
 
 const (
@@ -27,7 +27,14 @@ type Creator struct {
 	Certificate    x509.Certificate
 }
 
-func WorldStates(stub shim.ChaincodeStubInterface, objectType string) ([]queryresult.KV, error) {
+type KVJson struct {
+	Namespace     string
+	Key           string
+	CompositeKeys []string
+	Value         string
+}
+
+func WorldStates(stub shim.ChaincodeStubInterface, objectType string) ([]KVJson, error) {
 	var keysIterator shim.StateQueryIteratorInterface;
 	var err error;
 	if objectType == "" {
@@ -41,27 +48,27 @@ func WorldStates(stub shim.ChaincodeStubInterface, objectType string) ([]queryre
 	}
 	defer keysIterator.Close()
 
-	var kvs []queryresult.KV
+	var kvs []KVJson
 	for keysIterator.HasNext() {
 		kv, iterErr := keysIterator.Next()
 		if iterErr != nil {
 			return nil, iterErr
 		}
-		logger.Info(kv.Namespace, kv.Key, kv.Value)
-		kvs = append(kvs, *kv)
+		logger.Info(kv.Namespace, kv.Key, string(kv.Value))
+		if objectType == "" {
+			kvs = append(kvs, KVJson{Namespace: kv.Namespace, Key: kv.Key, Value: string(kv.Value)})
+		} else {
+			pKey, keys, err := stub.SplitCompositeKey(kv.Key)
+			if err != nil {
+				return nil, iterErr
+			}
+			keys = append([]string{pKey}, keys...)
+			kvs = append(kvs, KVJson{Namespace: kv.Namespace, CompositeKeys: keys, Value: string(kv.Value)})
+		}
 	}
 	return kvs, nil
 }
-func KV2Json(kv queryresult.KV) (string) {
-	type KVJson struct {
-		Namespace string
-		Key       string
-		Value     string
-	}
-	kvJson := KVJson{Namespace: kv.Namespace, Key: kv.Key, Value: string(kv.Value)}
-	jsonString, _ := json.Marshal(kvJson)
-	return string(jsonString)
-}
+
 func ParseCreator(creator []byte) (*Creator, error) {
 
 	var msp bytes.Buffer
@@ -130,16 +137,15 @@ func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		if err != nil {
 			return shim.Error(err.Error())
 		}
-		var strings []string;
+		var stringArray []string;
 		for _, kv := range kvs {
-			jsonElement := KV2Json(kv)
-			strings = append(strings, jsonElement)
+			jsonString, _ := json.Marshal(kv)
+			jsonElement := string(jsonString)
+			logger.Info(jsonElement)
+			stringArray = append(stringArray, jsonElement)
 		}
-		jsonBytes, err := json.Marshal(strings)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-		return shim.Success(jsonBytes)
+		jsonArray := "[" + strings.Join(stringArray, ",") + "]"
+		return shim.Success([]byte(jsonArray))
 	}
 
 	compositeKey, err := stub.CreateCompositeKey(creator.Msp, []string{args[0]})
