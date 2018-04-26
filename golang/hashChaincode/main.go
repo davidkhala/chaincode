@@ -40,6 +40,7 @@ func WorldStates(stub shim.ChaincodeStubInterface) ([]queryresult.KV, error) {
 		if iterErr != nil {
 			return nil, iterErr
 		}
+		logger.Info(kv.Namespace,kv.Key,kv.Value)
 		kvs = append(kvs, *kv)
 	}
 	return kvs, nil
@@ -169,7 +170,7 @@ func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		if err != nil {
 			return shim.Error(err.Error())
 		}
-		result = string(resultBytes[:])
+		result = string(resultBytes)
 	} else if fcn == "write" {
 		err := stub.PutState(compositKey, []byte(args[1]))
 		if err != nil {
