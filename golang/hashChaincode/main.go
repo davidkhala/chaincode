@@ -132,6 +132,27 @@ func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Info("###########" + name + " Invoke :" + "###########")
 	fcn, args := stub.GetFunctionAndParameters()
 	var result string
+	if fcn == "worldStates" {
+		if creator.Msp == superMSP {
+			kvs, err:=WorldStates(stub);
+			if err != nil {
+				return shim.Error(err.Error())
+			}
+			var strings []string;
+			for _, kv := range kvs {
+				jsonElement:= KV2Json(kv)
+				strings = append(strings,jsonElement)
+			}
+			jsonBytes,err:=json.Marshal(strings)
+			if err != nil {
+				return shim.Error(err.Error())
+			}
+			return shim.Success(jsonBytes)
+		}else {
+			return shim.Error("invalid MSP" + creator.Msp)
+		}
+	}
+
 	accessor := []string{creator.Msp};
 	compositKey, err := stub.CreateCompositeKey(args[0], accessor)
 	if err != nil {
@@ -161,18 +182,6 @@ func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 			return shim.Error(err.Error())
 		}
 		result = args[0]
-	} else if fcn == "worldStates" {
-		kvs, err:=WorldStates(stub);
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-		var strings []string;
-		for _, kv := range kvs {
-			jsonElement:= KV2Json(kv)
-			strings = append(strings,jsonElement)
-		}
-		jsonBytes,_:=json.Marshal(strings)
-		result = string(jsonBytes)
 	} else {
 		return shim.Error("invalid fcn" + fcn)
 	}
