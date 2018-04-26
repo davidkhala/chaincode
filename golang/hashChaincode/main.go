@@ -7,11 +7,13 @@ import (
 	"bytes"
 	"encoding/pem"
 	"errors"
+	"github.com/hyperledger/fabric/protos/ledger/queryresult"
+	"encoding/json"
 )
 
 const (
-	name = "hashCC"
-	superMSP="TkMSP"
+	name     = "hashCC"
+	superMSP = "TkMSP"
 )
 
 var logger = shim.NewLogger(name)
@@ -25,6 +27,33 @@ type Creator struct {
 	Certificate    x509.Certificate
 }
 
+func WorldStates(stub shim.ChaincodeStubInterface) ([]queryresult.KV, error) {
+	keysIterator, err := stub.GetStateByRange("", "")
+	if err != nil {
+		return nil, err
+	}
+	defer keysIterator.Close()
+
+	var kvs []queryresult.KV
+	for keysIterator.HasNext() {
+		kv, iterErr := keysIterator.Next()
+		if iterErr != nil {
+			return nil, iterErr
+		}
+		kvs = append(kvs, *kv)
+	}
+	return kvs, nil
+}
+func KV2Json(kv queryresult.KV) (string) {
+	type KVJson struct {
+		Namespace string
+		Key       string
+		Value     string
+	}
+	kvJson:= KVJson{Namespace:kv.Namespace,Key:kv.Key,Value:string(kv.Value)}
+	jsonString,_:=  json.Marshal(kvJson)
+	return string(jsonString)
+}
 func ParseCreator(creator []byte) (*Creator, error) {
 
 	var msp bytes.Buffer
@@ -132,6 +161,18 @@ func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 			return shim.Error(err.Error())
 		}
 		result = args[0]
+	} else if fcn == "worldStates" {
+		kvs, err:=WorldStates(stub);
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+		var strings []string;
+		for _, kv := range kvs {
+			jsonElement:= KV2Json(kv)
+			strings = append(strings,jsonElement)
+		}
+		jsonBytes,_:=json.Marshal(strings)
+		result = string(jsonBytes)
 	} else {
 		return shim.Error("invalid fcn" + fcn)
 	}
