@@ -27,8 +27,15 @@ type Creator struct {
 	Certificate    x509.Certificate
 }
 
-func WorldStates(stub shim.ChaincodeStubInterface) ([]queryresult.KV, error) {
-	keysIterator, err := stub.GetStateByRange("", "")
+func WorldStates(stub shim.ChaincodeStubInterface, objectType string) ([]queryresult.KV, error) {
+	var keysIterator shim.StateQueryIteratorInterface;
+	var err error;
+	if objectType == "" {
+		keysIterator, err = stub.GetStateByRange("", "")
+	} else {
+		keysIterator, err = stub.GetStateByPartialCompositeKey(objectType, nil)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +47,7 @@ func WorldStates(stub shim.ChaincodeStubInterface) ([]queryresult.KV, error) {
 		if iterErr != nil {
 			return nil, iterErr
 		}
-		logger.Info(kv.Namespace,kv.Key,kv.Value)
+		logger.Info(kv.Namespace, kv.Key, kv.Value)
 		kvs = append(kvs, *kv)
 	}
 	return kvs, nil
@@ -51,8 +58,8 @@ func KV2Json(kv queryresult.KV) (string) {
 		Key       string
 		Value     string
 	}
-	kvJson:= KVJson{Namespace:kv.Namespace,Key:kv.Key,Value:string(kv.Value)}
-	jsonString,_:=  json.Marshal(kvJson)
+	kvJson := KVJson{Namespace: kv.Namespace, Key: kv.Key, Value: string(kv.Value)}
+	jsonString, _ := json.Marshal(kvJson)
 	return string(jsonString)
 }
 func ParseCreator(creator []byte) (*Creator, error) {
@@ -105,21 +112,6 @@ func (t *HashChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 
 func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
-	// id, err := cid.New(stub)
-	// if err != nil {
-	// 	return shim.Error(err.Error())
-	// }
-	// mspid, err := id.GetMSPID()
-	// if err != nil {
-	// 	return shim.Error(err.Error())
-	// }
-	// cert, err := id.GetX509Certificate()
-	// if err != nil {
-	// 	return shim.Error(err.Error())
-	// }
-	// logger.Info("id " + id)
-	// logger.Info("mspid " + mspid)
-	// logger.Info("cert " + cert)
 	creatorBytes, err := stub.GetCreator();
 	if err != nil {
 		return shim.Error(err.Error())
@@ -134,51 +126,46 @@ func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	fcn, args := stub.GetFunctionAndParameters()
 	var result string
 	if fcn == "worldStates" {
-		if creator.Msp == superMSP {
-			kvs, err:=WorldStates(stub);
-			if err != nil {
-				return shim.Error(err.Error())
-			}
-			var strings []string;
-			for _, kv := range kvs {
-				jsonElement:= KV2Json(kv)
-				strings = append(strings,jsonElement)
-			}
-			jsonBytes,err:=json.Marshal(strings)
-			if err != nil {
-				return shim.Error(err.Error())
-			}
-			return shim.Success(jsonBytes)
-		}else {
-			return shim.Error("invalid MSP" + creator.Msp)
+		kvs, err := WorldStates(stub, creator.Msp);
+		if err != nil {
+			return shim.Error(err.Error())
 		}
+		var strings []string;
+		for _, kv := range kvs {
+			jsonElement := KV2Json(kv)
+			strings = append(strings, jsonElement)
+		}
+		jsonBytes, err := json.Marshal(strings)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+		return shim.Success(jsonBytes)
 	}
 
-	accessor := []string{creator.Msp};
-	compositKey, err := stub.CreateCompositeKey(args[0], accessor)
+	compositeKey, err := stub.CreateCompositeKey(creator.Msp, []string{args[0]})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
 	if fcn == "read" {
 		if creator.Msp == superMSP {
-			compositKey, err = stub.CreateCompositeKey(args[0], []string{args[1]})
+			compositeKey, err = stub.CreateCompositeKey(args[1], []string{args[0]})
 			if err != nil {
 				return shim.Error(err.Error())
 			}
 		}
-		resultBytes, err := stub.GetState(compositKey)
+		resultBytes, err := stub.GetState(compositeKey)
 		if err != nil {
 			return shim.Error(err.Error())
 		}
 		result = string(resultBytes)
 	} else if fcn == "write" {
-		err := stub.PutState(compositKey, []byte(args[1]))
+		err := stub.PutState(compositeKey, []byte(args[1]))
 		if err != nil {
 			return shim.Error(err.Error())
 		}
 		result = args[0] + "=>" + args[1]
 	} else if fcn == "delete" {
-		err := stub.DelState(compositKey)
+		err := stub.DelState(compositeKey)
 		if err != nil {
 			return shim.Error(err.Error())
 		}
