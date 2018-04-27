@@ -19,8 +19,5 @@ func (t *StressChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 }
 
 func main() {
-	err := shim.Start(new(StressChaincode))
-	if err != nil {
-		logger.Errorf("Error starting Simple chaincode: %s", err)
-	}
+	_ := shim.Start(new(StressChaincode))
 }
