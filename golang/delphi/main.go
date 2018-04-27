@@ -19,5 +19,5 @@ func (t *StressChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 }
 
 func main() {
-	_ := shim.Start(new(StressChaincode))
+	shim.Start(new(StressChaincode))
 }
