@@ -15,14 +15,13 @@ type StressChaincode struct {
 }
 
 func (t *StressChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+	logger.Info("########### " + name + " Init ###########")
 	return shim.Success(nil)
-
 }
 
 // Transaction makes payment of X units from A to B
 func (t *StressChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	logger.Info("########### " + name + " Invoke ###########")
-
 	return shim.Success(nil)
 }
 
