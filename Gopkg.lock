@@ -11,6 +11,18 @@
   revision = "d6e3b3328b783f23731bc4d058875b0371ff8109"
 
 [[projects]]
+  name = "github.com/BurntSushi/toml"
+  packages = ["."]
+  revision = "b26d9c308763d68093482582cea63d69be07a0f0"
+  version = "v0.3.0"
+
+[[projects]]
+  name = "github.com/Knetic/govaluate"
+  packages = ["."]
+  revision = "d216395917cc49052c7c7094cf57f09657ca08a8"
+  version = "v3.0.0"
+
+[[projects]]
   name = "github.com/Microsoft/go-winio"
   packages = ["."]
   revision = "7da180ee92d8bd8bb8c37fc560e673e6557c392f"
@@ -23,10 +35,22 @@
   revision = "cd527374f1e5bff4938207604a14f2e38a9cf512"
 
 [[projects]]
+  name = "github.com/Shopify/sarama"
+  packages = ["."]
+  revision = "35324cf48e33d8260e1c7c18854465a904ade249"
+  version = "v1.17.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/containerd/continuity"
   packages = ["pathdriver"]
   revision = "d8fb8589b0e8e85b8c8bbaa8840226d0dfeb7371"
+
+[[projects]]
+  name = "github.com/davecgh/go-spew"
+  packages = ["spew"]
+  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
+  version = "v1.1.0"
 
 [[projects]]
   branch = "master"
@@ -79,10 +103,22 @@
   version = "v0.3.2"
 
 [[projects]]
-  name = "github.com/fsnotify/fsnotify"
+  name = "github.com/eapache/go-resiliency"
+  packages = ["breaker"]
+  revision = "ea41b0fad31007accc7f806884dcdf3da98b79ce"
+  version = "v1.1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/eapache/go-xerial-snappy"
   packages = ["."]
-  revision = "c2828203cd70a50dcccfb2761f8b1f8ceef9a8e9"
-  version = "v1.4.7"
+  revision = "bb955e01b9346ac19dc29eb16586c90ded99a98c"
+
+[[projects]]
+  name = "github.com/eapache/queue"
+  packages = ["."]
+  revision = "44cc805cf13205b55f69e14bcb69867d1ae92f98"
+  version = "v1.1.0"
 
 [[projects]]
   name = "github.com/fsouza/go-dockerclient"
@@ -97,6 +133,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/golang/groupcache"
+  packages = ["lru"]
+  revision = "24b0969c4cb722950103eed87108c8d291a8df00"
+
+[[projects]]
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
@@ -106,26 +148,22 @@
     "ptypes/empty",
     "ptypes/timestamp"
   ]
-  revision = "925541529c1fa6821df4e44ce2723319eb2be768"
-  version = "v1.0.0"
+  revision = "fec3b39b059c0f88fa6b20f5ed012b1aa203a8b4"
 
 [[projects]]
   branch = "master"
-  name = "github.com/hashicorp/hcl"
-  packages = [
-    ".",
-    "hcl/ast",
-    "hcl/parser",
-    "hcl/scanner",
-    "hcl/strconv",
-    "hcl/token",
-    "json/parser",
-    "json/scanner",
-    "json/token"
-  ]
-  revision = "23c074d0eceb2b8a5bfdbb271ab780cde70f05a8"
+  name = "github.com/golang/snappy"
+  packages = ["."]
+  revision = "2e65f85255dbc3072edf28d6b5b8efc472979f5a"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/hashicorp/go-version"
+  packages = ["."]
+  revision = "23480c0665776210b5fbbac6eaaee40e3e6a96b7"
+
+[[projects]]
+  branch = "release-1.2"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -134,36 +172,73 @@
     "bccsp/signer",
     "bccsp/sw",
     "bccsp/utils",
+    "common/capabilities",
+    "common/cauthdsl",
+    "common/channelconfig",
+    "common/configtx",
+    "common/configtx/test",
     "common/crypto",
-    "common/errors",
     "common/flogging",
+    "common/genesis",
     "common/ledger",
+    "common/ledger/testutil",
     "common/metadata",
+    "common/mocks/msp",
+    "common/policies",
+    "common/tools/configtxgen/configtxgentest",
+    "common/tools/configtxgen/encoder",
+    "common/tools/configtxgen/localconfig",
+    "common/tools/configtxlator/update",
     "common/util",
+    "common/viperutil",
     "core/chaincode/platforms",
     "core/chaincode/platforms/car",
+    "core/chaincode/platforms/ccmetadata",
     "core/chaincode/platforms/golang",
     "core/chaincode/platforms/java",
+    "core/chaincode/platforms/node",
     "core/chaincode/platforms/util",
     "core/chaincode/shim",
     "core/comm",
     "core/config",
+    "core/config/configtest",
     "core/container/util",
+    "core/ledger/util",
+    "idemix",
     "msp",
+    "msp/cache",
+    "msp/mgmt",
+    "msp/mgmt/testtools",
     "protos/common",
     "protos/ledger/queryresult",
     "protos/msp",
+    "protos/orderer",
     "protos/peer",
+    "protos/testutils",
     "protos/utils"
   ]
-  revision = "70f3f2122b738d3d43c82a2aa52bd7e0718d5819"
-  version = "v1.0.6"
+  revision = "29a7d95802772a63c64759d9f43b87525771e239"
 
 [[projects]]
   branch = "master"
-  name = "github.com/looplab/fsm"
+  name = "github.com/hyperledger/fabric-amcl"
+  packages = [
+    "amcl",
+    "amcl/FP256BN"
+  ]
+  revision = "600b0c45a024131b326a41096da0559a9a7461fd"
+
+[[projects]]
+  name = "github.com/kr/pretty"
   packages = ["."]
-  revision = "8def87414f14eaa69e4ee40abd20a7c195cea6f4"
+  revision = "73f6ac0b30a98e433b289500d779f50c1a6f0712"
+  version = "v0.1.0"
+
+[[projects]]
+  name = "github.com/kr/text"
+  packages = ["."]
+  revision = "e2ffdb16a802fe2bb95e2e35ff34f0e53aeef34f"
+  version = "v0.1.0"
 
 [[projects]]
   name = "github.com/magiconair/properties"
@@ -184,10 +259,10 @@
   revision = "00c29f56e2386353d58c599509e8dc3801b0d716"
 
 [[projects]]
+  branch = "master"
   name = "github.com/op/go-logging"
   packages = ["."]
-  revision = "b2cb9fa56473e98db8caba80237377e83fe44db5"
-  version = "v1"
+  revision = "970db520ece77730c7e4724c61121037378659d9"
 
 [[projects]]
   name = "github.com/opencontainers/go-digest"
@@ -214,10 +289,13 @@
   version = "v0.1.1"
 
 [[projects]]
-  name = "github.com/pelletier/go-toml"
-  packages = ["."]
-  revision = "acdc4509485b587f5e675510c4f2c63e90ff68a8"
-  version = "v1.1.0"
+  name = "github.com/pierrec/lz4"
+  packages = [
+    ".",
+    "internal/xxh32"
+  ]
+  revision = "1958fd8fff7f115e79725b1288e0b878b3e06b00"
+  version = "v2.0.3"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -226,19 +304,22 @@
   version = "v0.8.0"
 
 [[projects]]
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/rcrowley/go-metrics"
+  packages = ["."]
+  revision = "e2704e165165ec55d062f5919b4b29494e9fa790"
+
+[[projects]]
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
   version = "v1.0.5"
-
-[[projects]]
-  name = "github.com/spf13/afero"
-  packages = [
-    ".",
-    "mem"
-  ]
-  revision = "bb8f1927f2a9d3ab41c9340aa034f6b803f4359c"
-  version = "v1.0.2"
 
 [[projects]]
   name = "github.com/spf13/cast"
@@ -261,8 +342,13 @@
 [[projects]]
   name = "github.com/spf13/viper"
   packages = ["."]
-  revision = "25b30aa063fc18e48662b86996252eabdcf2f0c7"
-  version = "v1.0.0"
+  revision = "1967d93db724f4a5c0e101307e96d82ff520a067"
+
+[[projects]]
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  revision = "f35b8ab0b5a2cef36673838d662e249dd9c94686"
+  version = "v1.2.2"
 
 [[projects]]
   branch = "master"
@@ -351,18 +437,18 @@
     "tap",
     "transport"
   ]
-  revision = "8e4536a86ab602859c20df5ebfd0bd4228d08655"
-  version = "v1.10.0"
+  revision = "d11072e7ca9811b1100b80ca0269ac831f06d024"
+  version = "v1.11.3"
 
 [[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "7f97868eec74b32b0982dd158a51a446d1da7eb5"
-  version = "v2.1.1"
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d08972ffdac1a50138f638bc0b7ca8f381cf15e4d527adfc29f487875b7270bd"
+  inputs-digest = "fe2450680f68fcb198034f299ad38f3701d5166c3659ec3f439c55ea9f0d79b4"
   solver-name = "gps-cdcl"
   solver-version = 1
