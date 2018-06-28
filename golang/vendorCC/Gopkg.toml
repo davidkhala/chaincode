@@ -1,0 +1,7 @@
+[[constraint]]
+  name = "github.com/hyperledger/fabric"
+  branch = "release-1.2"
+
+[prune]
+  go-tests = true
+  unused-packages = true
