@@ -1,25 +1,9 @@
-/*
-Copyright IBM Corp. 2016 All Rights Reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-		 http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package main
 
 import (
 	"encoding/json"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	pb "github.com/hyperledger/fabric/protos/peer"
+	"github.com/hyperledger/fabric/protos/peer"
 	common "github.com/davidkhala/fabric-common-chaincode/golang"
 )
 
@@ -75,7 +59,7 @@ const partASubject = "Admin@BU.Delphi.com"
 const partBSubject = "Admin@ENG.Delphi.com"
 const partCSubject = "Admin@PM.Delphi.com"
 
-func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("########### vendor Init ###########")
 
 	var err error;
@@ -134,7 +118,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 }
 
 // Transaction makes payment of X units from A to B
-func (t *SimpleChaincode) Invoke(chain shim.ChaincodeStubInterface) pb.Response {
+func (t *SimpleChaincode) Invoke(chain shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("########### vendor Invoke ###########")
 
 	fcn, args := chain.GetFunctionAndParameters()
@@ -152,7 +136,7 @@ func (t *SimpleChaincode) Invoke(chain shim.ChaincodeStubInterface) pb.Response 
 	return shim.Error(`Unknown action, check the fcn, got:` + fcn)
 }
 
-func (t *SimpleChaincode) progress(chain shim.ChaincodeStubInterface, args []string) pb.Response {
+func (t *SimpleChaincode) progress(chain shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	creatorBytes, _ := chain.GetCreator()
 	creator, err := common.ParseCreator(creatorBytes)
@@ -244,7 +228,7 @@ func (t *SimpleChaincode) progress(chain shim.ChaincodeStubInterface, args []str
 }
 
 // Query callback representing the query of a chaincode
-func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 
 	if len(args) < 1 {
 		return shim.Error("no query target specified")

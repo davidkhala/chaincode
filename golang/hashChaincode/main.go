@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	pb "github.com/hyperledger/fabric/protos/peer"
+	"github.com/hyperledger/fabric/protos/peer"
 	"crypto/x509"
 	"bytes"
 	"encoding/pem"
@@ -110,14 +110,14 @@ func ParseCreator(creator []byte) (*Creator, error) {
 
 }
 
-func (t *HashChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *HashChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("###########" + name + " Init ###########")
 	// GetStatus in Init will timeout request
 	return shim.Success(nil)
 
 }
 
-func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *HashChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 
 	creatorBytes, err := stub.GetCreator();
 	if err != nil {

@@ -6,7 +6,7 @@ import (
 
 	common "github.com/davidkhala/fabric-common-chaincode/golang"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	pb "github.com/hyperledger/fabric/protos/peer"
+	"github.com/hyperledger/fabric/protos/peer"
 )
 
 const (
@@ -19,7 +19,7 @@ var logger = shim.NewLogger(name)
 type AdminChaincode struct {
 }
 
-func (t *AdminChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *AdminChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("###########" + name + " Init ###########")
 	// GetStatus in Init will timeout request
 	err := stub.PutState(counterKey, []byte("0"))
@@ -43,7 +43,7 @@ type Creator struct {
 }
 
 // Transaction makes payment of X units from A to B
-func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
+func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 
 	stateBytes, _ := stub.GetState(counterKey)
 	state := string(stateBytes)
