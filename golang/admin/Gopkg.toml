@@ -6,6 +6,14 @@
   name = "github.com/hyperledger/fabric"
   branch = "release-1.2"
 
+[[override]]
+  name = "github.com/golang/protobuf"
+  version = "v1.1.0"
+
+[[override]]
+  name = "github.com/docker/docker"
+  revision = "a422774e593b33bd287d9890544ad9e09b380d8c"
+
 [prune]
   go-tests = true
   unused-packages = true

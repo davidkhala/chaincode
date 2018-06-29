@@ -19,8 +19,8 @@
 [[projects]]
   name = "github.com/Microsoft/go-winio"
   packages = ["."]
-  revision = "7da180ee92d8bd8bb8c37fc560e673e6557c392f"
-  version = "v0.4.7"
+  revision = "67921128fb397dd80339870d2193d6b1e6856fd4"
+  version = "v0.4.8"
 
 [[projects]]
   branch = "master"
@@ -65,7 +65,7 @@
     "pkg/stdcopy",
     "pkg/system"
   ]
-  revision = "3dfb26ab3cbf961298f8ce3f94659b5fe4146ceb"
+  revision = "a422774e593b33bd287d9890544ad9e09b380d8c"
 
 [[projects]]
   name = "github.com/docker/go-connections"
@@ -78,12 +78,6 @@
   packages = ["."]
   revision = "47565b4f722fb6ceae66b95f853feed578a4a51c"
   version = "v0.3.3"
-
-[[projects]]
-  name = "github.com/docker/libnetwork"
-  packages = ["ipamutils"]
-  revision = "6d23f11e681f24ee31802939e243fe8be41a75eb"
-  version = "v0.8.0-dev.2"
 
 [[projects]]
   name = "github.com/fsouza/go-dockerclient"
@@ -112,7 +106,8 @@
     "ptypes/empty",
     "ptypes/timestamp"
   ]
-  revision = "fec3b39b059c0f88fa6b20f5ed012b1aa203a8b4"
+  revision = "b4deda0973fb4c70b50d226b1af49f3da59f5265"
+  version = "v1.1.0"
 
 [[projects]]
   branch = "release-1.2"
@@ -148,7 +143,7 @@
     "protos/peer",
     "protos/utils"
   ]
-  revision = "29a7d95802772a63c64759d9f43b87525771e239"
+  revision = "590f9bb3b27eb404e16f7923b09c4168d046a0c2"
 
 [[projects]]
   branch = "master"
@@ -272,7 +267,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "e514e69ffb8bc3c76a71ae40de0118d794855992"
+  revision = "4cb1c02c05b0e749b0365f61ae859a8e0cfceed9"
 
 [[projects]]
   branch = "master"
@@ -349,6 +344,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9d7320637c495f26578e81efa84447f12f49584ceed489b2024947888a7b31f6"
+  inputs-digest = "3e592100e2eb7ac3cd9cf99c34e7446f64b0bd6c8a8ed99e4405468f3f0e3b32"
   solver-name = "gps-cdcl"
   solver-version = 1
