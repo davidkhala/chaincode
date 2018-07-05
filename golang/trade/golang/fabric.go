@@ -3,7 +3,8 @@ package golang
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/ledger/queryresult"
-	"fmt"
+	"github.com/hyperledger/fabric/protos/peer"
+	"errors"
 )
 
 func WorldStates(ccAPI shim.ChaincodeStubInterface, objectType string) ([]KVJson, error) {
@@ -87,4 +88,17 @@ func GetStateByRange(ccAPI shim.ChaincodeStubInterface, startKey string, endKey 
 	var r, err = ccAPI.GetStateByRange(startKey, endKey)
 	PanicError(err)
 	return r
+}
+func PanicDefer (response *peer.Response,){
+	if err := recover(); err != nil {
+		switch x := err.(type) {
+		case string:
+			err = errors.New(x)
+		case error:
+		default:
+			err = errors.New("Unknown panic")
+		}
+		response.Status = shim.ERROR
+		response.Message = err.(error).Error()
+	}
 }

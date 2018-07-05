@@ -40,3 +40,12 @@ func TestTradeChaincode_Invoke(t *testing.T) {
 	fmt.Println("invoke ", response)
 	testutil.AssertSame(t, response.Status, int32(200));
 }
+func TestTradeChaincode_InvokePanic(t *testing.T) {
+	var TxID = "01"
+	var invokeArgs [][]byte
+	invokeArgs = append(invokeArgs, []byte("panic")) //fcn
+	invokeArgs = append(invokeArgs, []byte("panicContent"))
+	var response = mock.MockInvoke(TxID, invokeArgs)
+	fmt.Println("invoke ", response)
+	testutil.AssertSame(t, response.Status, int32(500));
+}
