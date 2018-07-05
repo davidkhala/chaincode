@@ -37,11 +37,6 @@ func (t *AdminChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 
 }
 
-type Creator struct {
-	Msp         string
-	Certificate string
-}
-
 // Transaction makes payment of X units from A to B
 func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 
