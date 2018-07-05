@@ -24,16 +24,16 @@ func (t *DelphiChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 }
 
 // Transaction makes payment of X units from A to B
-func (t *DelphiChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+func (t *DelphiChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("########### " + name + " Invoke ###########")
 
-	stateBytes, _ := stub.GetState(counterKey)
+	stateBytes, _ := ccAPI.GetState(counterKey)
 	state := string(stateBytes)
 
 	stateInt, _ := strconv.Atoi(state)
 	stateInt++
 	state = strconv.Itoa(stateInt)
-	stub.PutState(counterKey, []byte(state))
+	ccAPI.PutState(counterKey, []byte(state))
 	logger.Info("###########" + name + " Invoke :counter " + state + "###########")
 	return shim.Success([]byte(state))
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/davidkhala/chaincode/golang/trade/golang"
+	"errors"
 )
 
 const (
@@ -33,20 +34,43 @@ func (t *TradeChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 }
 
 // Transaction makes payment of X units from A to B
-func (t *TradeChaincode) Invoke(ccApi shim.ChaincodeStubInterface) peer.Response {
+func (t *TradeChaincode) Invoke(ccApi shim.ChaincodeStubInterface) (returned peer.Response) {
 	logger.Info("########### " + name + " Invoke ###########")
 
+	defer func() {
+		if err := recover(); err != nil {
+			switch x := err.(type) {
+			case string:
+				err = errors.New(x)
+			case error:
+			default:
+				err = errors.New("Unknown panic")
+			}
+			returned.Status = shim.ERROR
+			returned.Message = err.(error).Error()
+		}
+	}()
+
+	var fcn, _= ccApi.GetFunctionAndParameters()
+
+	
 	var key = MSPIDListKey(ccApi)
+	switch fcn {
+	case "history":
+		history  := golang.GetHistoryForKey(ccApi,key)
+		golang.HistoryToArray(history)
+	}
 	var mspList golang.StringList
 
 	var statebytes = golang.GetState(ccApi, key)
 	golang.FromJson(statebytes, &mspList);
 	var thisMsp = t.getThisMsp(ccApi)
 	if mspList.Has(thisMsp) {
-		return shim.Success(nil)
+		returned = shim.Success(nil)
 	} else {
-		return shim.Error(thisMsp + " not included in " + mspList.String())
+		returned = shim.Error(thisMsp + " not included in " + mspList.String())
 	}
+	return returned
 
 }
 func (t *TradeChaincode) getThisMsp(ccApi shim.ChaincodeStubInterface) string {
