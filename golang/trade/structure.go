@@ -1,12 +1,14 @@
 package main
 
 import (
-	"github.com/davidkhala/fabric-common-chaincode/golang"
+	"github.com/davidkhala/chaincode/golang/trade/golang"
 	"errors"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 const (
+	walletCreate                = "create"
+	walletBalance               = "balance"
 	tt_new_eToken_issue         = "tt_new_eToken_issuance"
 	tt_fiat_eToken_exchange     = "tt_fiat_eToken_exchange"
 	tt_consumer_purchase        = "tt_consumer_purchase"
@@ -15,33 +17,36 @@ const (
 	tt                          = "tt_unspecified"
 )
 
+type CommonTransaction struct {
+	From      wallet
+	To        wallet
+	Amount    int64
+	Type      string
+	TimeStamp int64
+}
+
 type ID struct {
 	Name   string
 	Prefix string
 }
 
-type Wallet struct {
+type wallet struct {
 	ID string
 }
 type WalletValue struct {
 	RecordID string
-	Balance int64
+	Balance  int64
 }
 
-func BuildID(data []byte) ID {
-	var id ID
-	golang.FromJson(data, &id);
-	if id.Prefix != "c" && id.Prefix != "m" && id.Prefix != "e" {
-		golang.PanicError(errors.New("invalide ID prefix " + id.Prefix))
-	}
-	return id
-}
 func (id ID) getLoginID() string {
 	return id.Prefix + id.Name
 }
-func (id ID) getWallet(suffix string) Wallet {
+func (id ID) getWallet(suffix string) wallet {
 	var walletPrefix = "wallet_"
 
+	if id.Prefix != "c" && id.Prefix != "m" && id.Prefix != "e" {
+		golang.PanicError(errors.New("invalide ID prefix " + id.Prefix))
+	}
 	switch suffix {
 	case "":
 	case "_e": //for Escrow
@@ -50,10 +55,10 @@ func (id ID) getWallet(suffix string) Wallet {
 		golang.PanicError(errors.New("invalid wallet suffix:" + suffix));
 	}
 
-	return Wallet{walletPrefix + id.getLoginID() + suffix}
+	return wallet{walletPrefix + id.getLoginID() + suffix}
 }
 
-func (wallet Wallet) GetHistory(ccAPI shim.ChaincodeStubInterface, ) {
+func (wallet wallet) GetHistory(ccAPI shim.ChaincodeStubInterface, ) {
 	var key = wallet.ID;
-	golang.HistoryToArray(golang.GetHistoryForKey(ccAPI,key))//TODO
+	golang.ParseHistory(golang.GetHistoryForKey(ccAPI, key))
 }

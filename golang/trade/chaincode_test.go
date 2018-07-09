@@ -31,23 +31,18 @@ func TestTradeChaincode_Init(t *testing.T) {
 	fmt.Println("init ", response)
 	testutil.AssertSame(t, response.Status, int32(200));
 }
-func TestTradeChaincode_Invoke(t *testing.T) {
+func TestTradeChaincode_InvokeCreate(t *testing.T) {
 	var TxID = "oa"
 	var invokeArgs [][]byte
-	invokeArgs = append(invokeArgs, []byte("Invokefcn")) //fcn
+	invokeArgs = append(invokeArgs, []byte(walletCreate)) //fcn
+
+	invokeArgs = append(invokeArgs,golang.ToJson(ID{"david","c"}))
+
 	var response = mock.MockInvoke(TxID, invokeArgs)
 	fmt.Println("invoke ", response)
 	testutil.AssertSame(t, response.Status, int32(200));
 }
-func TestTradeChaincode_InvokePanic(t *testing.T) {
-	var TxID = "01"
-	var invokeArgs [][]byte
-	invokeArgs = append(invokeArgs, []byte("panic")) //fcn
-	invokeArgs = append(invokeArgs, []byte("panicContent"))
-	var response = mock.MockInvoke(TxID, invokeArgs)
-	fmt.Println("invoke ", response)
-	testutil.AssertSame(t, response.Status, int32(500));
-}
+
 func TestTradeChaincode_InvokeHistory(t *testing.T) {
 	var TxID = "03"
 	var invokeArgs [][]byte
