@@ -26,7 +26,6 @@ func TestTradeChaincode_Init(t *testing.T) {
 	set.Put("MerchantMSP")
 	set.Put("ExchangerMSP")
 	var mspsBytes = golang.ToJson(&set)
-	fmt.Println("mspsBytes", string(mspsBytes))
 	initArgs = append(initArgs, mspsBytes)
 	var response = mock.MockInit(TxID, initArgs)
 	fmt.Println("init ", response)
@@ -48,4 +47,12 @@ func TestTradeChaincode_InvokePanic(t *testing.T) {
 	var response = mock.MockInvoke(TxID, invokeArgs)
 	fmt.Println("invoke ", response)
 	testutil.AssertSame(t, response.Status, int32(500));
+}
+func TestTradeChaincode_InvokeHistory(t *testing.T) {
+	var TxID = "03"
+	var invokeArgs [][]byte
+	invokeArgs = append(invokeArgs, []byte("history")) //fcn
+	var response = mock.MockInvoke(TxID, invokeArgs)
+	testutil.AssertSame(t, response.Status, int32(500));
+	testutil.AssertSame(t, response.Message, "not implemented") //Not for mock
 }

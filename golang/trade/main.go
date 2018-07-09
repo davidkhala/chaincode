@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
-	"github.com/davidkhala/chaincode/golang/trade/golang"
+	"github.com/davidkhala/fabric-common-chaincode/golang"
 )
 
 const (
@@ -23,9 +23,9 @@ func (t *TradeChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.R
 	logger.Info("########### " + name + " Init ###########")
 
 	defer golang.PanicDefer(&response)
-	var _, params = stub.GetFunctionAndParameters();
-	var p0 = []byte(params[0]);
-	var list golang.StringList;
+	var _, params = stub.GetFunctionAndParameters()
+	var p0 = []byte(params[0])
+	var list golang.StringList
 	golang.FromJson(p0, &list) //for checking
 	var key = MSPIDListKey(stub)
 	stub.PutState(key, p0)
@@ -44,15 +44,13 @@ func (t *TradeChaincode) Invoke(ccApi shim.ChaincodeStubInterface) (response pee
 	var key = MSPIDListKey(ccApi)
 	switch fcn {
 	case "history":
-		history := golang.GetHistoryForKey(ccApi, key)
-		golang.HistoryToArray(history)
 	case "panic":
 		panic(params)
 	}
 	var mspList golang.StringList
 
 	var statebytes = golang.GetState(ccApi, key)
-	golang.FromJson(statebytes, &mspList);
+	golang.FromJson(statebytes, &mspList)
 	var thisMsp = t.getThisMsp(ccApi)
 	if mspList.Has(thisMsp) {
 		response = shim.Success(nil)
