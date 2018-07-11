@@ -8,8 +8,10 @@ import (
 	"github.com/davidkhala/chaincode/golang/trade/golang"
 )
 
-var cc = new(TradeChaincode)
+var cc = &TradeChaincode{mock: true}
 var mock = shim.NewMockStub(name, cc)
+
+
 
 func TestIsSubset(t *testing.T) {
 	var first = []string{"1", "2"}
@@ -30,24 +32,4 @@ func TestTradeChaincode_Init(t *testing.T) {
 	var response = mock.MockInit(TxID, initArgs)
 	fmt.Println("init ", response)
 	testutil.AssertSame(t, response.Status, int32(200));
-}
-func TestTradeChaincode_InvokeCreate(t *testing.T) {
-	var TxID = "oa"
-	var invokeArgs [][]byte
-	invokeArgs = append(invokeArgs, []byte(walletCreate)) //fcn
-
-	invokeArgs = append(invokeArgs,golang.ToJson(ID{"david","c"}))
-
-	var response = mock.MockInvoke(TxID, invokeArgs)
-	fmt.Println("invoke ", response)
-	testutil.AssertSame(t, response.Status, int32(200));
-}
-
-func TestTradeChaincode_InvokeHistory(t *testing.T) {
-	var TxID = "03"
-	var invokeArgs [][]byte
-	invokeArgs = append(invokeArgs, []byte("history")) //fcn
-	var response = mock.MockInvoke(TxID, invokeArgs)
-	testutil.AssertSame(t, response.Status, int32(500));
-	testutil.AssertSame(t, response.Message, "not implemented") //Not for mock
 }

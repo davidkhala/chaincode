@@ -3,62 +3,94 @@ package main
 import (
 	"github.com/davidkhala/chaincode/golang/trade/golang"
 	"errors"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"fmt"
 )
 
 const (
-	walletCreate                = "create"
-	walletBalance               = "balance"
+	walletCreate  = "create"
+	walletBalance = "balance"
+
 	tt_new_eToken_issue         = "tt_new_eToken_issuance"
 	tt_fiat_eToken_exchange     = "tt_fiat_eToken_exchange"
 	tt_consumer_purchase        = "tt_consumer_purchase"
 	tt_merchant_reject_purchase = "tt_merchant_reject_purchase"
 	tt_merchant_accept_purchase = "tt_merchant_accept_purchase"
 	tt                          = "tt_unspecified"
+
+	ConsumerMSP  = "ConsumerMSP"
+	MerchantMSP  = "MerchantMSP"
+	ExchangerMSP = "ExchangerMSP"
+
+	ConsumerType  = "c"
+	MerchantType  = "m"
+	ExchangerType = "e"
 )
 
 type CommonTransaction struct {
-	From      wallet
-	To        wallet
+	From      ID
+	To        ID
 	Amount    int64
 	Type      string
 	TimeStamp int64
 }
+type HistoryTransactions struct {
+	History []CommonTransaction
+}
+type PurchaseTransaction struct {
+	CommonTransaction
+	Merchandise                 string
+	MerchandiseAmount           int64
+	ConsumerDeliveryInstruction string
+}
+type PurchaseArbitrationTransaction struct {
+	CommonTransaction
+	Status       bool
+	PurchaseTxID string
+}
 
 type ID struct {
-	Name   string
-	Prefix string
+	Name string
+	Type string
 }
 
 type wallet struct {
-	ID string
+	regularID string
+	escrowID  string
 }
 type WalletValue struct {
 	RecordID string
 	Balance  int64
 }
 
+func (value *WalletValue) Add(amount int64, recordID string) (golang.Modifier) {
+	return func(interface{}) {
+		value.Balance += amount
+		value.RecordID = recordID
+		fmt.Println("addresult",value)
+	}
+}
+func (value *WalletValue) Lose(amount int64, recordID string) (golang.Modifier) {
+	return func(interface{}) {
+		value.Balance += amount
+		value.RecordID = recordID
+	}
+}
+
 func (id ID) getLoginID() string {
-	return id.Prefix + id.Name
+	return id.Type + id.Name
 }
-func (id ID) getWallet(suffix string) wallet {
+func (id ID) getWallet() wallet {
 	var walletPrefix = "wallet_"
-
-	if id.Prefix != "c" && id.Prefix != "m" && id.Prefix != "e" {
-		golang.PanicError(errors.New("invalide ID prefix " + id.Prefix))
+	if id.Type != ConsumerType && id.Type != MerchantType && id.Type != ExchangerType {
+		golang.PanicError(errors.New("invalid ID prefix " + id.Type))
 	}
-	switch suffix {
-	case "":
-	case "_e": //for Escrow
-	case "_r": //for Regular
-	default:
-		golang.PanicError(errors.New("invalid wallet suffix:" + suffix));
+	if id.Type == MerchantType {
+		return wallet{
+			walletPrefix + id.getLoginID() + "_r",
+			walletPrefix + id.getLoginID() + "_e",
+		}
+	} else {
+		return wallet{walletPrefix + id.getLoginID(), ""}
 	}
 
-	return wallet{walletPrefix + id.getLoginID() + suffix}
-}
-
-func (wallet wallet) GetHistory(ccAPI shim.ChaincodeStubInterface, ) {
-	var key = wallet.ID;
-	golang.ParseHistory(golang.GetHistoryForKey(ccAPI, key))
 }
