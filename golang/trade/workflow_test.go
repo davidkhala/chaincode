@@ -3,8 +3,10 @@ package main
 import (
 	"testing"
 	"github.com/davidkhala/chaincode/golang/trade/golang"
-	"fmt"
 	"github.com/hyperledger/fabric/common/ledger/testutil"
+	"math/rand"
+	"strconv"
+	"time"
 )
 
 var DavidExchange = ID{"david", "e"}
@@ -50,7 +52,27 @@ func TestTradeChaincode_InvokeBalance(t *testing.T) {
 	}
 
 	var response = mock.MockInvoke(TxID, invokeArgs)
-	fmt.Println("invoke ", response)
-	testutil.AssertSame(t, response.Status, int32(200));
 	testutil.AssertSame(t, golang.ToInt(response.Payload), issueAmount)
+}
+func TestTradeChaincode_InvokeFiat(t *testing.T) {
+	time.Sleep(1000)
+	var TxID = "fiat"+strconv.Itoa(rand.Int())
+	var change = 10
+	var tx = CommonTransaction{DavidExchange,LamMerchant,int64(change),tt_fiat_eToken_exchange,0}
+	var invokeArgs  = [][]byte{
+		[]byte(tt_fiat_eToken_exchange),
+		golang.ToJson(DavidExchange),
+		golang.ToJson(tx),
+	}
+
+	var response = mock.MockInvoke(TxID, invokeArgs)
+
+	TxID = "balance"+strconv.Itoa(rand.Int())
+	invokeArgs  = [][]byte{
+		[]byte(walletBalance),
+		golang.ToJson(DavidExchange),
+	}
+	response = mock.MockInvoke(TxID,invokeArgs)
+	testutil.AssertNotEquals(t, golang.ToInt(response.Payload), issueAmount)
+	testutil.AssertEquals(t, golang.ToInt(response.Payload), issueAmount-change)
 }

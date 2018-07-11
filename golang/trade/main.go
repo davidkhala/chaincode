@@ -160,8 +160,8 @@ func (t *TradeChaincode) Invoke(ccApi shim.ChaincodeStubInterface) (response pee
 		var fromWalletValue WalletValue
 		var toWallet = getWalletIfExist(ccApi, value.To)
 		var fromWallet = getWalletIfExist(ccApi, value.From)
-		golang.ModifyValue(ccApi, toWallet.regularID, toWalletValue.Add(value.Amount, txID), toWalletValue)
-		golang.ModifyValue(ccApi, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID), fromWalletValue)
+		golang.ModifyValue(ccApi, toWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
+		golang.ModifyValue(ccApi, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID), &fromWalletValue)
 		golang.PutStateObj(ccApi, txID, value)
 
 	default:

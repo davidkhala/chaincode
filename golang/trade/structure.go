@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/davidkhala/chaincode/golang/trade/golang"
 	"errors"
-	"fmt"
 )
 
 const (
@@ -66,12 +65,11 @@ func (value *WalletValue) Add(amount int64, recordID string) (golang.Modifier) {
 	return func(interface{}) {
 		value.Balance += amount
 		value.RecordID = recordID
-		fmt.Println("addresult",value)
 	}
 }
 func (value *WalletValue) Lose(amount int64, recordID string) (golang.Modifier) {
 	return func(interface{}) {
-		value.Balance += amount
+		value.Balance -= amount
 		value.RecordID = recordID
 	}
 }
