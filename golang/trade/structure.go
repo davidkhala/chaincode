@@ -6,8 +6,9 @@ import (
 )
 
 const (
-	walletCreate  = "create"
-	walletBalance = "balance"
+	fcnWalletCreate  = "create"
+	fcnWalletBalance = "balance"
+	fcnHistory       = "history"
 
 	tt_new_eToken_issue         = "tt_new_eToken_issuance"
 	tt_fiat_eToken_exchange     = "tt_fiat_eToken_exchange"
@@ -20,9 +21,12 @@ const (
 	MerchantMSP  = "MerchantMSP"
 	ExchangerMSP = "ExchangerMSP"
 
-	ConsumerType  = "c"
-	MerchantType  = "m"
-	ExchangerType = "e"
+	ConsumerType   = "c"
+	MerchantType   = "m"
+	ExchangerType  = "e"
+	StatusPending  = "pending"
+	StatusAccepted = "accepted"
+	StatusRejected = "rejected"
 )
 
 type CommonTransaction struct {
@@ -37,13 +41,32 @@ type HistoryTransactions struct {
 }
 type PurchaseTransaction struct {
 	CommonTransaction
-	Merchandise                 string
+	MerchandiseCode             string
 	MerchandiseAmount           int64
 	ConsumerDeliveryInstruction string
+	Status                      string
 }
+
+func (tx *PurchaseTransaction) Accept() (golang.Modifier) {
+	if tx.Status != StatusPending {
+		golang.PanicString("Before accept purchase, invalid current status:" + tx.Status)
+	}
+	return func(interface{}) {
+		tx.Status = StatusAccepted
+	}
+}
+func (tx *PurchaseTransaction) Reject() (golang.Modifier) {
+	if tx.Status != StatusPending {
+		golang.PanicString("Before reject purchase, invalid current status:" + tx.Status)
+	}
+	return func(interface{}) {
+		tx.Status = StatusRejected
+	}
+}
+
 type PurchaseArbitrationTransaction struct {
 	CommonTransaction
-	Status       bool
+	Accept       bool
 	PurchaseTxID string
 }
 
