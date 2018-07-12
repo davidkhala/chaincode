@@ -19,7 +19,7 @@ const (
 
 	ConsumerMSP  = "ConsumerMSP"
 	MerchantMSP  = "MerchantMSP"
-	ExchangerMSP = "ExchangerMSP"
+	ExchangerMSP = "ExchangeMSP"
 
 	ConsumerType   = "c"
 	MerchantType   = "m"
