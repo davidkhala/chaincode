@@ -6,9 +6,10 @@ import (
 )
 
 const (
-	fcnWalletCreate  = "create"
-	fcnWalletBalance = "balance"
-	fcnHistory       = "history"
+	fcnWalletCreate  = "walletCreate"
+	fcnWalletBalance = "walletBalance"
+	fcnHistory       = "walletHistory"
+	fcnTransfer      = "transfer"
 
 	tt_new_eToken_issue         = "tt_new_eToken_issuance"
 	tt_fiat_eToken_exchange     = "tt_fiat_eToken_exchange"
@@ -16,6 +17,9 @@ const (
 	tt_merchant_reject_purchase = "tt_merchant_reject_purchase"
 	tt_merchant_accept_purchase = "tt_merchant_accept_purchase"
 	tt                          = "tt_unspecified"
+
+	listConsumerPurchase = "listConsumer"
+	listMerchantPurchase = "listMerchant"
 
 	ConsumerMSP  = "ConsumerMSP"
 	MerchantMSP  = "MerchantMSP"
@@ -36,9 +40,7 @@ type CommonTransaction struct {
 	Type      string
 	TimeStamp int64
 }
-type HistoryTransactions struct {
-	History []CommonTransaction
-}
+
 type PurchaseTransaction struct {
 	CommonTransaction
 	MerchandiseCode             string
@@ -92,6 +94,9 @@ func (value *WalletValue) Add(amount int64, recordID string) (golang.Modifier) {
 }
 func (value *WalletValue) Lose(amount int64, recordID string) (golang.Modifier) {
 	return func(interface{}) {
+		if value.Balance-amount < 0 {
+			golang.PanicString("not enough balance to pay " + golang.ToString(amount))
+		}
 		value.Balance -= amount
 		value.RecordID = recordID
 	}
@@ -113,5 +118,19 @@ func (id ID) getWallet() wallet {
 	} else {
 		return wallet{walletPrefix + id.getLoginID(), ""}
 	}
+}
 
+type HistoryPurchase struct {
+	History []PurchaseTransaction
+}
+
+type HistoryResponse struct {
+	Wallet         wallet
+	RegularHistory []CommonTransaction
+	EscrowHistory  []CommonTransaction
+}
+type Filter struct {
+	Start  int64
+	End    int64
+	Status string
 }

@@ -15,17 +15,18 @@ var LamMerchant = ID{"lam", "m"}
 var StanleyConsumer = ID{"stanley,", "c"}
 
 var purchaseTxID string
+
 const (
 	issueAmount = 100
-	change = 10
-	cost = 1
+	change      = 10
+	cost        = 1
 )
 
 func TestPrepare(t *testing.T) {
 	TestTradeChaincode_Init(t)
 }
 func randTxId(prefix string) string {
-	return prefix + "|"+strconv.Itoa(rand.Int())
+	return prefix + "|" + strconv.Itoa(rand.Int())
 }
 func TestTradeChaincode_InvokeCreate(t *testing.T) {
 	var TxID = randTxId("create")
@@ -120,7 +121,7 @@ func TestTradeChaincode_InvokePurchase(t *testing.T) {
 		golang.ToJson(tx),
 	}
 	var response = mock.MockInvoke(TxID, invokeArgs)
-	purchaseTxID = string(response.Payload)//IMPORTANT to use in accept purchase
+	purchaseTxID = string(response.Payload) //IMPORTANT to use in accept purchase
 	TxID = randTxId("consumer after purchase")
 	invokeArgs = [][]byte{
 		[]byte(fcnWalletBalance),
@@ -188,7 +189,7 @@ func TestTradeChaincode_InvokePurchaseReject(t *testing.T) {
 		golang.ToJson(tx),
 	}
 	var response = mock.MockInvoke(TxID, invokeArgs)
-	purchaseTxID = string(response.Payload)//IMPORTANT to use in accept purchase
+	purchaseTxID = string(response.Payload) //IMPORTANT to use in accept purchase
 
 	var txReject = PurchaseArbitrationTransaction{
 		CommonTransaction{

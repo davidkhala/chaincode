@@ -8,7 +8,7 @@ import (
 	"github.com/davidkhala/chaincode/golang/trade/golang"
 )
 
-var cc = &TradeChaincode{mock: true}
+var cc = &TradeChaincode{golang.CommonChaincode{Mock: true,Debug:true}}
 var mock = shim.NewMockStub(name, cc)
 
 
