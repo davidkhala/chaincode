@@ -106,10 +106,13 @@ func txKeyFilter(txid string, tt_type string) bool {
 	var strs = strings.Split(txid, "|")
 	return strs[1] == tt_type
 }
-func checkTo(to ID,allowedType string,transactionType string){
-	if to.Type!= allowedType{
-		golang.PanicString("invalid transaction target type:"+to.Type +" for transactionType:"+ transactionType)
+func checkTo(to ID, allowedType string, transactionType string) {
+	if to.Type != allowedType {
+		golang.PanicString("invalid transaction target type:" + to.Type + " for transactionType:" + transactionType)
 	}
+}
+func (t *TradeChaincode) getTimeStamp() int64 {
+	return golang.UnixMilliSecond(golang.GetTxTime(*t.CCAPI))
 }
 
 // Transaction makes payment of X units from A to B
@@ -136,12 +139,13 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 	if len(params) > 1 {
 		golang.FromJson([]byte(params[1]), &inputTransaction)
 	}
+	var timeStamp = t.getTimeStamp() //inputTransaction.TimeStamp
 	if len(params) > 2 {
 		golang.FromJson([]byte(params[2]), &filter)
 	}
 	var filterTime = func(v interface{}) bool {
 		var t = v.(golang.KeyModification).Timestamp
-		return t > filter.Start && t < filter.End
+		return (filter.Start == 0 || t > filter.Start) && (t < filter.End || filter.End == 0)
 	}
 	var filterStatus = func(transaction PurchaseTransaction) bool {
 		return filter.Status == "" || transaction.Status == filter.Status
@@ -155,7 +159,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var wal = id.getWallet()
 		var value = CommonTransaction{
 			id, id, 0,
-			fcnWalletCreate, golang.UnixMilliSecond(golang.GetTxTime(*t.CCAPI)),
+			fcnWalletCreate, timeStamp,
 		}
 		if id.Type == MerchantType {
 			walletValueBytes = golang.GetState(*t.CCAPI, wal.escrowID)
@@ -180,7 +184,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 
 		var value = CommonTransaction{
 			id, inputTransaction.To, inputTransaction.Amount,
-			tt, inputTransaction.TimeStamp,
+			tt, timeStamp,
 		}
 
 		var toWalletValue WalletValue
@@ -188,13 +192,13 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var toWallet = t.getWalletIfExist(value.To)
 		var fromWallet = t.getWalletIfExist(value.From)
 		golang.ModifyValue(ccAPI, toWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
-		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID), &fromWalletValue)
+		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID, fromWallet.regularID), &fromWalletValue)
 		golang.PutStateObj(ccAPI, txID, value)
 
 	case fcnHistory:
 		var wallet = t.getWalletIfExist(id)
 		var historyResponse = HistoryResponse{
-			wallet, nil, nil,
+			id, nil, nil,
 		}
 		var filterFunc = func(v interface{}) bool {
 			var t = v.(golang.KeyModification).Timestamp
@@ -240,7 +244,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 
 		var value = CommonTransaction{
 			ID{}, id, inputTransaction.Amount,
-			tt_new_eToken_issue, inputTransaction.TimeStamp,
+			tt_new_eToken_issue, timeStamp,
 		}
 
 		var toWalletValue WalletValue
@@ -251,17 +255,17 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		switch id.Type {
 		case ConsumerType:
 			t.mspMatch(ConsumerMSP)
-			checkTo(inputTransaction.To,ExchangerType,tt_fiat_eToken_exchange)
+			checkTo(inputTransaction.To, ExchangerType, tt_fiat_eToken_exchange)
 		case ExchangerType:
 			t.mspMatch(ExchangerMSP)
-			checkTo(inputTransaction.To,ConsumerType,tt_fiat_eToken_exchange)
+			checkTo(inputTransaction.To, ConsumerType, tt_fiat_eToken_exchange)
 		default:
 			golang.PanicString("invalid user type to exchange token:" + id.Type)
 		}
 
 		var value = CommonTransaction{
 			id, inputTransaction.To, inputTransaction.Amount,
-			tt_fiat_eToken_exchange, inputTransaction.TimeStamp,
+			tt_fiat_eToken_exchange, timeStamp,
 		}
 
 		var toWalletValue WalletValue
@@ -269,31 +273,32 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var toWallet = t.getWalletIfExist(value.To)
 		var fromWallet = t.getWalletIfExist(value.From)
 		golang.ModifyValue(ccAPI, toWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
-		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID), &fromWalletValue)
+		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID, fromWallet.regularID), &fromWalletValue)
 		golang.PutStateObj(ccAPI, txID, value)
 
 	case tt_consumer_purchase:
 		t.mspMatch(ConsumerMSP)
-		checkTo(inputTransaction.To,MerchantType,tt_consumer_purchase)
+		checkTo(inputTransaction.To, MerchantType, tt_consumer_purchase)
 		var inputTransaction PurchaseTransaction
 		golang.FromJson([]byte(params[1]), &inputTransaction)
 		var value = PurchaseTransaction{
 			CommonTransaction{
 				id, inputTransaction.To,
 				inputTransaction.Amount, tt_consumer_purchase,
-				inputTransaction.TimeStamp,
+				timeStamp,
 			},
 			inputTransaction.MerchandiseCode,
 			inputTransaction.MerchandiseAmount,
 			inputTransaction.ConsumerDeliveryInstruction,
 			StatusPending,
 		}
+		value.isValid()
 
 		var toWalletValue WalletValue
 		var fromWalletValue WalletValue
 		var toWallet = t.getWalletIfExist(value.To)
 		var fromWallet = t.getWalletIfExist(value.From)
-		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID), &fromWalletValue)
+		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID, fromWallet.regularID), &fromWalletValue)
 		golang.ModifyValue(ccAPI, toWallet.escrowID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
 		golang.PutStateObj(ccAPI, txID, value)
 		response = shim.Success([]byte(txID))
@@ -307,7 +312,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			CommonTransaction{
 				id, id,
 				purchaseTx.Amount, tt_merchant_accept_purchase,
-				inputTransaction.TimeStamp,
+				timeStamp,
 			},
 			true,
 			inputTransaction.PurchaseTxID,
@@ -316,7 +321,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var toWalletValue WalletValue
 		var fromWalletValue WalletValue
 		var merchantWallet = t.getWalletIfExist(id)
-		golang.ModifyValue(ccAPI, merchantWallet.escrowID, fromWalletValue.Lose(value.Amount, txID), &fromWalletValue)
+		golang.ModifyValue(ccAPI, merchantWallet.escrowID, fromWalletValue.Lose(value.Amount, txID, merchantWallet.escrowID), &fromWalletValue)
 		golang.ModifyValue(ccAPI, merchantWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
 
 		golang.ModifyValue(ccAPI, inputTransaction.PurchaseTxID, purchaseTx.Accept(), &purchaseTx)
@@ -332,7 +337,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			CommonTransaction{
 				id, purchaseTx.From,
 				purchaseTx.Amount, tt_merchant_reject_purchase,
-				inputTransaction.TimeStamp,
+				timeStamp,
 			},
 			false,
 			inputTransaction.PurchaseTxID,
@@ -342,25 +347,32 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var fromWalletValue WalletValue
 		var fromWallet = t.getWalletIfExist(value.From)
 		var toWallet = t.getWalletIfExist(value.To)
-		golang.ModifyValue(ccAPI, fromWallet.escrowID, fromWalletValue.Lose(value.Amount, txID), &fromWalletValue)
+		golang.ModifyValue(ccAPI, fromWallet.escrowID, fromWalletValue.Lose(value.Amount, txID, fromWallet.escrowID), &fromWalletValue)
 		golang.ModifyValue(ccAPI, toWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
 
 		golang.ModifyValue(ccAPI, inputTransaction.PurchaseTxID, purchaseTx.Reject(), &purchaseTx)
 		golang.PutStateObj(ccAPI, txID, value)
-	case listConsumerPurchase:
-		t.mspMatch(ConsumerMSP)
-
+	case fcnListPurchase:
+		var historyKey string
 		var wallet = t.getWalletIfExist(id)
-
-		var historyResponse = HistoryPurchase{
-			nil,
+		switch id.Type {
+		case ConsumerType:
+			t.mspMatch(ConsumerMSP)
+			historyKey = wallet.regularID
+		case MerchantType:
+			t.mspMatch(MerchantMSP)
+			historyKey = wallet.escrowID
+		default:
+			golang.PanicString("invalid user type to view purchase list:" + id.Type)
 		}
 
-		var regularHistory golang.History
-		var regularHistoryIter = golang.GetHistoryForKey(ccAPI, wallet.regularID)
-		regularHistory.ParseHistory(regularHistoryIter, filterTime)
-		var result []PurchaseTransaction
-		for _, entry := range regularHistory.Modifications {
+		var historyResponse HistoryPurchase
+
+		var history golang.History
+		var historyIter = golang.GetHistoryForKey(ccAPI, historyKey)
+		history.ParseHistory(historyIter, filterTime)
+		var result = map[string]PurchaseTransaction{}
+		for _, entry := range history.Modifications {
 			var walletValue WalletValue
 			golang.FromJson(entry.Value, &walletValue)
 			var key = walletValue.RecordID
@@ -372,38 +384,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			if ! filterStatus(tx) {
 				continue
 			}
-			result = append(result, tx)
-		}
-		historyResponse.History = result
-
-		response = shim.Success(golang.ToJson(historyResponse))
-
-	case listMerchantPurchase:
-		t.mspMatch(MerchantMSP)
-
-		var wallet = t.getWalletIfExist(id)
-
-		var historyResponse = HistoryPurchase{
-			nil,
-		}
-
-		var regularHistory golang.History
-		var regularHistoryIter = golang.GetHistoryForKey(ccAPI, wallet.escrowID)
-		regularHistory.ParseHistory(regularHistoryIter, filterTime)
-		var result []PurchaseTransaction
-		for _, entry := range regularHistory.Modifications {
-			var walletValue WalletValue
-			golang.FromJson(entry.Value, &walletValue)
-			var key = walletValue.RecordID
-			if ! txKeyFilter(key, tt_consumer_purchase) {
-				continue
-			}
-			var tx PurchaseTransaction
-			golang.GetStateObj(ccAPI, key, &tx)
-			if ! filterStatus(tx) {
-				continue
-			}
-			result = append(result, tx)
+			result[key] = tx
 		}
 		historyResponse.History = result
 

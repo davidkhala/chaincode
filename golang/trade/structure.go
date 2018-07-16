@@ -10,6 +10,7 @@ const (
 	fcnWalletBalance = "walletBalance"
 	fcnHistory       = "walletHistory"
 	fcnTransfer      = "transfer"
+	fcnListPurchase  = "listPurchase"
 
 	tt_new_eToken_issue         = "tt_new_eToken_issuance"
 	tt_fiat_eToken_exchange     = "tt_fiat_eToken_exchange"
@@ -17,9 +18,6 @@ const (
 	tt_merchant_reject_purchase = "tt_merchant_reject_purchase"
 	tt_merchant_accept_purchase = "tt_merchant_accept_purchase"
 	tt                          = "tt_unspecified"
-
-	listConsumerPurchase = "listConsumer"
-	listMerchantPurchase = "listMerchant"
 
 	ConsumerMSP  = "ConsumerMSP"
 	MerchantMSP  = "MerchantMSP"
@@ -49,19 +47,28 @@ type PurchaseTransaction struct {
 	Status                      string
 }
 
-func (tx *PurchaseTransaction) Accept() (golang.Modifier) {
-	if tx.Status != StatusPending {
-		golang.PanicString("Before accept purchase, invalid current status:" + tx.Status)
+func (tx PurchaseTransaction) isValid() {
+	if tx.MerchandiseCode == "" {
+		golang.PanicString("invalid PurchaseTransaction: empty MerchandiseCode")
 	}
+	if tx.MerchandiseAmount < 0 {
+		golang.PanicString("invalid PurchaseTransaction: MerchandiseAmount<0")
+	}
+}
+
+func (tx *PurchaseTransaction) Accept() (golang.Modifier) {
 	return func(interface{}) {
+		if tx.Status != StatusPending {
+			golang.PanicString("Before accept purchase, invalid current status:" + tx.Status)
+		}
 		tx.Status = StatusAccepted
 	}
 }
 func (tx *PurchaseTransaction) Reject() (golang.Modifier) {
-	if tx.Status != StatusPending {
-		golang.PanicString("Before reject purchase, invalid current status:" + tx.Status)
-	}
 	return func(interface{}) {
+		if tx.Status != StatusPending {
+			golang.PanicString("Before reject purchase, invalid current status:" + tx.Status)
+		}
 		tx.Status = StatusRejected
 	}
 }
@@ -87,15 +94,21 @@ type WalletValue struct {
 }
 
 func (value *WalletValue) Add(amount int64, recordID string) (golang.Modifier) {
+	if amount < 0 {
+		golang.PanicString("invalid wallet value modification: amount<0")
+	}
 	return func(interface{}) {
 		value.Balance += amount
 		value.RecordID = recordID
 	}
 }
-func (value *WalletValue) Lose(amount int64, recordID string) (golang.Modifier) {
+func (value *WalletValue) Lose(amount int64, recordID string, who string) (golang.Modifier) {
+	if amount < 0 {
+		golang.PanicString("invalid wallet value modification: amount<0")
+	}
 	return func(interface{}) {
 		if value.Balance-amount < 0 {
-			golang.PanicString("not enough balance to pay " + golang.ToString(amount))
+			golang.PanicString(who + " has not enough Balance to pay " + golang.ToString(amount) + ", only have [" + golang.ToString(value.Balance) + "]")
 		}
 		value.Balance -= amount
 		value.RecordID = recordID
@@ -121,11 +134,11 @@ func (id ID) getWallet() wallet {
 }
 
 type HistoryPurchase struct {
-	History []PurchaseTransaction
+	History map[string]PurchaseTransaction
 }
 
 type HistoryResponse struct {
-	Wallet         wallet
+	ID             ID
 	RegularHistory []CommonTransaction
 	EscrowHistory  []CommonTransaction
 }
