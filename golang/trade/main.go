@@ -176,12 +176,17 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 
 		golang.PutStateObj(ccAPI, txID, value)
 	case fcnWalletBalance:
-		var walletValue WalletValue
+		var regularWalletValue WalletValue
+		var escrowWalletValue WalletValue
 		var wallet = t.getWalletIfExist(id)
-		golang.GetStateObj(ccAPI, wallet.regularID, &walletValue)
-		response = shim.Success([]byte(golang.ToString(walletValue.Balance)))
-	case tt:
+		golang.GetStateObj(ccAPI, wallet.regularID, &regularWalletValue)
+		if id.Type == MerchantType {
+			golang.GetStateObj(ccAPI, wallet.escrowID, &escrowWalletValue)
+		}
 
+		var resp = BalanceResponse{regularWalletValue.Balance,escrowWalletValue.Balance}
+		response = shim.Success(golang.ToJson(resp))
+	case tt:
 		var value = CommonTransaction{
 			id, inputTransaction.To, inputTransaction.Amount,
 			tt, timeStamp,
@@ -191,8 +196,8 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var fromWalletValue WalletValue
 		var toWallet = t.getWalletIfExist(value.To)
 		var fromWallet = t.getWalletIfExist(value.From)
-		golang.ModifyValue(ccAPI, toWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
 		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID, fromWallet.regularID), &fromWalletValue)
+		golang.ModifyValue(ccAPI, toWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
 		golang.PutStateObj(ccAPI, txID, value)
 
 	case fcnHistory:
@@ -200,16 +205,12 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var historyResponse = HistoryResponse{
 			id, nil, nil,
 		}
-		var filterFunc = func(v interface{}) bool {
-			var t = v.(golang.KeyModification).Timestamp
-			return t > filter.Start && t < filter.End
-		}
 
 		if id.Type == MerchantType {
 			var escrowHistory golang.History
 			var escrowHistoryIter = golang.GetHistoryForKey(ccAPI, wallet.escrowID)
 
-			escrowHistory.ParseHistory(escrowHistoryIter, filterFunc)
+			escrowHistory.ParseHistory(escrowHistoryIter, filterTime)
 			var result []CommonTransaction
 			for _, entry := range escrowHistory.Modifications {
 				var walletValue WalletValue
@@ -224,7 +225,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 
 		var regularHistory golang.History
 		var regularHistoryIter = golang.GetHistoryForKey(ccAPI, wallet.regularID)
-		regularHistory.ParseHistory(regularHistoryIter, filterFunc)
+		regularHistory.ParseHistory(regularHistoryIter, filterTime)
 		var result []CommonTransaction
 		for _, entry := range regularHistory.Modifications {
 			var walletValue WalletValue
@@ -384,6 +385,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			if ! filterStatus(tx) {
 				continue
 			}
+
 			result[key] = tx
 		}
 		historyResponse.History = result
@@ -391,7 +393,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		response = shim.Success(golang.ToJson(historyResponse))
 
 	default:
-		golang.PanicString("undefined fcn:" + fcn)
+		golang.PanicString("invalid fcn:" + fcn)
 	}
 	return response
 

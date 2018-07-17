@@ -120,7 +120,7 @@ func (id ID) getLoginID() string {
 func (id ID) getWallet() wallet {
 	var walletPrefix = "wallet_"
 	if id.Type != ConsumerType && id.Type != MerchantType && id.Type != ExchangerType {
-		golang.PanicError(errors.New("invalid ID prefix " + id.Type))
+		golang.PanicError(errors.New("invalid ID Type " + id.Type))
 	}
 	if id.Type == MerchantType {
 		return wallet{
@@ -136,6 +136,10 @@ type HistoryPurchase struct {
 	History map[string]PurchaseTransaction
 }
 
+type BalanceResponse struct {
+	Regular int64
+	Escrow int64
+}
 type HistoryResponse struct {
 	ID             ID
 	RegularHistory []CommonTransaction
