@@ -180,7 +180,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var wallet = t.getWalletIfExist(id)
 		golang.GetStateObj(ccAPI, wallet.regularID, &walletValue)
 		response = shim.Success([]byte(golang.ToString(walletValue.Balance)))
-	case fcnTransfer:
+	case tt:
 
 		var value = CommonTransaction{
 			id, inputTransaction.To, inputTransaction.Amount,
@@ -400,6 +400,6 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 func main() {
 	var cc = new(TradeChaincode)
 	cc.Mock = false
-	cc.Debug = true
+	cc.Debug = false
 	shim.Start(cc)
 }

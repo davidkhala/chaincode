@@ -9,7 +9,6 @@ const (
 	fcnWalletCreate  = "walletCreate"
 	fcnWalletBalance = "walletBalance"
 	fcnHistory       = "walletHistory"
-	fcnTransfer      = "transfer"
 	fcnListPurchase  = "listPurchase"
 
 	tt_new_eToken_issue         = "tt_new_eToken_issuance"
