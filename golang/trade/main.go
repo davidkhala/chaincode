@@ -18,34 +18,26 @@ type TradeChaincode struct {
 	golang.CommonChaincode
 }
 
-func (cc TradeChaincode) MSPIDListKey() string {
+func (cc TradeChaincode) OrgsMapKey() string {
 	return golang.CreateCompositeKey(*cc.CCAPI, MSP, []string{"ID"})
 }
-func (cc TradeChaincode) initMSPAllow() {
+func (cc TradeChaincode) invokeCreatorCheck(id ID, orgMap OrgMap) {
 	if cc.Mock {
 		return
 	}
-	var list = golang.StringList{
-		[]string{ConsumerMSP, ExchangerMSP, MerchantMSP},
-	}
-	var key = cc.MSPIDListKey()
-	golang.PutStateObj(*cc.CCAPI, key, list)
-}
-func (cc TradeChaincode) invokeCreatorCheck(id ID) {
-	if cc.Mock {
-		return
-	}
-	var mspList golang.StringList
-	var key = cc.MSPIDListKey()
-	golang.GetStateObj(*cc.CCAPI, key, &mspList)
+	var idMSP = orgMap[id.Type].MSPID
+	var idOrgName = orgMap[id.Type].Name
+
 	var creator = golang.GetThisCreator(*cc.CCAPI)
 	var thisMsp = creator.Msp
 	var commonName = creator.Certificate.Subject.CommonName
 	logger.Debug("subject common name", commonName)
-	if !mspList.Has(thisMsp) {
-		golang.PanicString("thisMsp:" + thisMsp + " not included in " + mspList.String())
+	var suffix = "@" + idOrgName
+	var commonNameTrimmed = strings.TrimSuffix(commonName, suffix)
+	if thisMsp != idMSP {
+		golang.PanicString("thisMsp:" + thisMsp + " not Matched with MSP of ID:" + idMSP)
 	}
-	if id.Name != commonName {
+	if id.Name != commonNameTrimmed {
 		golang.PanicString("ID.Name:" + id.Name + " mismatched with Certificate.Subject.CommonName:" + commonName)
 	}
 }
@@ -59,41 +51,61 @@ func (cc TradeChaincode) mspMatch(matchMSP string) {
 	}
 }
 
-func (t *TradeChaincode) Init(ccAPI shim.ChaincodeStubInterface) (response peer.Response) {
+func (t *TradeChaincode) Init(ccApi shim.ChaincodeStubInterface) (response peer.Response) {
 	logger.Info("########### " + name + " Init ###########")
-	t.Prepare(&ccAPI)
+	t.Prepare(&ccApi)
 	if !t.Mock && !t.Debug {
 		defer golang.PanicDefer(&response)
 	}
+	var _, params = ccApi.GetFunctionAndParameters()
+	if len(params) == 0 {
+		golang.PanicString("OrgMap is required")
+	}
+	var orgMap OrgMap
+	golang.FromJson([]byte(params[0]), &orgMap)
 
-	t.initMSPAllow()
+	var orgConsumer = orgMap[ConsumerType]
+	if orgConsumer.Name == "" {
+		golang.PanicString("Missing org consumer")
+	}
+	var orgExchange = orgMap[ExchangerType]
+	if orgExchange.Name == "" {
+		golang.PanicString("Missing org exchange")
+	}
+	var orgMerchant = orgMap[MerchantType]
+	if orgMerchant.Name == "" {
+		golang.PanicString("Missing org merchant")
+	}
+	orgMap = OrgMap{MerchantType: orgMerchant, ConsumerType: orgConsumer, ExchangerType: orgExchange}
+
+	var key = t.OrgsMapKey()
+	golang.PutStateObj(ccApi, key, orgMap)
+
 	response = shim.Success(nil)
 	return response
 }
 
 func (cc TradeChaincode) getWalletIfExist(id ID) (wallet) {
-	var walletValueBytes []byte
+	var walletValue WalletValue
 	var wal = id.getWallet()
 	if id.Type == MerchantType {
-		walletValueBytes = golang.GetState(*cc.CCAPI, wal.escrowID)
-		if walletValueBytes == nil {
+		exist := golang.GetStateObj(*cc.CCAPI, wal.escrowID, &walletValue)
+		if ! exist {
 			golang.PanicString("escrow Wallet " + wal.escrowID + " not exist")
 		}
 	}
-	walletValueBytes = golang.GetState(*cc.CCAPI, wal.regularID)
-	if walletValueBytes == nil {
+	exist := golang.GetStateObj(*cc.CCAPI, wal.regularID, &walletValue)
+	if ! exist {
 		golang.PanicString("Wallet " + wal.regularID + " not exist")
 	}
 	return wal
 }
 func (cc TradeChaincode) getPurchaseTxIfExist(purchaseTxID string) PurchaseTransaction {
-	//TODO value checking with defer
-	var valueBytes = golang.GetState(*cc.CCAPI, purchaseTxID)
-	if valueBytes == nil {
+	var tx PurchaseTransaction
+	var exist = golang.GetStateObj(*cc.CCAPI, purchaseTxID, &tx)
+	if !exist {
 		golang.PanicString("PurchaseTxID:" + purchaseTxID + " not exist")
 	}
-	var tx PurchaseTransaction
-	golang.FromJson(valueBytes, &tx)
 	return tx;
 }
 func (cc TradeChaincode) getTxKey(tt_type string) string {
@@ -125,6 +137,13 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 
 	var fcn, params = ccAPI.GetFunctionAndParameters()
 	response = shim.Success(nil)
+	var orgMap OrgMap
+	var orgKey = t.OrgsMapKey()
+	golang.GetStateObj(ccAPI, orgKey, &orgMap)
+
+	var ConsumerMSP = orgMap[ConsumerType].MSPID
+	var MerchantMSP = orgMap[MerchantType].MSPID
+	var ExchangerMSP = orgMap[ExchangerType].MSPID
 	var txID = t.getTxKey(fcn)
 	logger.Info("txID:" + txID)
 
@@ -150,26 +169,26 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 	var filterStatus = func(transaction PurchaseTransaction) bool {
 		return filter.Status == "" || transaction.Status == filter.Status
 	}
-	t.invokeCreatorCheck(id)
+	t.invokeCreatorCheck(id, orgMap)
 
 	switch fcn {
 	case fcnWalletCreate:
 		var walletValue = WalletValue{txID, 0}
-		var walletValueBytes []byte
+		var walletValueExist WalletValue
 		var wal = id.getWallet()
 		var value = CommonTransaction{
 			id, id, 0,
 			fcnWalletCreate, timeStamp,
 		}
 		if id.Type == MerchantType {
-			walletValueBytes = golang.GetState(*t.CCAPI, wal.escrowID)
-			if walletValueBytes != nil {
+			exist := golang.GetStateObj(*t.CCAPI, wal.escrowID, &walletValueExist)
+			if exist {
 				return shim.Error("escrow Wallet " + wal.escrowID + " exist")
 			}
 			golang.PutStateObj(ccAPI, wal.escrowID, walletValue)
 		}
-		walletValueBytes = golang.GetState(*t.CCAPI, wal.regularID)
-		if walletValueBytes != nil {
+		exist := golang.GetStateObj(*t.CCAPI, wal.regularID, &walletValueExist)
+		if exist {
 			return shim.Error("Wallet " + wal.regularID + " exist")
 		}
 		golang.PutStateObj(ccAPI, wal.regularID, walletValue)
@@ -184,7 +203,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			golang.GetStateObj(ccAPI, wallet.escrowID, &escrowWalletValue)
 		}
 
-		var resp = BalanceResponse{regularWalletValue.Balance,escrowWalletValue.Balance}
+		var resp = BalanceResponse{regularWalletValue.Balance, escrowWalletValue.Balance}
 		response = shim.Success(golang.ToJson(resp))
 	case tt:
 		var value = CommonTransaction{
@@ -367,12 +386,11 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			golang.PanicString("invalid user type to view purchase list:" + id.Type)
 		}
 
-		var historyResponse HistoryPurchase
+		var historyResponse = HistoryPurchase{}
 
 		var history golang.History
 		var historyIter = golang.GetHistoryForKey(ccAPI, historyKey)
 		history.ParseHistory(historyIter, filterTime)
-		var result = map[string]PurchaseTransaction{}
 		for _, entry := range history.Modifications {
 			var walletValue WalletValue
 			golang.FromJson(entry.Value, &walletValue)
@@ -386,9 +404,8 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 				continue
 			}
 
-			result[key] = tx
+			historyResponse[key] = tx
 		}
-		historyResponse.History = result
 
 		response = shim.Success(golang.ToJson(historyResponse))
 

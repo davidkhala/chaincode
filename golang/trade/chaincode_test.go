@@ -8,10 +8,8 @@ import (
 	"github.com/davidkhala/chaincode/golang/trade/golang"
 )
 
-var cc = &TradeChaincode{golang.CommonChaincode{Mock: true,Debug:true}}
+var cc = &TradeChaincode{golang.CommonChaincode{Mock: true, Debug: true}}
 var mock = shim.NewMockStub(name, cc)
-
-
 
 func TestIsSubset(t *testing.T) {
 	var first = []string{"1", "2"}
@@ -23,10 +21,11 @@ func TestTradeChaincode_Init(t *testing.T) {
 	initArgs = append(initArgs, []byte("Initfcn")) //fcn
 	var TxID = "ob"
 
-	var set = golang.StringList{}
-	set.Put("ConsumerMSP")
-	set.Put("MerchantMSP")
-	set.Put("ExchangerMSP")
+	var set = OrgMap{
+		ConsumerType:  Org{Name: "Consumer", MSPID: "ConsumerMSP"},
+		MerchantType:  Org{Name: "Merchant", MSPID: "MerchantMSP"},
+		ExchangerType: Org{Name: "Exchange", MSPID: "ExchangeMSP"},
+	}
 	var mspsBytes = golang.ToJson(&set)
 	initArgs = append(initArgs, mspsBytes)
 	var response = mock.MockInit(TxID, initArgs)

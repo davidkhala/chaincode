@@ -63,7 +63,9 @@ func TestTradeChaincode_InvokeBalance(t *testing.T) {
 	}
 
 	var response = mock.MockInvoke(TxID, invokeArgs)
-	testutil.AssertSame(t, golang.ToInt(response.Payload), issueAmount)
+	var balanceResp BalanceResponse
+	golang.FromJson(response.Payload, &balanceResp)
+	testutil.AssertSame(t, balanceResp.Regular, int64(issueAmount))
 }
 func TestTradeChaincode_InvokeFiat(t *testing.T) {
 	var TxID = randTxId("fiat")
@@ -83,8 +85,10 @@ func TestTradeChaincode_InvokeFiat(t *testing.T) {
 		golang.ToJson(DavidExchange),
 	}
 	response = mock.MockInvoke(TxID, invokeArgs)
-	testutil.AssertNotEquals(t, golang.ToInt(response.Payload), issueAmount)
-	testutil.AssertEquals(t, golang.ToInt(response.Payload), issueAmount-change)
+	var balanceResp BalanceResponse
+	golang.FromJson(response.Payload, &balanceResp)
+	testutil.AssertNotEquals(t, balanceResp.Regular, int64(issueAmount))
+	testutil.AssertEquals(t, balanceResp.Regular, int64(issueAmount-change))
 }
 func TestTradeChaincode_InvokeTimeStamp(t *testing.T) {
 	var time1 = mock.TxTimestamp
@@ -114,7 +118,7 @@ func TestTradeChaincode_InvokePurchase(t *testing.T) {
 		"",
 	}
 	var TxID = randTxId("purchase")
-
+	var balanceResp BalanceResponse
 	var invokeArgs = [][]byte{
 		[]byte(tt_consumer_purchase),
 		golang.ToJson(StanleyConsumer),
@@ -128,15 +132,18 @@ func TestTradeChaincode_InvokePurchase(t *testing.T) {
 		golang.ToJson(StanleyConsumer),
 	}
 	response = mock.MockInvoke(TxID, invokeArgs)
-	testutil.AssertEquals(t, golang.ToInt(response.Payload), change-cost)
+	golang.FromJson(response.Payload, &balanceResp)
+	testutil.AssertEquals(t, balanceResp.Regular, int64(change-cost))
 	TxID = randTxId("merchant after purchase")
 	invokeArgs = [][]byte{
 		[]byte(fcnWalletBalance),
 		golang.ToJson(LamMerchant),
 	}
 	response = mock.MockInvoke(TxID, invokeArgs)
-	testutil.AssertNotEquals(t, golang.ToInt(response.Payload), cost)
-	testutil.AssertEquals(t, golang.ToInt(response.Payload), 0)
+
+	golang.FromJson(response.Payload, &balanceResp)
+	testutil.AssertEquals(t, balanceResp.Escrow, int64(cost))
+	testutil.AssertEquals(t, balanceResp.Regular, int64(0))
 }
 func TestTradeChaincode_InvokeAccept(t *testing.T) {
 	var tx = PurchaseArbitrationTransaction{
@@ -165,7 +172,9 @@ func TestTradeChaincode_InvokeAccept(t *testing.T) {
 		golang.ToJson(LamMerchant),
 	}
 	response = mock.MockInvoke(TxID, invokeArgs)
-	testutil.AssertEquals(t, golang.ToInt(response.Payload), cost)
+	var balanceResp BalanceResponse
+	golang.FromJson(response.Payload, &balanceResp)
+	testutil.AssertEquals(t, balanceResp.Regular, int64(cost))
 }
 func TestTradeChaincode_InvokePurchaseReject(t *testing.T) {
 	var tx = PurchaseTransaction{
@@ -181,6 +190,7 @@ func TestTradeChaincode_InvokePurchaseReject(t *testing.T) {
 		"astri",
 		"",
 	}
+	var balanceResp BalanceResponse
 	var TxID = randTxId("purchase")
 
 	var invokeArgs = [][]byte{
@@ -218,12 +228,15 @@ func TestTradeChaincode_InvokePurchaseReject(t *testing.T) {
 		golang.ToJson(StanleyConsumer),
 	}
 	response = mock.MockInvoke(TxID, invokeArgs)
-	testutil.AssertEquals(t, golang.ToInt(response.Payload), change-cost)
+	golang.FromJson(response.Payload, &balanceResp)
+	testutil.AssertEquals(t, balanceResp.Regular, int64(change-cost))
 	TxID = randTxId("merchant after purchase reject")
 	invokeArgs = [][]byte{
 		[]byte(fcnWalletBalance),
 		golang.ToJson(LamMerchant),
 	}
 	response = mock.MockInvoke(TxID, invokeArgs)
-	testutil.AssertEquals(t, golang.ToInt(response.Payload), cost)
+
+	golang.FromJson(response.Payload, &balanceResp)
+	testutil.AssertEquals(t, balanceResp.Regular, int64(cost))
 }

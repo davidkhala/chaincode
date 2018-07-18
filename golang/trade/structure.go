@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/davidkhala/chaincode/golang/trade/golang"
-	"errors"
 )
 
 const (
@@ -18,10 +17,6 @@ const (
 	tt_merchant_accept_purchase = "tt_merchant_accept_purchase"
 	tt                          = "tt_unspecified"
 
-	ConsumerMSP  = "ConsumerMSP"
-	MerchantMSP  = "MerchantMSP"
-	ExchangerMSP = "ExchangeMSP"
-
 	ConsumerType   = "c"
 	MerchantType   = "m"
 	ExchangerType  = "e"
@@ -29,6 +24,12 @@ const (
 	StatusAccepted = "accepted"
 	StatusRejected = "rejected"
 )
+
+type Org struct {
+	Name  string
+	MSPID string
+}
+type OrgMap	map[string]Org
 
 type CommonTransaction struct {
 	From      ID
@@ -120,7 +121,7 @@ func (id ID) getLoginID() string {
 func (id ID) getWallet() wallet {
 	var walletPrefix = "wallet_"
 	if id.Type != ConsumerType && id.Type != MerchantType && id.Type != ExchangerType {
-		golang.PanicError(errors.New("invalid ID Type " + id.Type))
+		golang.PanicString("invalid ID Type " + id.Type)
 	}
 	if id.Type == MerchantType {
 		return wallet{
@@ -132,13 +133,11 @@ func (id ID) getWallet() wallet {
 	}
 }
 
-type HistoryPurchase struct {
-	History map[string]PurchaseTransaction
-}
+type HistoryPurchase map[string]PurchaseTransaction
 
 type BalanceResponse struct {
 	Regular int64
-	Escrow int64
+	Escrow  int64
 }
 type HistoryResponse struct {
 	ID             ID
