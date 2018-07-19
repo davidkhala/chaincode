@@ -134,9 +134,6 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 	var orgKey = t.OrgsMapKey()
 	golang.GetStateObj(ccAPI, orgKey, &orgMap)
 
-	var ConsumerMSP = orgMap[ConsumerType].MSPID
-	var MerchantMSP = orgMap[MerchantType].MSPID
-	var ExchangerMSP = orgMap[ExchangeType].MSPID
 	var txID = t.getTxKey(fcn)
 	logger.Info("txID:" + txID)
 
