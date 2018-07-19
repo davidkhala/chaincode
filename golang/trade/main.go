@@ -41,15 +41,6 @@ func (cc TradeChaincode) invokeCreatorCheck(id ID, orgMap OrgMap) {
 		golang.PanicString("ID.Name:" + id.Name + " mismatched with Certificate.Subject.CommonName:" + commonName)
 	}
 }
-func (cc TradeChaincode) mspMatch(matchMSP string) {
-	if cc.Mock {
-		return
-	}
-	var thisMsp = golang.GetThisCreator(*cc.CCAPI).Msp
-	if thisMsp != matchMSP {
-		golang.PanicString("This MSP " + thisMsp + "is not allowed to operate")
-	}
-}
 
 func (t *TradeChaincode) Init(ccApi shim.ChaincodeStubInterface) (response peer.Response) {
 	logger.Info("########### " + name + " Init ###########")
@@ -68,7 +59,7 @@ func (t *TradeChaincode) Init(ccApi shim.ChaincodeStubInterface) (response peer.
 	if orgConsumer.Name == "" {
 		golang.PanicString("Missing org consumer")
 	}
-	var orgExchange = orgMap[ExchangerType]
+	var orgExchange = orgMap[ExchangeType]
 	if orgExchange.Name == "" {
 		golang.PanicString("Missing org exchange")
 	}
@@ -76,7 +67,7 @@ func (t *TradeChaincode) Init(ccApi shim.ChaincodeStubInterface) (response peer.
 	if orgMerchant.Name == "" {
 		golang.PanicString("Missing org merchant")
 	}
-	orgMap = OrgMap{MerchantType: orgMerchant, ConsumerType: orgConsumer, ExchangerType: orgExchange}
+	orgMap = OrgMap{MerchantType: orgMerchant, ConsumerType: orgConsumer, ExchangeType: orgExchange}
 
 	var key = t.OrgsMapKey()
 	golang.PutStateObj(ccApi, key, orgMap)
@@ -114,10 +105,12 @@ func (cc TradeChaincode) getTxKey(tt_type string) string {
 	var timeMilliSecond = golang.UnixMilliSecond(time)
 	return golang.ToString(timeMilliSecond) + "|" + tt_type + "|" + txID
 }
-func txKeyFilter(txid string, tt_type string) bool {
-	var strs = strings.Split(txid, "|")
-	return strs[1] == tt_type
+func (cc TradeChaincode) checkFrom(from ID, allowedType string, transactionType string) {
+	if from.Type != allowedType {
+		golang.PanicString("invalid transaction operator type:" + from.Type + " for transactionType:" + transactionType)
+	}
 }
+
 func checkTo(to ID, allowedType string, transactionType string) {
 	if to.Type != allowedType {
 		golang.PanicString("invalid transaction target type:" + to.Type + " for transactionType:" + transactionType)
@@ -143,7 +136,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 
 	var ConsumerMSP = orgMap[ConsumerType].MSPID
 	var MerchantMSP = orgMap[MerchantType].MSPID
-	var ExchangerMSP = orgMap[ExchangerType].MSPID
+	var ExchangerMSP = orgMap[ExchangeType].MSPID
 	var txID = t.getTxKey(fcn)
 	logger.Info("txID:" + txID)
 
@@ -166,6 +159,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var t = v.(golang.KeyModification).Timestamp
 		return (filter.Start == 0 || t > filter.Start) && (t < filter.End || filter.End == 0)
 	}
+
 	var filterStatus = func(transaction PurchaseTransaction) bool {
 		return filter.Status == "" || transaction.Status == filter.Status
 	}
@@ -259,7 +253,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		response = shim.Success(golang.ToJson(historyResponse))
 
 	case tt_new_eToken_issue:
-		t.mspMatch(ExchangerMSP)
+		t.checkFrom(id, ExchangeType, tt_new_eToken_issue)
 		var toWallet = t.getWalletIfExist(id)
 
 		var value = CommonTransaction{
@@ -272,15 +266,8 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 
 		golang.PutStateObj(ccAPI, txID, value)
 	case tt_fiat_eToken_exchange:
-		switch id.Type {
-		case ConsumerType:
-			t.mspMatch(ConsumerMSP)
-			checkTo(inputTransaction.To, ExchangerType, tt_fiat_eToken_exchange)
-		case ExchangerType:
-			t.mspMatch(ExchangerMSP)
-			checkTo(inputTransaction.To, ConsumerType, tt_fiat_eToken_exchange)
-		default:
-			golang.PanicString("invalid user type to exchange token:" + id.Type)
+		if id.Type != ExchangeType {
+			checkTo(inputTransaction.To, ExchangeType, tt_fiat_eToken_exchange)
 		}
 
 		var value = CommonTransaction{
@@ -297,7 +284,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		golang.PutStateObj(ccAPI, txID, value)
 
 	case tt_consumer_purchase:
-		t.mspMatch(ConsumerMSP)
+		t.checkFrom(id, ConsumerType, tt_consumer_purchase)
 		checkTo(inputTransaction.To, MerchantType, tt_consumer_purchase)
 		var inputTransaction PurchaseTransaction
 		golang.FromJson([]byte(params[1]), &inputTransaction)
@@ -307,8 +294,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 				inputTransaction.Amount, tt_consumer_purchase,
 				timeStamp,
 			},
-			inputTransaction.MerchandiseCode,
-			inputTransaction.MerchandiseAmount,
+			inputTransaction.Merchandise,
 			inputTransaction.ConsumerDeliveryInstruction,
 			StatusPending,
 		}
@@ -323,7 +309,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		golang.PutStateObj(ccAPI, txID, value)
 		response = shim.Success([]byte(txID))
 	case tt_merchant_accept_purchase:
-		t.mspMatch(MerchantMSP)
+		t.checkFrom(id, MerchantType, tt_merchant_accept_purchase)
 		var inputTransaction PurchaseArbitrationTransaction
 		golang.FromJson([]byte(params[1]), &inputTransaction)
 
@@ -348,7 +334,7 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		golang.PutStateObj(ccAPI, txID, value)
 
 	case tt_merchant_reject_purchase:
-		t.mspMatch(MerchantMSP)
+		t.checkFrom(id, MerchantType, tt_merchant_reject_purchase)
 		var inputTransaction PurchaseArbitrationTransaction
 		golang.FromJson([]byte(params[1]), &inputTransaction)
 
@@ -377,10 +363,10 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		var wallet = t.getWalletIfExist(id)
 		switch id.Type {
 		case ConsumerType:
-			t.mspMatch(ConsumerMSP)
+			t.checkFrom(id, ConsumerType, fcnListPurchase)
 			historyKey = wallet.regularID
 		case MerchantType:
-			t.mspMatch(MerchantMSP)
+			t.checkFrom(id, MerchantType, fcnListPurchase)
 			historyKey = wallet.escrowID
 		default:
 			golang.PanicString("invalid user type to view purchase list:" + id.Type)
@@ -388,16 +374,22 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 
 		var historyResponse = HistoryPurchase{}
 
+		var filterTimeAndType = func(v interface{}) bool {
+			var entry = v.(golang.KeyModification)
+			var walletValue WalletValue
+			golang.FromJson(entry.Value, &walletValue)
+			var key = walletValue.RecordID
+			var strs = strings.Split(key, "|")
+
+			return filterTime(v) && strs[1] == tt_consumer_purchase
+		}
 		var history golang.History
 		var historyIter = golang.GetHistoryForKey(ccAPI, historyKey)
-		history.ParseHistory(historyIter, filterTime)
+		history.ParseHistory(historyIter, filterTimeAndType)
 		for _, entry := range history.Modifications {
 			var walletValue WalletValue
 			golang.FromJson(entry.Value, &walletValue)
 			var key = walletValue.RecordID
-			if ! txKeyFilter(key, tt_consumer_purchase) {
-				continue
-			}
 			var tx PurchaseTransaction
 			golang.GetStateObj(ccAPI, key, &tx)
 			if ! filterStatus(tx) {

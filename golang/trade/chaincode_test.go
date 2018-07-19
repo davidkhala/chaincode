@@ -22,9 +22,9 @@ func TestTradeChaincode_Init(t *testing.T) {
 	var TxID = "ob"
 
 	var set = OrgMap{
-		ConsumerType:  Org{Name: "Consumer", MSPID: "ConsumerMSP"},
-		MerchantType:  Org{Name: "Merchant", MSPID: "MerchantMSP"},
-		ExchangerType: Org{Name: "Exchange", MSPID: "ExchangeMSP"},
+		ConsumerType: Org{Name: "Consumer", MSPID: "ConsumerMSP"},
+		MerchantType: Org{Name: "Merchant", MSPID: "MerchantMSP"},
+		ExchangeType: Org{Name: "Exchange", MSPID: "ExchangeMSP"},
 	}
 	var mspsBytes = golang.ToJson(&set)
 	initArgs = append(initArgs, mspsBytes)

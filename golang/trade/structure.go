@@ -19,7 +19,7 @@ const (
 
 	ConsumerType   = "c"
 	MerchantType   = "m"
-	ExchangerType  = "e"
+	ExchangeType   = "e"
 	StatusPending  = "pending"
 	StatusAccepted = "accepted"
 	StatusRejected = "rejected"
@@ -29,7 +29,7 @@ type Org struct {
 	Name  string
 	MSPID string
 }
-type OrgMap	map[string]Org
+type OrgMap map[string]Org
 
 type CommonTransaction struct {
 	From      ID
@@ -41,18 +41,22 @@ type CommonTransaction struct {
 
 type PurchaseTransaction struct {
 	CommonTransaction
-	MerchandiseCode             string
-	MerchandiseAmount           int64
+	Merchandise                 map[string]int64
 	ConsumerDeliveryInstruction string
 	Status                      string
 }
 
 func (tx PurchaseTransaction) isValid() {
-	if tx.MerchandiseCode == "" {
-		golang.PanicString("invalid PurchaseTransaction: empty MerchandiseCode")
+	if tx.Merchandise == nil {
+		golang.PanicString("invalid PurchaseTransaction: empty Merchandise")
 	}
-	if tx.MerchandiseAmount < 0 {
-		golang.PanicString("invalid PurchaseTransaction: MerchandiseAmount<0")
+	for k, v := range tx.Merchandise {
+		if k == "" {
+			golang.PanicString("invalid PurchaseTransaction: empty MerchandiseCode")
+		}
+		if v < 0 {
+			golang.PanicString("invalid PurchaseTransaction: MerchandiseAmount<0")
+		}
 	}
 }
 
@@ -120,7 +124,7 @@ func (id ID) getLoginID() string {
 }
 func (id ID) getWallet() wallet {
 	var walletPrefix = "wallet_"
-	if id.Type != ConsumerType && id.Type != MerchantType && id.Type != ExchangerType {
+	if id.Type != ConsumerType && id.Type != MerchantType && id.Type != ExchangeType {
 		golang.PanicString("invalid ID Type " + id.Type)
 	}
 	if id.Type == MerchantType {
