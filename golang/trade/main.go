@@ -99,6 +99,14 @@ func (cc TradeChaincode) getPurchaseTxIfExist(purchaseTxID string) PurchaseTrans
 	}
 	return tx;
 }
+func transfer(ccAPI shim.ChaincodeStubInterface, recordID string, fromID string, toID string, amount int64) {
+	if fromID == toID {
+		golang.PanicString("transaction operator equals to target:" + fromID)
+	}
+	var fromWalletValue, toWalletValue WalletValue
+	golang.ModifyValue(ccAPI, fromID, fromWalletValue.Lose(amount, recordID, fromID), &fromWalletValue)
+	golang.ModifyValue(ccAPI, toID, toWalletValue.Add(amount, recordID), &toWalletValue)
+}
 func (cc TradeChaincode) getTxKey(tt_type string) string {
 	var txID = (*cc.CCAPI).GetTxID()
 	var time = golang.GetTxTime(*cc.CCAPI)
@@ -202,12 +210,9 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			tt, timeStamp,
 		}
 
-		var toWalletValue WalletValue
-		var fromWalletValue WalletValue
 		var toWallet = t.getWalletIfExist(value.To)
 		var fromWallet = t.getWalletIfExist(value.From)
-		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID, fromWallet.regularID), &fromWalletValue)
-		golang.ModifyValue(ccAPI, toWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
+		transfer(ccAPI, txID, fromWallet.regularID, toWallet.regularID, value.Amount)
 		golang.PutStateObj(ccAPI, txID, value)
 
 	case fcnHistory:
@@ -272,12 +277,9 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			tt_fiat_eToken_exchange, timeStamp,
 		}
 
-		var toWalletValue WalletValue
-		var fromWalletValue WalletValue
 		var toWallet = t.getWalletIfExist(value.To)
 		var fromWallet = t.getWalletIfExist(value.From)
-		golang.ModifyValue(ccAPI, toWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
-		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID, fromWallet.regularID), &fromWalletValue)
+		transfer(ccAPI, txID, fromWallet.regularID, toWallet.regularID, value.Amount)
 		golang.PutStateObj(ccAPI, txID, value)
 
 	case tt_consumer_purchase:
@@ -297,12 +299,9 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 		}
 		value.isValid()
 
-		var toWalletValue WalletValue
-		var fromWalletValue WalletValue
 		var toWallet = t.getWalletIfExist(value.To)
 		var fromWallet = t.getWalletIfExist(value.From)
-		golang.ModifyValue(ccAPI, fromWallet.regularID, fromWalletValue.Lose(value.Amount, txID, fromWallet.regularID), &fromWalletValue)
-		golang.ModifyValue(ccAPI, toWallet.escrowID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
+		transfer(ccAPI, txID, fromWallet.regularID, toWallet.escrowID, value.Amount)
 		golang.PutStateObj(ccAPI, txID, value)
 		response = shim.Success([]byte(txID))
 	case tt_merchant_accept_purchase:
@@ -321,11 +320,8 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			inputTransaction.PurchaseTxID,
 		}
 
-		var toWalletValue WalletValue
-		var fromWalletValue WalletValue
 		var merchantWallet = t.getWalletIfExist(id)
-		golang.ModifyValue(ccAPI, merchantWallet.escrowID, fromWalletValue.Lose(value.Amount, txID, merchantWallet.escrowID), &fromWalletValue)
-		golang.ModifyValue(ccAPI, merchantWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
+		transfer(ccAPI, txID, merchantWallet.escrowID, merchantWallet.regularID, value.Amount)
 
 		golang.ModifyValue(ccAPI, inputTransaction.PurchaseTxID, purchaseTx.Accept(), &purchaseTx)
 		golang.PutStateObj(ccAPI, txID, value)
@@ -346,12 +342,9 @@ func (t *TradeChaincode) Invoke(ccAPI shim.ChaincodeStubInterface) (response pee
 			inputTransaction.PurchaseTxID,
 		}
 
-		var toWalletValue WalletValue
-		var fromWalletValue WalletValue
 		var fromWallet = t.getWalletIfExist(value.From)
 		var toWallet = t.getWalletIfExist(value.To)
-		golang.ModifyValue(ccAPI, fromWallet.escrowID, fromWalletValue.Lose(value.Amount, txID, fromWallet.escrowID), &fromWalletValue)
-		golang.ModifyValue(ccAPI, toWallet.regularID, toWalletValue.Add(value.Amount, txID), &toWalletValue)
+		transfer(ccAPI, txID, fromWallet.escrowID, toWallet.regularID, value.Amount)
 
 		golang.ModifyValue(ccAPI, inputTransaction.PurchaseTxID, purchaseTx.Reject(), &purchaseTx)
 		golang.PutStateObj(ccAPI, txID, value)
