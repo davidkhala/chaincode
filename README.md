@@ -10,4 +10,4 @@ $ dep ensure -v
 
 
 ### TODO
-- move MockInit, MockTest as common tester
+- sourceCode. shim.Error jsdoc Buffer --> string

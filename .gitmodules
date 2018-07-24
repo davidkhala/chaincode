@@ -2,5 +2,5 @@
 	path = golang/trade/golang
 	url = https://github.com/davidkhala/fabric-common-chaincode-golang.git
 [submodule "nodejs/common"]
-	path = nodejs/common
+	path = nodejs/sample/common
 	url = https://github.com/davidkhala/fabric-common-chaincode-node
