@@ -1,4 +1,4 @@
-const {Base, shim} = require('../common/base');
+const {Base, shim} = require('./common/base');
 
 
 class Chaincode extends Base {
