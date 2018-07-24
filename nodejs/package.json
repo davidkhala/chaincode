@@ -1,0 +1,9 @@
+{
+  "name": "nodeSample",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node chaincode.js"
+  },
+  "author": "davidliu"
+}

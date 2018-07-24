@@ -1,6 +1,7 @@
-[[constraint]]
+[[override]]
+  name = "github.com/golang/protobuf"
   branch = "master"
-  name = "github.com/davidkhala/fabric-common-chaincode"
+
 [[constraint]]
   name = "github.com/hyperledger/fabric"
   branch = "release-1.2"
