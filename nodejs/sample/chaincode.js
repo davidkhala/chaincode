@@ -6,6 +6,14 @@ class Chaincode extends Base {
 		const name = "test";
 		super(name);
 	}
+
+	async init(stub, clientIdentity) {
+		return '';
+	}
+
+	async invoke(stub, clientIdentity) {
+		return '';
+	}
 }
 
 shim.start(new Chaincode());
