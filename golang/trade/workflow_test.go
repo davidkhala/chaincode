@@ -112,8 +112,7 @@ func TestTradeChaincode_InvokePurchase(t *testing.T) {
 			tt_consumer_purchase,
 			0,
 		},
-		"item1",
-		1,
+		map[string]int64{"item1": 1},
 		"astri",
 		"",
 	}
@@ -185,8 +184,7 @@ func TestTradeChaincode_InvokePurchaseReject(t *testing.T) {
 			tt_consumer_purchase,
 			0,
 		},
-		"item1",
-		1,
+		map[string]int64{"item1": 1},
 		"astri",
 		"",
 	}

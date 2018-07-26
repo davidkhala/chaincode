@@ -12,6 +12,9 @@ class Chaincode extends Base {
 	}
 
 	async invoke(stub, clientIdentity) {
+
+		this.setEvent("chaincodeEvent", "Hello World");
+
 		return '';
 	}
 }
