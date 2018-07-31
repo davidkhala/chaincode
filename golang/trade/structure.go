@@ -36,7 +36,7 @@ type CommonTransaction struct {
 	To        ID
 	Amount    int64
 	Type      string
-	TimeStamp int64
+	TimeStamp golang.TimeLong
 }
 
 type PurchaseTransaction struct {

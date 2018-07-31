@@ -124,7 +124,7 @@ func checkTo(to ID, allowedType string, transactionType string) {
 		golang.PanicString("invalid transaction target type:" + to.Type + " for transactionType:" + transactionType)
 	}
 }
-func (t *TradeChaincode) getTimeStamp() int64 {
+func (t *TradeChaincode) getTimeStamp() golang.TimeLong {
 	return golang.UnixMilliSecond(t.GetTxTime())
 }
 
