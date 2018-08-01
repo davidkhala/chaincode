@@ -1,9 +1,11 @@
-const {Base, shim, ChaincodeStub} = require('./common/base');
+const { Base, shim } = require('./common/base');
 
-
+const collection = 'private1';
+const key = '1';
 class Chaincode extends Base {
+
 	constructor() {
-		const name = "test";
+		const name = 'test';
 		super(name);
 	}
 
@@ -18,11 +20,14 @@ class Chaincode extends Base {
 	 */
 	async invoke(stub, clientIdentity) {
 
-		this.setEvent("chaincodeEvent", "Hello World");
-		const collection = 'private1';
-		const key = '1';
-		await stub.getPrivateData(collection, key);
-		await stub.putPrivateData(collection, key, '');
+		this.setEvent('chaincodeEvent', 'Hello World');
+
+		const value = await this.getPrivateData(collection, key);
+		if (!value) {
+			this.logger.info('clientID' + clientIdentity.getID());
+			await this.putPrivateData(collection, key, clientIdentity.getID());
+		}
+		this.logger.info(`PrivateData done valueType ${typeof value},length:${value.length}, value: ${value}`);
 		return '';
 	}
 }
