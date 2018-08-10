@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-var cc = new(DelphiChaincode)
+var cc = new(PrivateDataCC)
 var mock = shim.NewMockStub(name, cc)
 
 func TestStressChaincode_Init(t *testing.T) {
