@@ -111,7 +111,7 @@ func (cc TradeChaincode) getTxKey(tt_type string) string {
 	var txID = cc.CCAPI.GetTxID()
 	var time = cc.GetTxTime()
 	var timeMilliSecond = golang.UnixMilliSecond(time)
-	return golang.ToString(timeMilliSecond) + "|" + tt_type + "|" + txID
+	return timeMilliSecond.ToString()+ "|" + tt_type + "|" + txID
 }
 func (cc TradeChaincode) checkFrom(from ID, allowedType string, transactionType string) {
 	if from.Type != allowedType {

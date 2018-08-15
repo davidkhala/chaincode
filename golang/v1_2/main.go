@@ -11,7 +11,8 @@ type PrivateDataCC struct {
 }
 
 const (
-	name = "PrivateDataCC"
+	name       = "PrivateDataCC"
+	collection = "private1"
 )
 
 var logger = shim.NewLogger(name)
@@ -23,11 +24,23 @@ func (t *PrivateDataCC) Init(stub shim.ChaincodeStubInterface) peer.Response {
 }
 
 // Transaction makes payment of X units from A to B
-func (t *PrivateDataCC) Invoke(ccAPI shim.ChaincodeStubInterface) peer.Response {
+func (t *PrivateDataCC) Invoke(ccAPI shim.ChaincodeStubInterface) (response peer.Response) {
 	logger.Info("########### " + name + " Invoke ###########")
+	//defer golang.PanicDefer(&response)
+	t.Prepare(ccAPI)
+	var fcn, _ = ccAPI.GetFunctionAndParameters()
+	switch fcn {
+	case "put":
+		var CN = t.GetThisCreator().Certificate.Subject.CommonName
+		var txTime = golang.UnixMilliSecond(t.GetTxTime()).ToString()
+		t.PutPrivateData(collection, collection, []byte(CN+"|"+txTime))
+	case "get":
+		var pData = t.GetPrivateData(collection, collection)
+		logger.Info("pData" + string(pData))
+	default:
 
+	}
 
-	ccAPI.GetPrivateData()
 	return shim.Success(nil)
 }
 

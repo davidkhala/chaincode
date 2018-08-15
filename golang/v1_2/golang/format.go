@@ -24,8 +24,8 @@ func ToInt(bytes []byte) int {
 	PanicError(err)
 	return i
 }
-func ToString(integer interface{}) string {
-	return strconv.FormatInt(integer.(int64), 10)
+func ToString(integer int64) string {
+	return strconv.FormatInt(integer, 10)
 }
 
 func PanicError(err error) {
@@ -41,14 +41,19 @@ func PanicString(err string) {
 func UnixMilliSecond(t time.Time) TimeLong {
 	return TimeLong(t.UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond)))
 }
+
 type TimeLong int64
+
+func (t TimeLong) ToString() string {
+	return strconv.FormatInt(int64(t), 10)
+}
 
 /**
 	a wrapper to panic Unmarshal(non-pointer v)
  */
 func FromJson(jsonString []byte, v interface{}) {
 	err := json.Unmarshal(jsonString, v)
-	PanicError(err);
+	PanicError(err)
 }
 
 func ToJson(v interface{}) []byte {
