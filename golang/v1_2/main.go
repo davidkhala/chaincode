@@ -3,7 +3,8 @@ package main
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
-	"github.com/davidkhala/chaincode/golang/v1_2/golang"
+	"github.com/davidkhala/fabric-common-chaincode-golang"
+	. "github.com/davidkhala/goutils"
 )
 
 type PrivateDataCC struct {
@@ -32,7 +33,7 @@ func (t *PrivateDataCC) Invoke(ccAPI shim.ChaincodeStubInterface) (response peer
 	switch fcn {
 	case "put":
 		var CN = t.GetThisCreator().Certificate.Subject.CommonName
-		var txTime = golang.UnixMilliSecond(t.GetTxTime()).ToString()
+		var txTime = UnixMilliSecond(t.GetTxTime()).ToString()
 		t.PutPrivateData(collection, collection, []byte(CN+"|"+txTime))
 	case "get":
 		var pData = t.GetPrivateData(collection, collection)
