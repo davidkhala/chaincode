@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
+	"strconv"
 )
 
 const (
@@ -22,11 +23,13 @@ func (t *SideChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 // Transaction makes payment of X units from A to B
 func (t *SideChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("########### " + name + " Invoke ###########")
-	response, err := stub.GetArgsSlice()
-	if err != nil {
-		panic(err)
+	fcn, args := stub.GetFunctionAndParameters()
+	logger.Info("fcn:" + fcn)
+	logger.Info("args")
+	for i, val := range args {
+		logger.Info("arg[" + strconv.Itoa(i) + "] " + val)
 	}
-	return shim.Success(response)
+	return shim.Success(nil)
 }
 
 func main() {

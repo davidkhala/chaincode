@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	name = "mainChaincode"
-	called = "sideChaincode"
+	name   = "mainChain"
+	called = "sideChain"
 )
 
 var logger = shim.NewLogger(name)
@@ -15,17 +15,19 @@ var logger = shim.NewLogger(name)
 type MainChaincode struct {
 }
 
-type Args [][]byte
-func ArgsBuilder(fcn string)(Args){
-	return Args{[]byte(fcn)}
+type Args struct {
+	buff [][]byte
+}
+
+func ArgsBuilder(fcn string) (Args) {
+	return Args{[][]byte{[]byte(fcn)}}
+}
+
+func (t *Args) AppendArg(str string) {
+	t.buff = append(t.buff, []byte(str))
 }
 func (t Args) Get() [][]byte {
-	return [][]byte(t)
-}
-func (t *Args) AppendArg(str string){
-	var buff = *t
-	buff = append(buff, []byte(str))
-	t = &buff
+	return t.buff
 }
 func (t *MainChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("########### " + name + " Init ###########")
@@ -34,12 +36,12 @@ func (t *MainChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 
 func (t *MainChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("########### " + name + " Invoke ###########")
-	var fcn ="invoke side"
+	var fcn = "invoke side"
 	var args = ArgsBuilder(fcn)
 	args.AppendArg("p1")
 
-	var sideReponse = stub.InvokeChaincode(called,args.Get(),"")
-	logger.Info(sideReponse)
+	stub.InvokeChaincode(called, args.Get(), "")
+
 	return shim.Success(nil)
 }
 
