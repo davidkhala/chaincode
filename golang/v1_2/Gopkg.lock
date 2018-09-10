@@ -70,11 +70,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:bb238c77e35aeb0e983ebc35f33d45741bce68fe5bb808125c292eeb827e27b1"
+  digest = "1:268c4fac7b1347c77cfaea2a6448b5c188379e645c8ec64e435ad40be2188c10"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = ["."]
   pruneopts = "UT"
-  revision = "3b570c96df419f25a500f5242251d09fdc293f31"
+  revision = "7f0258dadfc947b8adff6b8cfc7c0ba3c02bb0fe"
 
 [[projects]]
   branch = "master"
@@ -85,7 +85,7 @@
   revision = "ac21a45ea9c7778a3ef822888fbf1f8c1fcc87ed"
 
 [[projects]]
-  digest = "1:4ec8504b68b75f562efc4b291cba33194f88eaa4e68d9fc449e5b7ca68539329"
+  digest = "1:e80ed0f4bb8a40859d97a65541edbe3d310234bd702d6fa334cf19e847e69a73"
   name = "github.com/docker/docker"
   packages = [
     "api/types",
@@ -111,7 +111,7 @@
     "pkg/system",
   ]
   pruneopts = "UT"
-  revision = "3dfb26ab3cbf961298f8ce3f94659b5fe4146ceb"
+  revision = "a422774e593b33bd287d9890544ad9e09b380d8c"
 
 [[projects]]
   digest = "1:ade935c55cd6d0367c843b109b09c9d748b1982952031414740750fdf94747eb"
@@ -128,14 +128,6 @@
   pruneopts = "UT"
   revision = "47565b4f722fb6ceae66b95f853feed578a4a51c"
   version = "v0.3.3"
-
-[[projects]]
-  digest = "1:4f57c53dc1244bd265be71bc4e75fc48132f1cf2927b19de52ed600b7d73cd8e"
-  name = "github.com/docker/libnetwork"
-  packages = ["ipamutils"]
-  pruneopts = "UT"
-  revision = "6d23f11e681f24ee31802939e243fe8be41a75eb"
-  version = "v0.8.0-dev.2"
 
 [[projects]]
   digest = "1:1f0c7ab489b407a7f8f9ad16c25a504d28ab461517a971d341388a56156c1bd7"
@@ -183,15 +175,7 @@
   version = "v1.1.1"
 
 [[projects]]
-  branch = "master"
-  digest = "1:3fb07f8e222402962fa190eb060608b34eddfb64562a18e2167df2de0ece85d8"
-  name = "github.com/golang/groupcache"
-  packages = ["lru"]
-  pruneopts = "UT"
-  revision = "24b0969c4cb722950103eed87108c8d291a8df00"
-
-[[projects]]
-  digest = "1:0d4dc2a3dd15d48dbe07a96e393a4846048026ae9ba2277c3a6efbf2462dd98d"
+  digest = "1:5ac24c0ad5dc117fb2b6d90d205c876ec599c09cccb702a36586680e09cb20b5"
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
@@ -202,7 +186,8 @@
     "ptypes/timestamp",
   ]
   pruneopts = "UT"
-  revision = "fec3b39b059c0f88fa6b20f5ed012b1aa203a8b4"
+  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
+  version = "v1.2.0"
 
 [[projects]]
   branch = "master"
@@ -213,6 +198,14 @@
   revision = "2e65f85255dbc3072edf28d6b5b8efc472979f5a"
 
 [[projects]]
+  digest = "1:1168584a5881d371e96cb0e66ef6db71d7cef0856cc7f311490bc856627f8328"
+  name = "github.com/grpc-ecosystem/go-grpc-middleware"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c250d6563d4d4c20252cd865923440e829844f4e"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   digest = "1:77395dd3847dac9c45118c668f5dab85aedf0163dc3b38aea6578c5cf0d502f9"
   name = "github.com/hashicorp/go-version"
@@ -221,7 +214,8 @@
   revision = "b5a281d3160aa11950a6182bd9a9dc2cb1e02d50"
 
 [[projects]]
-  digest = "1:1e6b189008e2c690eff7dd98199e195ce8a434b06aa73b8980d7ade7bec160db"
+  branch = "master"
+  digest = "1:9007b8102242980dd02739e1ad6b4f1f83e77b6e9744a1338344d39b1dbf19b2"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -237,6 +231,7 @@
     "common/configtx/test",
     "common/crypto",
     "common/flogging",
+    "common/flogging/fabenc",
     "common/genesis",
     "common/ledger",
     "common/ledger/testutil",
@@ -250,12 +245,7 @@
     "common/util",
     "common/viperutil",
     "core/chaincode/platforms",
-    "core/chaincode/platforms/car",
     "core/chaincode/platforms/ccmetadata",
-    "core/chaincode/platforms/golang",
-    "core/chaincode/platforms/java",
-    "core/chaincode/platforms/node",
-    "core/chaincode/platforms/util",
     "core/chaincode/shim",
     "core/comm",
     "core/config",
@@ -269,15 +259,17 @@
     "msp/mgmt/testtools",
     "protos/common",
     "protos/ledger/queryresult",
+    "protos/ledger/rwset",
+    "protos/ledger/rwset/kvrwset",
     "protos/msp",
     "protos/orderer",
+    "protos/orderer/etcdraft",
     "protos/peer",
     "protos/testutils",
     "protos/utils",
   ]
   pruneopts = "UT"
-  revision = "cae2ad4456914adffcb07b1ca873e9624ce8f8b3"
-  version = "v1.2.0"
+  revision = "b710dd3e25a529ca60732d299e4b20badf80f597"
 
 [[projects]]
   branch = "master"
@@ -448,6 +440,38 @@
   version = "v1.2.2"
 
 [[projects]]
+  digest = "1:3c1a69cdae3501bf75e76d0d86dc6f2b0a7421bc205c0cb7b96b19eed464a34d"
+  name = "go.uber.org/atomic"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "1ea20fb1cbb1cc08cbd0d913a96dead89aa18289"
+  version = "v1.3.2"
+
+[[projects]]
+  digest = "1:60bf2a5e347af463c42ed31a493d817f8a72f102543060ed992754e689805d1a"
+  name = "go.uber.org/multierr"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3c4937480c32f4c13a875a1829af76c98ca3d40a"
+  version = "v1.1.0"
+
+[[projects]]
+  digest = "1:1a48a306f348a6454fbe88c77c25430de7c3427c4081735d3223aa97c302c24f"
+  name = "go.uber.org/zap"
+  packages = [
+    ".",
+    "buffer",
+    "internal/bufferpool",
+    "internal/color",
+    "internal/exit",
+    "zapcore",
+    "zapgrpc",
+  ]
+  pruneopts = "UT"
+  revision = "ff33455a0e382e8a81d14dd7c922020b6b5e7982"
+  version = "v1.9.1"
+
+[[projects]]
   branch = "master"
   digest = "1:2e1733bde491e422f3c9cf7bf8b4cb3d11c867ad3017fec8897923f6106a3a51"
   name = "golang.org/x/crypto"
@@ -517,7 +541,7 @@
   revision = "11092d34479b07829b72e10713b159248caf5dad"
 
 [[projects]]
-  digest = "1:f47fb9bd1a9173285be23a1a1342e019abddfd787216e7f2c555ddba837e98ce"
+  digest = "1:2dab32a43451e320e49608ff4542fdfc653c95dcc35d0065ec9c6c3dd540ed74"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -529,9 +553,11 @@
     "credentials",
     "encoding",
     "encoding/proto",
-    "grpclb/grpc_lb_v1/messages",
     "grpclog",
     "internal",
+    "internal/backoff",
+    "internal/channelz",
+    "internal/grpcrand",
     "keepalive",
     "metadata",
     "naming",
@@ -545,8 +571,8 @@
     "transport",
   ]
   pruneopts = "UT"
-  revision = "d11072e7ca9811b1100b80ca0269ac831f06d024"
-  version = "v1.11.3"
+  revision = "168a6198bcb0ef175f7dacec0b8691fc141dc9b8"
+  version = "v1.13.0"
 
 [[projects]]
   digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"
