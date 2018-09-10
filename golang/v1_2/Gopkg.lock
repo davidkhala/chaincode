@@ -45,19 +45,20 @@
   revision = "cd527374f1e5bff4938207604a14f2e38a9cf512"
 
 [[projects]]
-  digest = "1:66b8ed452b31eb9075bc53295952487c333a9cb555de57ed61f5664c058d9050"
+  digest = "1:aef23e9ea9f154b965b9792e32c86f315c2c689883ead4eeca8a182f6edfdfbc"
   name = "github.com/Shopify/sarama"
   packages = ["."]
   pruneopts = "UT"
-  revision = "35324cf48e33d8260e1c7c18854465a904ade249"
-  version = "v1.17.0"
+  revision = "a6144ae922fd99dd0ea5046c8137acfb7fab0914"
+  version = "v1.18.0"
 
 [[projects]]
+  branch = "master"
   digest = "1:fc8dbcc2a5de7c093e167828ebbdf551641761d2ad75431d3a167d467a264115"
   name = "github.com/containerd/continuity"
   packages = ["pathdriver"]
   pruneopts = "UT"
-  revision = "d3c23511c1bf5851696cba83143d9cbcd666869b"
+  revision = "f44b615e492bdfb371aae2f76ec694d9da1db537"
 
 [[projects]]
   digest = "1:ffe9824d294da03b391f44e1ae8281281b4afc1bdaa9588c9097785e3af10cec"
@@ -117,7 +118,8 @@
   name = "github.com/docker/go-connections"
   packages = ["nat"]
   pruneopts = "UT"
-  revision = "7beb39f0b969b075d1325fecb092faf27fd357b6"
+  revision = "7395e3f8aa162843a74ed6d48e79627d9792ac55"
+  version = "v0.4.0"
 
 [[projects]]
   digest = "1:6f82cacd0af5921e99bf3f46748705239b36489464f4529a1589bc895764fb18"
@@ -128,11 +130,12 @@
   version = "v0.3.3"
 
 [[projects]]
-  digest = "1:00d0d550a1f1d7ca03270ebc1e136f21f6b9dab37f0c37e9a90d56d2f7afcff9"
+  digest = "1:4f57c53dc1244bd265be71bc4e75fc48132f1cf2927b19de52ed600b7d73cd8e"
   name = "github.com/docker/libnetwork"
   packages = ["ipamutils"]
   pruneopts = "UT"
-  revision = "19279f0492417475b6bfbd0aa529f73e8f178fb5"
+  revision = "6d23f11e681f24ee31802939e243fe8be41a75eb"
+  version = "v0.8.0-dev.2"
 
 [[projects]]
   digest = "1:1f0c7ab489b407a7f8f9ad16c25a504d28ab461517a971d341388a56156c1bd7"
@@ -172,12 +175,12 @@
   version = "v1.2.2"
 
 [[projects]]
-  digest = "1:9a688317f3231e0175b3429033f44411906c0ce119361b7b5019d01375f8cff7"
+  digest = "1:bbadccf3d3317ea03c0dac0b45b673b4b397c8f91a1d2eff550a3c51c4ad770e"
   name = "github.com/gogo/protobuf"
   packages = ["proto"]
   pruneopts = "UT"
-  revision = "1adfc126b41513cc696b209667c8656ea7aac67c"
-  version = "v1.0.0"
+  revision = "636bf0302bc95575d69441b25a2603156ffdddf1"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -278,14 +281,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2dd942c7ae2a232034c9c714dd7dc0143a6e947d24446e865c84beb657dd256a"
+  digest = "1:b1c26a7393cb28a859e794f8eb364f5bae72ad9762e301325c50c7fa43544667"
   name = "github.com/hyperledger/fabric-amcl"
   packages = [
     "amcl",
     "amcl/FP256BN",
   ]
   pruneopts = "UT"
-  revision = "31cc24e414990009f09ab4d4d9a85eb94d17ac31"
+  revision = "6b78f7a22d950103fb2669aabb969f56d42d283b"
 
 [[projects]]
   digest = "1:ca955a9cd5b50b0f43d2cc3aeb35c951473eeca41b34eb67507f1dbcc0542394"
@@ -355,22 +358,23 @@
   version = "v1.0.1"
 
 [[projects]]
-  digest = "1:5fd4c15ff94e30a6cd726290c5656af965dd271fa975b7ccbc89a48a89b2cd73"
+  digest = "1:38ee335aedf4626620f3cf8f605661e71abdcce7b40b38921962beb3980f0a20"
   name = "github.com/opencontainers/runc"
   packages = ["libcontainer/user"]
   pruneopts = "UT"
-  revision = "ad0f5255060d36872be04de22f8731f38ef2d7b1"
+  revision = "baf6536d6259209c3edfa2b22237af82942d3dfa"
+  version = "v0.1.1"
 
 [[projects]]
-  digest = "1:d381414e3fb235fd48ede666eee8e717e5a995762d15e9c159b3ef8cc5cce7e4"
+  digest = "1:4f0885b3f0dba96128a09a6f4b4231c42688fbd05f323224c6aa5adc9f4e87bf"
   name = "github.com/pierrec/lz4"
   packages = [
     ".",
     "internal/xxh32",
   ]
   pruneopts = "UT"
-  revision = "ea731401f5c95a8ba30f15787e5e0fb77c60c66b"
-  version = "v2.0.4"
+  revision = "bb6bfd13c6a262f1943c0446eb25b7f54c1fb9a2"
+  version = "v2.0.6"
 
 [[projects]]
   digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
@@ -413,12 +417,12 @@
   version = "v1.2.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:8a020f916b23ff574845789daee6818daf8d25a4852419aae3f0b12378ba432a"
+  digest = "1:68ea4e23713989dc20b1bded5d9da2c5f9be14ff9885beef481848edd18c26cb"
   name = "github.com/spf13/jwalterweatherman"
   packages = ["."]
   pruneopts = "UT"
-  revision = "14d3d4c518341bea657dd8a226f5121c0ff8c9f2"
+  revision = "4a4406e478ca629068e7768fc33f3f044173c0a6"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:dab83a1bbc7ad3d7a6ba1a1cc1760f25ac38cdf7d96a5cdd55cd915a4f5ceaf9"
@@ -452,7 +456,7 @@
     "ssh/terminal",
   ]
   pruneopts = "UT"
-  revision = "182538f80094b6a8efaade63a8fd8e0d9d5843dd"
+  revision = "0709b304e793a5edb4a2c0145f281ecdc20838a4"
 
 [[projects]]
   branch = "master"
@@ -468,18 +472,18 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "8a410e7b638dca158bf9e766925842f6651ff828"
+  revision = "161cd47e91fd58ac17490ef4d742dc98bb4cf60e"
 
 [[projects]]
   branch = "master"
-  digest = "1:629034aef6b53eb8ea737e6d82cb5402907e2757fbab5ddf5e74c08b4c6473af"
+  digest = "1:374fc90fcb026e9a367e3fad29e988e5dd944b68ca3f24a184d77abc5307dda4"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "fa5fdf94c78965f1aa8423f0cc50b8b8d728b05a"
+  revision = "d0be0721c37eeb5299f245a996a483160fc36940"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -510,7 +514,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "c66870c02cf823ceb633bcd05be3c7cda29976f4"
+  revision = "11092d34479b07829b72e10713b159248caf5dad"
 
 [[projects]]
   digest = "1:f47fb9bd1a9173285be23a1a1342e019abddfd787216e7f2c555ddba837e98ce"
