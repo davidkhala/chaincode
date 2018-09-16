@@ -1,10 +1,13 @@
 [[override]]
   name = "github.com/golang/protobuf"
   branch = "master"
+[[override]]
+   name = "github.com/fsouza/go-dockerclient"
+   version = "=1.2.1"
 
 [[constraint]]
   name = "github.com/hyperledger/fabric"
-  branch = "release-1.2"
+  branch = "master"
 
 [prune]
   go-tests = true
