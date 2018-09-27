@@ -1,7 +1,6 @@
 package main
 
 import (
-
 	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -26,7 +25,6 @@ func (t *AdminChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 		return shim.Error(err.Error())
 	}
 
-
 	return shim.Success(nil)
 
 }
@@ -38,6 +36,11 @@ func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response 
 	state := string(stateBytes)
 	logger.Info("###########" + name + " Invoke :counter " + state + "###########")
 
+	trasientMap, _ := stub.GetTransient()
+	logger.Info("==transientMap")
+	for k, v := range trasientMap {
+		logger.Info(k, ":", string(v))
+	}
 	stateInt, _ := strconv.Atoi(state)
 	stateInt++
 	state = strconv.Itoa(stateInt)
