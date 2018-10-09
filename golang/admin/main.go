@@ -5,6 +5,9 @@ import (
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
+	. "github.com/davidkhala/fabric-common-chaincode-golang"
+	"github.com/davidkhala/chaincode/golang/trade/golang"
+	"github.com/davidkhala/goutils"
 )
 
 const (
@@ -15,11 +18,14 @@ const (
 var logger = shim.NewLogger(name)
 
 type AdminChaincode struct {
+	CommonChaincode
 }
 
 func (t *AdminChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
+	defer goutils.Deferred(DeferHandlerPeerResponse)
 	logger.Info("###########" + name + " Init ###########")
 	// GetStatus in Init will timeout request
+
 	err := stub.PutState(counterKey, []byte("0"))
 	if err != nil {
 		return shim.Error(err.Error())
@@ -31,7 +37,13 @@ func (t *AdminChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 
 // Transaction makes payment of X units from A to B
 func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+	defer goutils.Deferred(DeferHandlerPeerResponse)
+	var fcn, _ = stub.GetFunctionAndParameters()
+	switch fcn {
+	case "panic":
+		golang.PanicString("test panic")
 
+	}
 	stateBytes, _ := stub.GetState(counterKey)
 	state := string(stateBytes)
 	logger.Info("###########" + name + " Invoke :counter " + state + "###########")
@@ -49,8 +61,5 @@ func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response 
 }
 
 func main() {
-	err := shim.Start(new(AdminChaincode))
-	if err != nil {
-		logger.Errorf("Error starting Simple chaincode: %s", err)
-	}
+	ChaincodeStart(&AdminChaincode{})
 }
