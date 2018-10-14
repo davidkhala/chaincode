@@ -6,8 +6,7 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
 	. "github.com/davidkhala/fabric-common-chaincode-golang"
-	"github.com/davidkhala/chaincode/golang/trade/golang"
-	"github.com/davidkhala/goutils"
+	. "github.com/davidkhala/goutils"
 )
 
 const (
@@ -22,7 +21,7 @@ type AdminChaincode struct {
 }
 
 func (t *AdminChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
-	defer goutils.Deferred(DeferHandlerPeerResponse)
+	defer Deferred(DeferHandlerPeerResponse)
 	logger.Info("###########" + name + " Init ###########")
 	// GetStatus in Init will timeout request
 
@@ -37,11 +36,11 @@ func (t *AdminChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 
 // Transaction makes payment of X units from A to B
 func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
-	defer goutils.Deferred(DeferHandlerPeerResponse)
+	defer Deferred(DeferHandlerPeerResponse)
 	var fcn, _ = stub.GetFunctionAndParameters()
 	switch fcn {
 	case "panic":
-		golang.PanicString("test panic")
+		PanicString("test panic")
 
 	}
 	stateBytes, _ := stub.GetState(counterKey)
