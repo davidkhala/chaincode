@@ -33,7 +33,7 @@ func (t *PrivateDataCC) Invoke(ccAPI shim.ChaincodeStubInterface) (response peer
 	switch fcn {
 	case "put":
 		var CN = t.GetThisCreator().Certificate.Subject.CommonName
-		var txTime = UnixMilliSecond(t.GetTxTime()).ToString()
+		var txTime = UnixMilliSecond(t.GetTxTime()).String()
 		t.PutPrivateData(collection, collection, []byte(CN+"|"+txTime))
 	case "get":
 		var pData = t.GetPrivateData(collection, collection)

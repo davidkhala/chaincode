@@ -1,64 +1,76 @@
 package main
 
 import (
-	"strconv"
-
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/hyperledger/fabric/protos/peer"
 	. "github.com/davidkhala/fabric-common-chaincode-golang"
 	. "github.com/davidkhala/goutils"
+	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric/protos/peer"
 )
 
 const (
-	name       = "admincc"
-	counterKey = "invokeCounter"
+	name = "admincc"
 )
-
-var logger = shim.NewLogger(name)
 
 type AdminChaincode struct {
 	CommonChaincode
 }
 
-func (t *AdminChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
-	defer Deferred(DeferHandlerPeerResponse)
-	logger.Info("###########" + name + " Init ###########")
+type couchDBValue struct {
+	Time TimeLong
+}
+
+func (t AdminChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.Response) {
+	defer Deferred(DeferHandlerPeerResponse, &response)
+	t.Prepare(stub)
+	t.Logger.Info(" Init ")
 	// GetStatus in Init will timeout request
 
-	err := stub.PutState(counterKey, []byte("0"))
-	if err != nil {
-		return shim.Error(err.Error())
-	}
+	var txId = t.CCAPI.GetTxID()
+	var txTime = UnixMilliSecond(t.GetTxTime())
+	t.PutStateObj(txId, couchDBValue{txTime})
 
-	return shim.Success(nil)
-
+	response = shim.Success(nil)
+	return
 }
 
 // Transaction makes payment of X units from A to B
-func (t *AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
-	defer Deferred(DeferHandlerPeerResponse)
-	var fcn, _ = stub.GetFunctionAndParameters()
+func (t AdminChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer.Response) {
+	defer Deferred(DeferHandlerPeerResponse, &response)
+	t.Prepare(stub)
+	var fcn, params = stub.GetFunctionAndParameters()
+	t.Logger.Info(" Invoke fcn:" + fcn)
 	switch fcn {
 	case "panic":
 		PanicString("test panic")
-
+	case "richQuery":
+		var query = params[0]
+		t.Logger.Debug("Query string:" + query)
+		var queryIter = t.GetQueryResult(query)
+		var states = ParseStates(queryIter)
+		for i, v := range states.States {
+			t.Logger.Info(i, ":", v)
+		}
+	case "set":
+		var txId = t.CCAPI.GetTxID()
+		var txTime = UnixMilliSecond(t.GetTxTime())
+		t.PutStateObj(txId, couchDBValue{txTime})
 	}
-	stateBytes, _ := stub.GetState(counterKey)
-	state := string(stateBytes)
-	logger.Info("###########" + name + " Invoke :counter " + state + "###########")
-
-	trasientMap, _ := stub.GetTransient()
-	logger.Info("==transientMap")
-	for k, v := range trasientMap {
-		logger.Info(k, ":", string(v))
+	{
+		transientMap, _ := stub.GetTransient()
+		t.Logger.Info("==transientMap")
+		for k, v := range transientMap {
+			t.Logger.Info(k, ":", string(v))
+		}
 	}
-	stateInt, _ := strconv.Atoi(state)
-	stateInt++
-	state = strconv.Itoa(stateInt)
-	stub.PutState(counterKey, []byte(state))
-	return shim.Success([]byte(state))
+	var txID = t.CCAPI.GetTxID()
+	var txTime = UnixMilliSecond(t.GetTxTime())
+
+	t.PutStateObj(txID, couchDBValue{txTime})
+	return shim.Success(nil)
 }
 
 func main() {
-	ChaincodeStart(&AdminChaincode{})
+	var cc = AdminChaincode{}
+	cc.SetLogger(name)
+	ChaincodeStart(cc)
 }
