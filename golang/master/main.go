@@ -1,14 +1,14 @@
 package main
 
 import (
+	. "github.com/davidkhala/fabric-common-chaincode-golang"
+	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
-	"github.com/davidkhala/fabric-common-chaincode-golang"
-	. "github.com/davidkhala/goutils"
 )
 
 type PrivateDataCC struct {
-	golang.CommonChaincode
+	CommonChaincode
 }
 
 const (
@@ -29,7 +29,8 @@ func (t *PrivateDataCC) Invoke(ccAPI shim.ChaincodeStubInterface) (response peer
 	logger.Info("########### " + name + " Invoke ###########")
 	//defer golang.PanicDefer(&response)
 	t.Prepare(ccAPI)
-	var fcn, _ = ccAPI.GetFunctionAndParameters()
+	var fcn, params = ccAPI.GetFunctionAndParameters()
+	var responseBytes []byte
 	switch fcn {
 	case "put":
 		var CN = t.GetThisCreator().Certificate.Subject.CommonName
@@ -38,11 +39,20 @@ func (t *PrivateDataCC) Invoke(ccAPI shim.ChaincodeStubInterface) (response peer
 	case "get":
 		var pData = t.GetPrivateData(collection, collection)
 		logger.Info("pData" + string(pData))
+	case "put2":
+		var txTime = UnixMilliSecond(t.GetTxTime()).String()
+		var key2 = txTime + " 1"
+		t.PutState(txTime, []byte(txTime))
+		t.PutState(key2, []byte(key2))
+		responseBytes = []byte(key2)
+	case "get2":
+		var key = params[0]
+		responseBytes = t.GetState(key)
 	default:
 
 	}
 
-	return shim.Success(nil)
+	return shim.Success(responseBytes)
 }
 
 func main() {
