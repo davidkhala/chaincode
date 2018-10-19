@@ -1,50 +1,45 @@
 package main
 
 import (
+	. "github.com/davidkhala/fabric-common-chaincode-golang"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
 )
 
 const (
-	name   = "mainChain"
-	called = "sideChain"
+	name = "mainChain"
 )
 
-var logger = shim.NewLogger(name)
-
 type MainChaincode struct {
+	CommonChaincode
 }
 
-type Args struct {
-	buff [][]byte
-}
-
-func ArgsBuilder(fcn string) (Args) {
-	return Args{[][]byte{[]byte(fcn)}}
-}
-
-func (t *Args) AppendArg(str string) {
-	t.buff = append(t.buff, []byte(str))
-}
-func (t Args) Get() [][]byte {
-	return t.buff
-}
-func (t *MainChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
-	logger.Info("########### " + name + " Init ###########")
-	return shim.Success(nil)
-}
-
-func (t *MainChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
-	logger.Info("########### " + name + " Invoke ###########")
-	var fcn = "invoke side"
-	var args = ArgsBuilder(fcn)
-	args.AppendArg("p1")
-
-	stub.InvokeChaincode(called, args.Get(), "")
+func (t MainChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
+	t.Prepare(stub)
+	t.Logger.Info("Init")
 
 	return shim.Success(nil)
+}
+
+func (t MainChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+	t.Prepare(stub)
+	t.Logger.Info("Invoke")
+	var fcn, params = stub.GetFunctionAndParameters()
+	t.Logger.Debug("fcn", fcn, "params", params)
+	var key = params[0]
+	var responseBytes []byte
+	switch fcn {
+	case "put":
+		t.PutState(key, []byte(params[1]))
+	case "get":
+		responseBytes = t.GetState(key)
+	}
+
+	return shim.Success(responseBytes)
 }
 
 func main() {
-	shim.Start(new(MainChaincode))
+	var cc = MainChaincode{}
+	cc.SetLogger(name)
+	ChaincodeStart(cc)
 }
