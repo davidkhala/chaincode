@@ -2,6 +2,7 @@ package main
 
 import (
 	. "github.com/davidkhala/fabric-common-chaincode-golang"
+	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
 )
@@ -14,14 +15,16 @@ type MainChaincode struct {
 	CommonChaincode
 }
 
-func (t MainChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
+func (t MainChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.Response) {
+	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
 	t.Logger.Info("Init")
 
 	return shim.Success(nil)
 }
 
-func (t MainChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+func (t MainChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer.Response) {
+	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
 	t.Logger.Info("Invoke")
 	var fcn, params = stub.GetFunctionAndParameters()
@@ -34,7 +37,7 @@ func (t MainChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	case "get":
 		responseBytes = t.GetState(key)
 	}
-
+	t.Logger.Debug("response", responseBytes)
 	return shim.Success(responseBytes)
 }
 

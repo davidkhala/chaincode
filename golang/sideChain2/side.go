@@ -35,6 +35,7 @@ func (t SideChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 		args.AppendArg(key)
 		responseBytes = t.InvokeChaincode(mainCC, args.Get(), "").Payload
 	}
+	t.Logger.Debug("response", responseBytes)
 	return shim.Success(responseBytes)
 }
 

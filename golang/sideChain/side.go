@@ -5,7 +5,6 @@ import (
 	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
-	"strings"
 	"time"
 )
 
@@ -23,6 +22,17 @@ func (t SideChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	t.Logger.Info(" Init ")
 	return shim.Success(nil)
 }
+func (t SideChaincode) newTokenGetter() string {
+	var key1 = RandString(4, "abcd")
+	var args = ArgsBuilder("get")
+	args.AppendArg(key1)
+	var responseBytes = t.InvokeChaincode(mainCC, args.Get(), "").Payload
+	if responseBytes == nil {
+		return key1
+	}
+	return t.newTokenGetter()
+
+}
 
 // Transaction makes payment of X units from A to B
 func (t SideChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
@@ -33,23 +43,17 @@ func (t SideChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	var responseBytes []byte
 	switch fcn {
 	case "put":
-		var key1 = UnixMilliSecond(t.GetTxTime()).String()
+
+		var key1 = t.newTokenGetter()
 		{
 			var args = ArgsBuilder("put")
-			var value = key1
+			var value = UnixMilliSecond(time.Now()).String()
 			args.AppendArg(key1)
 			args.AppendArg(value)
 			t.InvokeChaincode(mainCC, args.Get(), "")
 		}
-		var key2 = UnixMilliSecond(time.Now()).String() + "1"
-		{
-			var args = ArgsBuilder("put")
-			var value = strings.Repeat(key2, 20)
-			args.AppendArg(key2)
-			args.AppendArg(value)
-			t.InvokeChaincode(mainCC, args.Get(), "")
-		}
-		responseBytes = []byte(key1 + "|" + key2)
+
+		responseBytes = []byte(key1)
 	case "get":
 		var args = ArgsBuilder("get")
 		var key = params[0]
