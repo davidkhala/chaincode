@@ -45,20 +45,13 @@ func (t SideChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	case "put":
 
 		var key1 = t.newTokenGetter()
-		{
-			var args = ArgsBuilder("put")
-			var value = UnixMilliSecond(time.Now()).String()
-			args.AppendArg(key1)
-			args.AppendArg(value)
-			t.InvokeChaincode(mainCC, args.Get(), "")
-		}
+		var args = ArgsBuilder("put")
+		var value = UnixMilliSecond(time.Now()).String()
+		args.AppendArg(key1)
+		args.AppendArg(value)
+		t.InvokeChaincode(mainCC, args.Get(), "")
 
 		responseBytes = []byte(key1)
-	case "get":
-		var args = ArgsBuilder("get")
-		var key = params[0]
-		args.AppendArg(key)
-		responseBytes = t.InvokeChaincode(mainCC, args.Get(), "").Payload
 	}
 	return shim.Success(responseBytes)
 }
