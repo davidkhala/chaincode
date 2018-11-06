@@ -5,6 +5,7 @@ import (
 	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
+	"strconv"
 )
 
 type PrivateDataCC struct {
@@ -14,22 +15,25 @@ type PrivateDataCC struct {
 const (
 	name       = "PrivateDataCC"
 	collection = "private1"
+	counterKey = "iterator"
 )
 
 var logger = shim.NewLogger(name)
 
 func (t *PrivateDataCC) Init(stub shim.ChaincodeStubInterface) peer.Response {
-	logger.Info("########### " + name + " Init ###########")
+	logger.Info(" Init ")
+	t.Prepare(stub)
+	t.PutState(counterKey, []byte(strconv.Itoa(0)))
 	return shim.Success(nil)
 
 }
 
 // Transaction makes payment of X units from A to B
-func (t *PrivateDataCC) Invoke(ccAPI shim.ChaincodeStubInterface) (response peer.Response) {
+func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.Response) {
 	logger.Info("########### " + name + " Invoke ###########")
 	//defer golang.PanicDefer(&response)
-	t.Prepare(ccAPI)
-	var fcn, params = ccAPI.GetFunctionAndParameters()
+	t.Prepare(stub)
+	var fcn, params = stub.GetFunctionAndParameters()
 	var responseBytes []byte
 	switch fcn {
 	case "put":
@@ -39,12 +43,14 @@ func (t *PrivateDataCC) Invoke(ccAPI shim.ChaincodeStubInterface) (response peer
 	case "get":
 		var pData = t.GetPrivateData(collection, collection)
 		logger.Info("pData" + string(pData))
-	case "put2":
-		var txTime = UnixMilliSecond(t.GetTxTime()).String()
-		var key2 = txTime + " 1"
-		t.PutState(txTime, []byte(txTime))
-		t.PutState(key2, []byte(key2))
-		responseBytes = []byte(key2)
+	case "increase":
+
+		var old = Atoi(string(t.GetState(counterKey)))
+		var i = old + 1
+		var iBytes = []byte(strconv.Itoa(i))
+		t.PutState(counterKey, iBytes)
+
+		responseBytes = iBytes
 	case "get2":
 		var key = params[0]
 		responseBytes = t.GetState(key)
@@ -56,5 +62,7 @@ func (t *PrivateDataCC) Invoke(ccAPI shim.ChaincodeStubInterface) (response peer
 }
 
 func main() {
-	shim.Start(new(PrivateDataCC))
+	var cc = PrivateDataCC{}
+	cc.SetLogger(name)
+	ChaincodeStart(&cc)
 }
