@@ -18,7 +18,6 @@ type diagnoseChaincode struct {
 func (t diagnoseChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	t.Prepare(stub)
 	t.Logger.Info(" Init ")
-	// GetStatus in Init will timeout request
 	return shim.Success(nil)
 
 }
