@@ -41,6 +41,21 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Respons
 		var key = params[0]
 		var value = params[1]
 		t.PutState(key, []byte(value))
+	case "delegate":
+		type crossChaincode struct {
+			ChaincodeName string
+			Fcn           string
+			Args          [][]byte
+			Channel       string
+		}
+		var paramInput crossChaincode
+		FromJson([]byte(params[0]), &paramInput)
+		var args = ArgsBuilder(paramInput.Fcn)
+		for _, element := range paramInput.Args {
+			args.AppendBytes(element)
+		}
+		var pb = t.InvokeChaincode(paramInput.ChaincodeName, args.Get(), paramInput.Channel)
+		response = pb.Payload
 	}
 	return shim.Success(response)
 }
