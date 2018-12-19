@@ -15,12 +15,12 @@ type StressChaincode struct {
 }
 
 func (t *StressChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
-	logger.Info("########### " + name + " Init ###########")
+	logger.Info( "Init")
 	return shim.Success(nil)
 }
 
 func (t *StressChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
-	logger.Info("########### " + name + " Invoke ###########")
+	logger.Info( "Invoke")
 	return shim.Success(nil)
 }
 

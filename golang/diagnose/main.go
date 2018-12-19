@@ -22,8 +22,9 @@ func (t diagnoseChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response 
 
 }
 
-func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (peerResponse peer.Response) {
 	t.Prepare(stub)
+	defer Deferred(DeferHandlerPeerResponse, &peerResponse)
 	fcn, params := stub.GetFunctionAndParameters()
 	t.Logger.Info("Invoke", fcn, params)
 	var response []byte
@@ -45,14 +46,15 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Respons
 		type crossChaincode struct {
 			ChaincodeName string
 			Fcn           string
-			Args          [][]byte
+			Args          []string
 			Channel       string
 		}
 		var paramInput crossChaincode
 		FromJson([]byte(params[0]), &paramInput)
 		var args = ArgsBuilder(paramInput.Fcn)
-		for _, element := range paramInput.Args {
-			args.AppendBytes(element)
+		for i, element := range paramInput.Args {
+			args.AppendArg(element)
+			t.Logger.Debug("delegated Arg", i, element)
 		}
 		var pb = t.InvokeChaincode(paramInput.ChaincodeName, args.Get(), paramInput.Channel)
 		response = pb.Payload

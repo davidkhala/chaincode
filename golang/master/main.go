@@ -28,10 +28,11 @@ func (t *PrivateDataCC) Init(stub shim.ChaincodeStubInterface) peer.Response {
 
 // Transaction makes payment of X units from A to B
 func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.Response) {
-	t.Logger.Info("########### " + name + " Invoke ###########")
 	//defer golang.PanicDefer(&response)
 	t.Prepare(stub)
 	var fcn, params = stub.GetFunctionAndParameters()
+	t.Logger.Info("Invoke", fcn)
+	t.Logger.Debug(fcn, "params", params)
 	var responseBytes []byte
 	switch fcn {
 	case "put":
