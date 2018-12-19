@@ -46,6 +46,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:e2a10da95e6193b03c32f89fda417dd8cf06457ffb60b606c4e150fea88a9e7c"
+  name = "github.com/containerd/fifo"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3d5202aec260678c48179c56f40e6f38a095738c"
+
+[[projects]]
+  branch = "master"
   digest = "1:eba5bfa7a66a55f86b78df822ebe2e610ed6c4003d6b33203d9e3a7918c648ae"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = ["."]
@@ -64,20 +72,23 @@
   revision = "a7fe43f9495c8b7b82b6ea0f6f617b3c952457b4"
 
 [[projects]]
-  digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
+  digest = "1:356ee89426ae9651bf4e458377a5343aba8d339ad5d2d0d6c2182f8411bda4a7"
   name = "github.com/docker/docker"
   packages = [
     "api/types",
+    "api/types/backend",
     "api/types/blkiodev",
     "api/types/container",
     "api/types/filters",
     "api/types/mount",
     "api/types/network",
+    "api/types/plugins/logdriver",
     "api/types/registry",
     "api/types/strslice",
     "api/types/swarm",
     "api/types/swarm/runtime",
     "api/types/versions",
+    "daemon/logger",
     "opts",
     "pkg/archive",
     "pkg/fileutils",
@@ -87,8 +98,14 @@
     "pkg/jsonmessage",
     "pkg/longpath",
     "pkg/mount",
+    "pkg/plugingetter",
+    "pkg/plugins",
+    "pkg/plugins/transport",
     "pkg/pools",
+    "pkg/progress",
     "pkg/stdcopy",
+    "pkg/streamformatter",
+    "pkg/stringid",
     "pkg/system",
     "pkg/term",
     "pkg/term/windows",
@@ -97,9 +114,13 @@
   revision = "a422774e593b33bd287d9890544ad9e09b380d8c"
 
 [[projects]]
-  digest = "1:ade935c55cd6d0367c843b109b09c9d748b1982952031414740750fdf94747eb"
+  digest = "1:811c86996b1ca46729bad2724d4499014c4b9effd05ef8c71b852aad90deb0ce"
   name = "github.com/docker/go-connections"
-  packages = ["nat"]
+  packages = [
+    "nat",
+    "sockets",
+    "tlsconfig",
+  ]
   pruneopts = "UT"
   revision = "7395e3f8aa162843a74ed6d48e79627d9792ac55"
   version = "v0.4.0"
@@ -377,7 +398,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:7a2e3d6819e7a97a877f8604e737901c6941e76d56ae98a51a1ca2f13de351fb"
+  digest = "1:268a53e7e000186a1bc07533341133bcfabd127cc4a080ba0b4baa75599b8ee1"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -385,7 +406,9 @@
     "http2",
     "http2/hpack",
     "idna",
+    "internal/socks",
     "internal/timeseries",
+    "proxy",
     "trace",
   ]
   pruneopts = "UT"
@@ -424,6 +447,14 @@
   pruneopts = "UT"
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:9fdc2b55e8e0fafe4b41884091e51e77344f7dc511c5acedcfd98200003bff90"
+  name = "golang.org/x/time"
+  packages = ["rate"]
+  pruneopts = "UT"
+  revision = "85acf8d2951cb2a3bde7632f9ff273ef0379bcbd"
 
 [[projects]]
   branch = "master"
@@ -481,6 +512,7 @@
   input-imports = [
     "github.com/davidkhala/fabric-common-chaincode-golang",
     "github.com/davidkhala/goutils",
+    "github.com/docker/docker/daemon/logger",
     "github.com/hyperledger/fabric/core/chaincode/shim",
     "github.com/hyperledger/fabric/protos/peer",
   ]

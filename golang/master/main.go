@@ -18,10 +18,8 @@ const (
 	counterKey = "iterator"
 )
 
-var logger = shim.NewLogger(name)
-
 func (t *PrivateDataCC) Init(stub shim.ChaincodeStubInterface) peer.Response {
-	logger.Info(" Init ")
+	t.Logger.Info(" Init ")
 	t.Prepare(stub)
 	t.PutState(counterKey, []byte(strconv.Itoa(0)))
 	return shim.Success(nil)
@@ -30,7 +28,7 @@ func (t *PrivateDataCC) Init(stub shim.ChaincodeStubInterface) peer.Response {
 
 // Transaction makes payment of X units from A to B
 func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.Response) {
-	logger.Info("########### " + name + " Invoke ###########")
+	t.Logger.Info("########### " + name + " Invoke ###########")
 	//defer golang.PanicDefer(&response)
 	t.Prepare(stub)
 	var fcn, params = stub.GetFunctionAndParameters()
@@ -42,7 +40,7 @@ func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.
 		t.PutPrivateData(collection, collection, []byte(CN+"|"+txTime))
 	case "get":
 		var pData = t.GetPrivateData(collection, collection)
-		logger.Info("pData" + string(pData))
+		t.Logger.Info("pData" + string(pData))
 	case "increase":
 
 		var old = Atoi(string(t.GetState(counterKey)))
