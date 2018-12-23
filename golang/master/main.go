@@ -35,11 +35,11 @@ func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.
 	t.Logger.Debug(fcn, "params", params)
 	var responseBytes []byte
 	switch fcn {
-	case "put":
+	case "putPrivate":
 		var CN = t.GetThisCreator().Certificate.Subject.CommonName
 		var txTime = UnixMilliSecond(t.GetTxTime()).String()
 		t.PutPrivateData(collection, collection, []byte(CN+"|"+txTime))
-	case "get":
+	case "getPrivate":
 		var pData = t.GetPrivateData(collection, collection)
 		t.Logger.Info("pData" + string(pData))
 	case "increase":
@@ -50,9 +50,15 @@ func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.
 		t.PutState(counterKey, iBytes)
 
 		responseBytes = iBytes
-	case "get2":
+	case "get":
 		var key = params[0]
 		responseBytes = t.GetState(key)
+	case "getBinding":
+		//TODO what is this
+		responseBytes = []byte(HexEncode(t.GetBinding()))
+	case "getDecorations":
+		//TODO what is this
+		responseBytes = ToJson(stub.GetDecorations())
 	default:
 
 	}
