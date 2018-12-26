@@ -15,29 +15,49 @@ type diagnoseChaincode struct {
 	CommonChaincode
 }
 
-func (t diagnoseChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
+func (t diagnoseChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.Response) {
+	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
-	t.Logger.Info(" Init ")
+	var fcn, params = stub.GetFunctionAndParameters()
+	t.Logger.Info("Init", fcn, params)
+	t.printTransient()
 	return shim.Success(nil)
 
 }
+func (t diagnoseChaincode) printTransient() {
+	var transientMap = t.GetTransient()
+	t.Logger.Debug("==[start]transientMap")
+	for k, v := range transientMap {
+		t.Logger.Debug(k, ":", string(v))
+	}
+	t.Logger.Debug("==[end]transientMap")
+}
 
-func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (peerResponse peer.Response) {
+func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer.Response) {
+	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
-	defer Deferred(DeferHandlerPeerResponse, &peerResponse)
 	fcn, params := stub.GetFunctionAndParameters()
 	t.Logger.Info("Invoke", fcn, params)
-	var response []byte
+	t.printTransient()
+	var responseBytes []byte
 	switch fcn {
+	case "panic":
+		PanicString("test panic")
+	case "richQuery":
+		var query = params[0]
+		t.Logger.Info("Query string", query)
+		var queryIter = t.GetQueryResult(query)
+		var states = ParseStates(queryIter)
+		responseBytes = ToJson(states)
 	case "worldStates":
 		var states = t.WorldStates("")
-		response = ToJson(states)
+		responseBytes = ToJson(states)
 	case "whoami":
 		var cid = NewClientIdentity(stub)
-		response = ToJson(cid)
+		responseBytes = ToJson(cid)
 	case "get":
 		var key = params[0]
-		response = t.GetState(key)
+		responseBytes = t.GetState(key)
 	case "put":
 		var key = params[0]
 		var value = params[1]
@@ -57,9 +77,9 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (peerRespons
 			t.Logger.Debug("delegated Arg", i, element)
 		}
 		var pb = t.InvokeChaincode(paramInput.ChaincodeName, args.Get(), paramInput.Channel)
-		response = pb.Payload
+		responseBytes = pb.Payload
 	}
-	return shim.Success(response)
+	return shim.Success(responseBytes)
 }
 
 func main() {
