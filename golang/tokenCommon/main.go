@@ -22,15 +22,16 @@ func (t tokenChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.Re
 	return shim.Success(nil)
 }
 func (t tokenChaincode) putToken(cid ClientIdentity, tokenID string, tokenData TokenData) {
-	var issuer = crypto.GetDN(&cid.Cert.Issuer)
+	var issuer = crypto.GetDN(cid.Cert.Issuer)
 	var alternativeTokenData = TokenData{
-		crypto.GetDN(&cid.Cert.Subject),
+		crypto.GetDN(cid.Cert.Subject),
 		issuer,
 		issuer,
 		0,
 		0,
 		0,
 		cid,
+		tokenData.MetaData,
 	}
 
 	t.PutStateObj(tokenID, alternativeTokenData)
@@ -53,7 +54,7 @@ func (t tokenChaincode) history(tokenID string) []byte {
 }
 func accessRight(identity ClientIdentity, tokenRaw string, data TokenData) {
 	//TODO tune CA first
-	if crypto.GetDN(&identity.Cert.Issuer) != data.Manager { // allow manager to delete
+	if crypto.GetDN(identity.Cert.Issuer) != data.Manager { // allow manager to delete
 		PanicString("[" + tokenRaw + "]Token Data Manager(" + data.Manager + ") mismatched with CID.Subject.CN:" + identity.Cert.Issuer.CommonName)
 	}
 }
