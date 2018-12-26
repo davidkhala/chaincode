@@ -18,8 +18,11 @@ type MainChaincode struct {
 func (t MainChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.Response) {
 	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
-	t.Logger.Info("Init")
-
+	var fcn, params = stub.GetFunctionAndParameters()
+	t.Logger.Info("Init", fcn, params)
+	if fcn != "" {
+		t.PutState(fcn, []byte(params[0]))
+	}
 	return shim.Success(nil)
 }
 
