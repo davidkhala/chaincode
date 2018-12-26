@@ -22,11 +22,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e47dfae609c10eb735e0aba27f93c369596865e0ea2f240cbfa6a825467b45b9"
+  digest = "1:2b43923d15444370d6b33dd2541088d991505b5646afb6fc21c12897afe89a7d"
   name = "github.com/MediConCenHK/go-chaincode-common"
   packages = ["."]
   pruneopts = "UT"
-  revision = "88982fe777947393986b322f2440ed0ee13d070c"
+  revision = "557db052e334351ba30cbea442e574f008337df3"
 
 [[projects]]
   digest = "1:f9ae348e1f793dcf9ed930ed47136a67343dbd6809c5c91391322267f4476892"
@@ -54,25 +54,25 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:c038c2e44f3263346642a55b67d3168e84c7f1ca33ae12976a520c3fb17b69d9"
+  digest = "1:8acc107bf806a8f57a8b4dac4d043ffd31c6f88b94c37746601e020a2505b5e3"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
     "cid",
   ]
   pruneopts = "UT"
-  revision = "c3244ade1a977cdc650ac3bade25851fb6781d07"
+  revision = "1714000960a93faac3ec2c51b1070313d8398b7a"
 
 [[projects]]
   branch = "master"
-  digest = "1:c8a528cda7c93622d28e0362ed330459890d17ebdb358a17b33c31ce3ce15b48"
+  digest = "1:a54768da1dc900ffc60c02bf946db1bdbe98234d9c4737251bce7c42c9d3c874"
   name = "github.com/davidkhala/goutils"
   packages = [
     ".",
     "crypto",
   ]
   pruneopts = "UT"
-  revision = "d9a07c31d2c700094e5dd04b5f4afcabf4f0049c"
+  revision = "b902ab696b5b20ce1a96ea13417893d06ad70d6e"
 
 [[projects]]
   digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
@@ -164,7 +164,7 @@
 
 [[projects]]
   branch = "release-1.3"
-  digest = "1:187e0ea7a1d33df07219adf86ca3cdab78539629ecda02be896f598839f2fc8d"
+  digest = "1:eaa46e021d70e68ab993b47f93bbccf47ec308ce61e22521d22fd018a0aed379"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -183,6 +183,8 @@
     "core/chaincode/platforms",
     "core/chaincode/platforms/ccmetadata",
     "core/chaincode/shim",
+    "core/chaincode/shim/ext/attrmgr",
+    "core/chaincode/shim/ext/cid",
     "core/comm",
     "core/config",
     "core/container/util",

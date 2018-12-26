@@ -30,7 +30,7 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/davidkhala/fabric-common-chaincode-golang"
+  name = "github.com/MediConCenHK/go-chaincode-common"
 
 [prune]
   go-tests = true
