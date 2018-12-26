@@ -34,7 +34,6 @@ func (t SideChaincode) newTokenGetter() string {
 
 }
 
-// Transaction makes payment of X units from A to B
 func (t SideChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	t.Prepare(stub)
 	t.Logger.Info(" Invoke ")
