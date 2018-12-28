@@ -34,6 +34,11 @@ func (t diagnoseChaincode) printTransient() {
 	t.Logger.Debug("==[end]transientMap")
 }
 
+type txData struct {
+	Time  TimeLong
+	Value []byte
+}
+
 func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer.Response) {
 	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
@@ -57,11 +62,16 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		responseBytes = ToJson(cid.NewClientIdentity(stub))
 	case "get":
 		var key = params[0]
-		responseBytes = t.GetState(key)
+		var tx txData
+		t.GetStateObj(key, &tx)
+		responseBytes = tx.Value
 	case "put":
 		var key = params[0]
 		var value = params[1]
-		t.PutState(key, []byte(value))
+		t.PutStateObj(key, txData{
+			UnixMilliSecond(t.GetTxTime()),
+			[]byte(value),
+		})
 	case "delegate":
 		type crossChaincode struct {
 			ChaincodeName string
