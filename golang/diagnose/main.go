@@ -2,6 +2,7 @@ package main
 
 import (
 	. "github.com/davidkhala/fabric-common-chaincode-golang"
+	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
@@ -53,8 +54,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var states = t.WorldStates("")
 		responseBytes = ToJson(states)
 	case "whoami":
-		var cid = NewClientIdentity(stub)
-		responseBytes = ToJson(cid)
+		responseBytes = ToJson(cid.NewClientIdentity(stub))
 	case "get":
 		var key = params[0]
 		responseBytes = t.GetState(key)
