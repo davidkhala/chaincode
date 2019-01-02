@@ -46,22 +46,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:eba5bfa7a66a55f86b78df822ebe2e610ed6c4003d6b33203d9e3a7918c648ae"
+  digest = "1:0e6022364c3caf27a8389b23146c8bce31b40db6e266415edfa917ac5c3b1ac3"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = ["."]
   pruneopts = "UT"
-  revision = "8969ec2785e3177f49e2772670d970051edf53e0"
+  revision = "b878e4e46504bd504cf3fef6dc207dc0929cd854"
 
 [[projects]]
   branch = "master"
-  digest = "1:6d912faa785fb86930777f4364ad3e45aa9880572b736d285ad64f9c5ec124b7"
+  digest = "1:6a18b1cc73001c46d1c74d4d20535e58f88d9c2e0f8de465ca9aed910089c43f"
   name = "github.com/davidkhala/goutils"
-  packages = [
-    ".",
-    "crypto",
-  ]
+  packages = ["."]
   pruneopts = "UT"
-  revision = "a7fe43f9495c8b7b82b6ea0f6f617b3c952457b4"
+  revision = "6e936dc5f777235088392061a85f2dedad27dd3d"
 
 [[projects]]
   digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
@@ -153,7 +150,7 @@
 
 [[projects]]
   branch = "release-1.3"
-  digest = "1:187e0ea7a1d33df07219adf86ca3cdab78539629ecda02be896f598839f2fc8d"
+  digest = "1:fae9ab3e50ee1540b2ba99669b97b4a7e3357fd3844eec9292c733169bca3565"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -162,7 +159,6 @@
     "bccsp/signer",
     "bccsp/sw",
     "bccsp/utils",
-    "common/attrmgr",
     "common/crypto",
     "common/flogging",
     "common/flogging/fabenc",
@@ -186,7 +182,7 @@
     "protos/utils",
   ]
   pruneopts = "UT"
-  revision = "c66b5982ff293b76ef5d3fcca9febfdb8bbb986e"
+  revision = "afbc66a1b8c9ecafca8c64159739373f57b72e46"
 
 [[projects]]
   branch = "master"
@@ -197,7 +193,7 @@
     "amcl/FP256BN",
   ]
   pruneopts = "UT"
-  revision = "6b78f7a22d950103fb2669aabb969f56d42d283b"
+  revision = "5ccba6eab8d6b39aa2cdd88db202bba0e25da5d7"
 
 [[projects]]
   digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
@@ -389,18 +385,18 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "e147a9138326bc0e9d4e179541ffd8af41cff8a9"
+  revision = "927f97764cc334a6575f4b7a1584a147864d5723"
 
 [[projects]]
   branch = "master"
-  digest = "1:ba8cbf57cfd92d5f8592b4aca1a35d92c162363d32aeabd5b12555f8896635e7"
+  digest = "1:10405139b45e3a97a3842c93984710e30466eb933545f219ad3f5e45246973b4"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "074acd46bca67915925527c07849494d115e7c43"
+  revision = "9a3f9b0469bbc6b8802087ae5c0af9f61502de01"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -431,7 +427,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "67d6565462c5a0d99b88193d59fefa10ca7e3010"
+  revision = "bd9b4fb69e2ffd37621a6caa54dcbead29b546f2"
 
 [[projects]]
   digest = "1:2dab32a43451e320e49608ff4542fdfc653c95dcc35d0065ec9c6c3dd540ed74"

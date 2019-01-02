@@ -2,6 +2,7 @@ package main
 
 import (
 	. "github.com/davidkhala/fabric-common-chaincode-golang"
+	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
@@ -36,12 +37,11 @@ func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.
 	var responseBytes []byte
 	switch fcn {
 	case "putPrivate":
-		var CN = t.GetThisCreator().Certificate.Subject.CommonName
+		var id = cid.NewClientIdentity(stub).GetID()
 		var txTime = UnixMilliSecond(t.GetTxTime()).String()
-		t.PutPrivateData(collection, collection, []byte(CN+"|"+txTime))
+		t.PutPrivateData(collection, collection, []byte(id+"|"+txTime))
 	case "getPrivate":
-		var pData = t.GetPrivateData(collection, collection)
-		t.Logger.Info("pData" + string(pData))
+		responseBytes = t.GetPrivateData(collection, collection)
 	case "increase":
 
 		var old = Atoi(string(t.GetState(counterKey)))

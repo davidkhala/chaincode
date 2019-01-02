@@ -54,25 +54,25 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2fb95890a9d8cc9e38a8bea091dcbcc5d8e696c734f3847fa8e07b94189ea2e3"
+  digest = "1:70684a8bd5a68e3ea2b690977b9e10f615f22fca04da2028a8ce7017be7d109d"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
     "cid",
   ]
   pruneopts = "UT"
-  revision = "6055f9a7d0d9619753ae633623f8503943470a5b"
+  revision = "b878e4e46504bd504cf3fef6dc207dc0929cd854"
 
 [[projects]]
   branch = "master"
-  digest = "1:a54768da1dc900ffc60c02bf946db1bdbe98234d9c4737251bce7c42c9d3c874"
+  digest = "1:42492fd0b40bacb072cf18a819d79929e8aa85d334c851094a5fde53d45deebf"
   name = "github.com/davidkhala/goutils"
   packages = [
     ".",
     "crypto",
   ]
   pruneopts = "UT"
-  revision = "b902ab696b5b20ce1a96ea13417893d06ad70d6e"
+  revision = "6e936dc5f777235088392061a85f2dedad27dd3d"
 
 [[projects]]
   digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
@@ -164,7 +164,7 @@
 
 [[projects]]
   branch = "release-1.3"
-  digest = "1:eaa46e021d70e68ab993b47f93bbccf47ec308ce61e22521d22fd018a0aed379"
+  digest = "1:187e0ea7a1d33df07219adf86ca3cdab78539629ecda02be896f598839f2fc8d"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -183,8 +183,6 @@
     "core/chaincode/platforms",
     "core/chaincode/platforms/ccmetadata",
     "core/chaincode/shim",
-    "core/chaincode/shim/ext/attrmgr",
-    "core/chaincode/shim/ext/cid",
     "core/comm",
     "core/config",
     "core/container/util",
@@ -210,7 +208,7 @@
     "amcl/FP256BN",
   ]
   pruneopts = "UT"
-  revision = "6b78f7a22d950103fb2669aabb969f56d42d283b"
+  revision = "5ccba6eab8d6b39aa2cdd88db202bba0e25da5d7"
 
 [[projects]]
   digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
@@ -406,14 +404,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:3d5e79e10549fd9119cbefd614b6d351ef5bd0be2f2b103a4199788e784cbc68"
+  digest = "1:10405139b45e3a97a3842c93984710e30466eb933545f219ad3f5e45246973b4"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "b4a75ba826a64a70990f11a225237acd6ef35c9f"
+  revision = "9a3f9b0469bbc6b8802087ae5c0af9f61502de01"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
