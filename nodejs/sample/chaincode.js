@@ -1,27 +1,26 @@
-const { Base, shim } = require('./common/base');
+const {CommonChaincode, shim} = require('fabric-common-chaincode');
 
 const collection = 'private1';
 const key = '1';
-class Chaincode extends Base {
+
+class Chaincode extends CommonChaincode {
 
 	constructor() {
 		const name = 'test';
 		super(name);
 	}
 
-	async init(stub, clientIdentity) {
+	async init(stub) {
 		return '';
 	}
 
 	/**
+	 *
 	 * @param {ChaincodeStub} stub
-	 * @param {ClientIdentity} clientIdentity
 	 * @returns {Promise<string>}
 	 */
-	async invoke(stub, clientIdentity) {
-
+	async invoke(stub) {
 		this.setEvent('chaincodeEvent', 'Hello World');
-
 		const value = await this.getPrivateData(collection, key);
 		if (!value) {
 			this.logger.info('clientID' + clientIdentity.getID());
