@@ -1,3 +1,0 @@
-[submodule "nodejs/sample/common"]
-	path = nodejs/sample/common
-	url = https://github.com/davidkhala/fabric-common-chaincode-node

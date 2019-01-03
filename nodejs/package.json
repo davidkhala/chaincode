@@ -1,8 +1,0 @@
-{
-  "name": "node-chaincode-eslint",
-  "version": "0.0.0",
-  "description": "nodejs chaincode eslint wrapper",
-  "devDependencies": {
-    "eslint": "^4.19.1"
-  }
-}
