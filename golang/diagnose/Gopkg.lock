@@ -46,25 +46,25 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:70684a8bd5a68e3ea2b690977b9e10f615f22fca04da2028a8ce7017be7d109d"
+  digest = "1:76be1d23c719a23a5def5c7b349be334d4e1a88ea0200d49d6b611484c73572b"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
     "cid",
   ]
   pruneopts = "UT"
-  revision = "f328b6cb9fd9b81e34268e63984210d5346133c7"
+  revision = "eafdfa5c7f1d3f0a2769fbdae4a7d35d4598e707"
 
 [[projects]]
   branch = "master"
-  digest = "1:42492fd0b40bacb072cf18a819d79929e8aa85d334c851094a5fde53d45deebf"
+  digest = "1:9dcbc8ce6be903b169955cc304893aec424cd9f5d5b528d76abe32b3c161d3b6"
   name = "github.com/davidkhala/goutils"
   packages = [
     ".",
     "crypto",
   ]
   pruneopts = "UT"
-  revision = "6e936dc5f777235088392061a85f2dedad27dd3d"
+  revision = "91639814ce9896e843757c1174961a5f51922e99"
 
 [[projects]]
   digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
@@ -200,7 +200,7 @@
     "amcl/FP256BN",
   ]
   pruneopts = "UT"
-  revision = "6b78f7a22d950103fb2669aabb969f56d42d283b"
+  revision = "5ccba6eab8d6b39aa2cdd88db202bba0e25da5d7"
 
 [[projects]]
   digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
@@ -376,7 +376,7 @@
     "ssh/terminal",
   ]
   pruneopts = "UT"
-  revision = "505ab145d0a99da450461ae2c1a9f6cd10d1f447"
+  revision = "8d7daa0c54b357f3071e11eaef7efc4e19a417e2"
 
 [[projects]]
   branch = "master"
@@ -396,14 +396,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:3d5e79e10549fd9119cbefd614b6d351ef5bd0be2f2b103a4199788e784cbc68"
+  digest = "1:191cccd950a4aeadb60306062f2bdc2f924d750d0156ec6c691b17211bfd7349"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "b4a75ba826a64a70990f11a225237acd6ef35c9f"
+  revision = "82a175fd1598e8a172e58ebdf5ed262bb29129e5"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
