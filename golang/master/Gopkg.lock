@@ -21,6 +21,14 @@
   version = "v0.3.1"
 
 [[projects]]
+  digest = "1:5d3e23515e7916c152cc665eda0f7eaf6fdf8fdfe7c3dbac97049bcbd649b33f"
+  name = "github.com/Knetic/govaluate"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "d216395917cc49052c7c7094cf57f09657ca08a8"
+  version = "v3.0.0"
+
+[[projects]]
   digest = "1:f9ae348e1f793dcf9ed930ed47136a67343dbd6809c5c91391322267f4476892"
   name = "github.com/Microsoft/go-winio"
   packages = ["."]
@@ -46,25 +54,26 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:70684a8bd5a68e3ea2b690977b9e10f615f22fca04da2028a8ce7017be7d109d"
+  digest = "1:38d7642eebd53e22a3710215b73cd6a937b82740d35c699b9709b509e09ab9c0"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
     "cid",
+    "ext",
   ]
   pruneopts = "UT"
-  revision = "b878e4e46504bd504cf3fef6dc207dc0929cd854"
+  revision = "eafdfa5c7f1d3f0a2769fbdae4a7d35d4598e707"
 
 [[projects]]
   branch = "master"
-  digest = "1:42492fd0b40bacb072cf18a819d79929e8aa85d334c851094a5fde53d45deebf"
+  digest = "1:9dcbc8ce6be903b169955cc304893aec424cd9f5d5b528d76abe32b3c161d3b6"
   name = "github.com/davidkhala/goutils"
   packages = [
     ".",
     "crypto",
   ]
   pruneopts = "UT"
-  revision = "6e936dc5f777235088392061a85f2dedad27dd3d"
+  revision = "91639814ce9896e843757c1174961a5f51922e99"
 
 [[projects]]
   digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
@@ -156,7 +165,7 @@
 
 [[projects]]
   branch = "release-1.3"
-  digest = "1:187e0ea7a1d33df07219adf86ca3cdab78539629ecda02be896f598839f2fc8d"
+  digest = "1:0e3d879c4e374476590e6c0b3882dd26cc83d582d7958f0d67370e222b9d381f"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -166,15 +175,20 @@
     "bccsp/sw",
     "bccsp/utils",
     "common/attrmgr",
+    "common/cauthdsl",
     "common/crypto",
     "common/flogging",
     "common/flogging/fabenc",
     "common/ledger",
     "common/metadata",
+    "common/policies",
     "common/util",
     "core/chaincode/platforms",
     "core/chaincode/platforms/ccmetadata",
     "core/chaincode/shim",
+    "core/chaincode/shim/ext/attrmgr",
+    "core/chaincode/shim/ext/cid",
+    "core/chaincode/shim/ext/statebased",
     "core/comm",
     "core/config",
     "core/container/util",
@@ -289,20 +303,20 @@
   version = "v0.1.1"
 
 [[projects]]
-  digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
+  digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
   name = "github.com/pkg/errors"
   packages = ["."]
   pruneopts = "UT"
-  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
-  version = "v0.8.0"
+  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
+  version = "v0.8.1"
 
 [[projects]]
-  digest = "1:69b1cc331fca23d702bd72f860c6a647afd0aa9fcbc1d0659b1365e26546dd70"
+  digest = "1:87c2e02fb01c27060ccc5ba7c5a407cc91147726f8f40b70cceeedbc52b1f3a8"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   pruneopts = "UT"
-  revision = "bcd833dfe83d3cebad139e4a29ed79cb2318bf95"
-  version = "v1.2.0"
+  revision = "e1e72e9de974bd926e5c56f83753fba2df402ce5"
+  version = "v1.3.0"
 
 [[projects]]
   digest = "1:08d65904057412fc0270fc4812a1c90c594186819243160dc779a402d4b6d0bc"
@@ -369,14 +383,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:89c56c4bcd18aa1846cac96053b5a6f5bc8231e27b6963df24a1de61f2f225f3"
+  digest = "1:79c0cc65a52d3c366944549e30b57543cb7c9752bda66d57bd79c57ecfc71246"
   name = "golang.org/x/crypto"
   packages = [
     "sha3",
     "ssh/terminal",
   ]
   pruneopts = "UT"
-  revision = "505ab145d0a99da450461ae2c1a9f6cd10d1f447"
+  revision = "ff983b9c42bc9fbf91556e191cc8efb585c16908"
 
 [[projects]]
   branch = "master"
@@ -396,14 +410,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:10405139b45e3a97a3842c93984710e30466eb933545f219ad3f5e45246973b4"
+  digest = "1:c4f2af053602f247b8625846cd88dfbf9295e3d02e82c58c27ebe3be06bef80c"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "9a3f9b0469bbc6b8802087ae5c0af9f61502de01"
+  revision = "1775db3f06b568179d273425900dd09125831dd5"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -484,8 +498,10 @@
   input-imports = [
     "github.com/davidkhala/fabric-common-chaincode-golang",
     "github.com/davidkhala/fabric-common-chaincode-golang/cid",
+    "github.com/davidkhala/fabric-common-chaincode-golang/ext",
     "github.com/davidkhala/goutils",
     "github.com/hyperledger/fabric/core/chaincode/shim",
+    "github.com/hyperledger/fabric/protos/msp",
     "github.com/hyperledger/fabric/protos/peer",
   ]
   solver-name = "gps-cdcl"

@@ -3,8 +3,10 @@ package main
 import (
 	. "github.com/davidkhala/fabric-common-chaincode-golang"
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
+	"github.com/davidkhala/fabric-common-chaincode-golang/ext"
 	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric/protos/msp"
 	"github.com/hyperledger/fabric/protos/peer"
 )
 
@@ -72,6 +74,18 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 			UnixMilliSecond(t.GetTxTime()),
 			[]byte(value),
 		})
+	case "putEndorsement":
+		var key = params[0]
+		var orgs = params[1:]
+		var policy = ext.NewKeyEndorsementPolicy(nil)
+		policy.AddOrgs(msp.MSPRole_MEMBER, orgs...)
+		t.SetStateValidationParameter(key, policy.Policy())
+	case "getEndorsement":
+		var key = params[0]
+		var policyBytes = t.GetStateValidationParameter(key)
+		var policy = ext.NewKeyEndorsementPolicy(policyBytes)
+		var orgs = policy.ListOrgs()
+		responseBytes = ToJson(orgs)
 	case "delegate":
 		type crossChaincode struct {
 			ChaincodeName string

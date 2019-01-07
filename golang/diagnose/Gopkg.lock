@@ -21,6 +21,14 @@
   version = "v0.3.1"
 
 [[projects]]
+  digest = "1:5d3e23515e7916c152cc665eda0f7eaf6fdf8fdfe7c3dbac97049bcbd649b33f"
+  name = "github.com/Knetic/govaluate"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "d216395917cc49052c7c7094cf57f09657ca08a8"
+  version = "v3.0.0"
+
+[[projects]]
   digest = "1:f9ae348e1f793dcf9ed930ed47136a67343dbd6809c5c91391322267f4476892"
   name = "github.com/Microsoft/go-winio"
   packages = ["."]
@@ -46,11 +54,12 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:76be1d23c719a23a5def5c7b349be334d4e1a88ea0200d49d6b611484c73572b"
+  digest = "1:38d7642eebd53e22a3710215b73cd6a937b82740d35c699b9709b509e09ab9c0"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
     "cid",
+    "ext",
   ]
   pruneopts = "UT"
   revision = "eafdfa5c7f1d3f0a2769fbdae4a7d35d4598e707"
@@ -156,7 +165,7 @@
 
 [[projects]]
   branch = "release-1.3"
-  digest = "1:187e0ea7a1d33df07219adf86ca3cdab78539629ecda02be896f598839f2fc8d"
+  digest = "1:0e3d879c4e374476590e6c0b3882dd26cc83d582d7958f0d67370e222b9d381f"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -166,15 +175,20 @@
     "bccsp/sw",
     "bccsp/utils",
     "common/attrmgr",
+    "common/cauthdsl",
     "common/crypto",
     "common/flogging",
     "common/flogging/fabenc",
     "common/ledger",
     "common/metadata",
+    "common/policies",
     "common/util",
     "core/chaincode/platforms",
     "core/chaincode/platforms/ccmetadata",
     "core/chaincode/shim",
+    "core/chaincode/shim/ext/attrmgr",
+    "core/chaincode/shim/ext/cid",
+    "core/chaincode/shim/ext/statebased",
     "core/comm",
     "core/config",
     "core/container/util",
@@ -484,8 +498,10 @@
   input-imports = [
     "github.com/davidkhala/fabric-common-chaincode-golang",
     "github.com/davidkhala/fabric-common-chaincode-golang/cid",
+    "github.com/davidkhala/fabric-common-chaincode-golang/ext",
     "github.com/davidkhala/goutils",
     "github.com/hyperledger/fabric/core/chaincode/shim",
+    "github.com/hyperledger/fabric/protos/msp",
     "github.com/hyperledger/fabric/protos/peer",
   ]
   solver-name = "gps-cdcl"
