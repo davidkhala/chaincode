@@ -67,6 +67,14 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var tx txData
 		t.GetStateObj(key, &tx)
 		responseBytes = tx.Value
+	case "putRaw":
+		//for leveldb hacker analyzer
+		var key = params[0]
+		var value = params[1]
+		t.PutState(key, []byte(value))
+	case "getRaw":
+		var key = params[0]
+		responseBytes = t.GetState(key)
 	case "put":
 		var key = params[0]
 		var value = params[1]
