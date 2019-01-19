@@ -55,10 +55,10 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var query = params[0]
 		t.Logger.Info("Query string", query)
 		var queryIter = t.GetQueryResult(query)
-		var states = ParseStates(queryIter)
+		var states = ParseStates(queryIter, nil)
 		responseBytes = ToJson(states)
 	case "worldStates":
-		var states = t.WorldStates("")
+		var states = t.WorldStates("", nil)
 		responseBytes = ToJson(states)
 	case "whoami":
 		responseBytes = ToJson(cid.NewClientIdentity(stub))
@@ -110,6 +110,24 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		}
 		var pb = t.InvokeChaincode(paramInput.ChaincodeName, args.Get(), paramInput.Channel)
 		responseBytes = pb.Payload
+	case "listPage":
+		var startKey = params[0]
+		var endKey = params[1]
+		var pageSize = Atoi(params[2])
+		var bookMark = params[3]
+		var iter, metaData = t.GetStateByRangeWithPagination(startKey, endKey, pageSize, bookMark)
+
+		type Response struct {
+			States   []StateKV
+			MetaData QueryResponseMetadata
+		}
+		responseBytes = ToJson(Response{ParseStates(iter, nil), metaData})
+	case "putBatch":
+		var batch map[string]string
+		FromJson([]byte(params[0]), &batch)
+		for k, v := range batch {
+			t.PutState(k, []byte(v))
+		}
 	}
 	return shim.Success(responseBytes)
 }
