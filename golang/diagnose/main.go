@@ -128,6 +128,8 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		for k, v := range batch {
 			t.PutState(k, []byte(v))
 		}
+	case "chaincodeId":
+		responseBytes = []byte(t.GetChaincodeID())
 	}
 	return shim.Success(responseBytes)
 }
