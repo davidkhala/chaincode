@@ -2,265 +2,136 @@ package main
 
 import (
 	"encoding/json"
+	. "github.com/davidkhala/fabric-common-chaincode-golang"
+	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
+	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
-	common "github.com/davidkhala/fabric-common-chaincode/golang"
 )
 
 const (
+	name      = "vendor"
 	TODO      = "TODO"
 	Submitted = "Submitted"
 	Confirmed = "Confirmed"
 	Reject    = "Reject"
 	Closed    = "Closed"
+	StepType  = "Schedule"
 )
 
-var logger = shim.NewLogger("vendor_cc")
-
-type Project struct {
-	//for party A
-	Title       string
-	StackHolder []string
-	Requirement []string
-	Schedule    []Step
-}
-type Submit struct {
-	DeliveryURL string
-	ID          string
-}
-type Step struct {
-	//for party A
-	Installment int
-	ID          string
-	DeadLine    string
-	Status      string
-	lastSubmit  Submit
-	lastAudit   Audit
-	lastReview  Review
-}
-type Audit struct {
-	ID      string
-	Status  string
-	Comment string
-	Time    string
-}
-type Review struct {
-	Status  string
-	Comment string
-	ID      string
-	Time    string
-}
 type SimpleChaincode struct {
+	CommonChaincode
 }
 
-const Schedule = "Schedule"
+func (t SimpleChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.Response) {
+	defer Deferred(DeferHandlerPeerResponse, &response)
+	t.Prepare(stub)
+	var fcn, params = stub.GetFunctionAndParameters()
+	t.Logger.Info("Init", fcn)
+	t.Logger.Debug("params", params)
+	var project Project
+	FromJson([]byte(params[0]), &project)
+	var projectTitle = project.Title
+	t.PutState(projectTitle, []byte(params[0]))
 
-const partASubject = "Admin@BU.Delphi.com"
-const partBSubject = "Admin@ENG.Delphi.com"
-const partCSubject = "Admin@PM.Delphi.com"
-
-func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
-	logger.Info("########### vendor Init ###########")
-
-	var err error;
-	creatorBytes, err := stub.GetCreator()
-	if err != nil {
-		return shim.Error(err.Error())
+	for _, step := range project.Schedule {
+		var key = t.CreateCompositeKey(StepType, []string{step.ID})
+		t.PutState(key, ToJson(step))
 	}
-	creator, err := common.ParseCreator(creatorBytes)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	cert := creator.Certificate
-	if cert.Subject.CommonName != partASubject && cert.Subject.CommonName != partBSubject {
-		return shim.Error("invalid creator:" + cert.Subject.CommonName + "; allowed creator:" + partASubject + ", " + partBSubject)
-	}
-
-	_, args := stub.GetFunctionAndParameters()
-
-	if len(args) == 0 {
-		return shim.Error("empty params")
-	}
-	payloadJSON := args[0]
-	project := Project{}
-	err = json.Unmarshal([]byte(payloadJSON), &project)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-
-	logger.Info("project")
-	logger.Info(project)
-	// Initialize the chaincode
-	projectTitle := project.Title
-	if len(projectTitle) == 0 {
-		return shim.Error("empty project Title")
-	}
-	err = stub.PutState(projectTitle, []byte(payloadJSON))
-
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	for i := 0; i < len(project.Schedule); i++ {
-		step := project.Schedule[i]
-		var stepBytes []byte
-		stepBytes, err = json.Marshal(step)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-		err = stub.PutState(step.ID, stepBytes)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-	}
-
-	return shim.Success([]byte(payloadJSON))
-
+	return shim.Success(nil)
 }
 
-// Transaction makes payment of X units from A to B
-func (t *SimpleChaincode) Invoke(chain shim.ChaincodeStubInterface) peer.Response {
-	logger.Info("########### vendor Invoke ###########")
+func (t SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer.Response) {
+	defer Deferred(DeferHandlerPeerResponse, &response)
+	t.Prepare(stub)
 
-	fcn, args := chain.GetFunctionAndParameters()
+	var responseBytes []byte
+	var fcn, params = stub.GetFunctionAndParameters()
+	t.Logger.Info("Invoke", fcn)
+	t.Logger.Debug("params", params)
 
-	if len(args) == 0 {
-		return shim.Error("empty params")
+	switch fcn {
+	case "read":
+		responseBytes = t.read(params[0], params[1])
+	case "progress":
+		t.progress(params)
+	default:
+		PanicString("Unknown fcn:" + fcn)
 	}
-	if fcn == "read" {
-		return t.read(chain, args)
-	}
-	if fcn == "progress" {
-		return t.progress(chain, args)
-	}
-
-	return shim.Error(`Unknown action, check the fcn, got:` + fcn)
+	return shim.Success(responseBytes)
 }
 
-func (t *SimpleChaincode) progress(chain shim.ChaincodeStubInterface, args []string) peer.Response {
+func (t SimpleChaincode) progress(params []string){
 
-	creatorBytes, _ := chain.GetCreator()
-	creator, err := common.ParseCreator(creatorBytes)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	cert := creator.Certificate
-	payloadJSON := args[0]
-	step := Step{}
-	var stepBytes []byte
-	switch cert.Subject.CommonName {
+
+	var client = cid.NewClientIdentity(t.CCAPI)
+	var step Step
+	switch client.Cert.Subject.CommonName{
 	case partBSubject:
-		submit := Submit{}
-		err = json.Unmarshal([]byte(payloadJSON), &submit)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-		stepBytes, err = chain.GetState(submit.ID)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
+		var submit Submit
+		FromJson([]byte(params[0]),&submit)
 
-		err = json.Unmarshal(stepBytes, &step)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
+		t.GetStateObj(submit.ID,&step)
+
 		if step.Status != TODO && step.Status != Reject && step.Status != Submitted {
-			return shim.Error("Invalid current step. Status:" + step.Status)
+			PanicString("Invalid current step. Status:" + step.Status)
 		}
 		step.lastSubmit = submit
 
 		step.Status = Submitted
 
 	case partASubject:
-		review := Review{}
-		err = json.Unmarshal([]byte(payloadJSON), &review)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-		stepBytes, err = chain.GetState(review.ID)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-		err = json.Unmarshal(stepBytes, &step)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
+		var review Review
+		FromJson([]byte(params[0]),&review)
+
+		t.GetStateObj(review.ID,&step)
+
 		if step.Status != Submitted {
-			return shim.Error("Invalid current step. Status:" + step.Status)
+			PanicString("Invalid current step. Status:" + step.Status)
 		}
 		step.lastReview = review
 
 		step.Status = review.Status
 
 	case partCSubject:
-		audit := Audit{}
-		err = json.Unmarshal([]byte(payloadJSON), &audit)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-		stepBytes, err = chain.GetState(audit.ID)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-		err = json.Unmarshal(stepBytes, &step)
-		if err != nil {
-			return shim.Error(err.Error())
-		}
+		var audit Audit
+		FromJson([]byte(params[0]),&audit)
+
+		t.GetStateObj(audit.ID,&step)
+
+
 		if step.Status != Confirmed {
-			return shim.Error("Invalid current step. Status:" + step.Status)
+			PanicString("Invalid current step. Status:" + step.Status)
 		}
 		step.lastAudit = audit
 
 		step.Status = audit.Status
 
 	default:
-		return shim.Error("invalid creator:" + cert.Subject.CommonName)
+		PanicString("invalid creator:" + cert.Subject.CommonName)
 	}
-	stepBytes, err = json.Marshal(step)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	err = chain.PutState(step.ID, stepBytes)
-	if err != nil {
-		return shim.Error(err.Error())
-	}
-	return shim.Success(stepBytes)
+
+	t.PutStateObj(step.ID,step)
 
 }
 
-// Query callback representing the query of a chaincode
-func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) peer.Response {
-
-	if len(args) < 1 {
-		return shim.Error("no query target specified")
-	}
-	target := args[0]
-	logger.Info("target", target)
-	switch target {
+func (t SimpleChaincode) read(targetType, item string) []byte {
+	var value []byte
+	switch targetType {
 	case "project":
-		if len(args) < 2 {
-			return shim.Error("no project title specified")
-		}
-		projectTitle := args[1]
-		logger.Info("title", projectTitle)
-		project, _ := stub.GetState(projectTitle)
-		return shim.Success(project)
+		value = t.GetState(item)
 	case "step":
-		if len(args) < 2 {
-			return shim.Error("no step ID specified")
-		}
-		stepID := args[1]
-		logger.Info("step ID", stepID)
-		stepBytes, _ := stub.GetState(stepID)
-		return shim.Success(stepBytes)
-
+		var key = t.CreateCompositeKey(StepType, []string{item})
+		value = t.GetState(key)
+	default:
+		PanicString("Unknown read targetType:" + targetType)
 	}
-
-	return shim.Success(nil)
+	return value
 }
 
 func main() {
-	err := shim.Start(new(SimpleChaincode))
-	if err != nil {
-		logger.Errorf("Error starting Simple chaincode: %s", err)
-	}
+	var cc = SimpleChaincode{}
+	cc.SetLogger(name)
+	ChaincodeStart(cc)
+
 }
