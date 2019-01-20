@@ -53,11 +53,9 @@ func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.
 	case "get":
 		var key = params[0]
 		responseBytes = t.GetState(key)
-	case "getBinding":
-		//TODO what is this
+	case "getBinding": // not for application chaincode
 		responseBytes = []byte(HexEncode(t.GetBinding()))
-	case "getDecorations":
-		//TODO what is this
+	case "getDecorations": // not for application chaincode
 		responseBytes = ToJson(stub.GetDecorations())
 	default:
 
