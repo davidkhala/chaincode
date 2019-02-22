@@ -33,8 +33,8 @@
   name = "github.com/Microsoft/go-winio"
   packages = ["."]
   pruneopts = "UT"
-  revision = "97e4973ce50b2ff5f09635a57e2b88a037aae829"
-  version = "v0.4.11"
+  revision = "1a8911d1ed007260465c3bfbbc785ac6915a0bb8"
+  version = "v0.4.12"
 
 [[projects]]
   branch = "master"
@@ -54,7 +54,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:7aa491611331bba4817ef3382bde48fee69a08f74b1b01aed40dc3a8a5922520"
+  digest = "1:2cad10c499d92d82132367f96f210e9e566442cd822f11e7846bc06bc4313edf"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
@@ -62,18 +62,18 @@
     "ext",
   ]
   pruneopts = "UT"
-  revision = "05bca2d4c9a4c484793600c2a36334a034eeb8b9"
+  revision = "bd03757a56b50946ce4dc8fecf3db015eacf1e24"
 
 [[projects]]
   branch = "master"
-  digest = "1:cc6ecc84c1ca91ae8975eb61b20f3e193e5fceefdfc47b5160a853fe2ba1617a"
+  digest = "1:2ce6dfe3870aa15c5335acf6b454213ffd008de409daa38639fb84075b662fb9"
   name = "github.com/davidkhala/goutils"
   packages = [
     ".",
     "crypto",
   ]
   pruneopts = "UT"
-  revision = "aece9bee0f89c0a64d3239fc2e7f075cdba90f68"
+  revision = "eaa5110e6e368c10809d076813f213947c622819"
 
 [[projects]]
   digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
@@ -133,12 +133,12 @@
   version = "v1.2.1"
 
 [[projects]]
-  digest = "1:d059a146ab350e553c2687d3e17f198eb5b27c7cf55fe6ba0e2d21349df63388"
+  digest = "1:48092bf6632f55839850666c33469f546f6d45fdbd59a66759ec12e84d853dc2"
   name = "github.com/gogo/protobuf"
   packages = ["proto"]
   pruneopts = "UT"
-  revision = "4cbf7e384e768b4e01799441fdf2a706a5635ae7"
-  version = "v1.2.0"
+  revision = "ba06b47c162d49f2af050fb4c75bcbc86a159d5c"
+  version = "v1.2.1"
 
 [[projects]]
   digest = "1:5ac24c0ad5dc117fb2b6d90d205c876ec599c09cccb702a36586680e09cb20b5"
@@ -164,12 +164,15 @@
   version = "v1.0.0"
 
 [[projects]]
-  branch = "release-1.3"
-  digest = "1:0e3d879c4e374476590e6c0b3882dd26cc83d582d7958f0d67370e222b9d381f"
+  branch = "release-1.4"
+  digest = "1:fa9b793b35ea8ec98b9e1051316bc47987611e902c262d03f3102b968d7f24e9"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
     "bccsp/factory",
+    "bccsp/idemix",
+    "bccsp/idemix/bridge",
+    "bccsp/idemix/handlers",
     "bccsp/pkcs11",
     "bccsp/signer",
     "bccsp/sw",
@@ -181,13 +184,16 @@
     "common/flogging/fabenc",
     "common/ledger",
     "common/metadata",
+    "common/metrics",
     "common/policies",
+    "common/semaphore",
     "common/util",
     "core/chaincode/platforms",
     "core/chaincode/platforms/ccmetadata",
     "core/chaincode/shim",
     "core/chaincode/shim/ext/attrmgr",
     "core/chaincode/shim/ext/cid",
+    "core/chaincode/shim/ext/entities",
     "core/chaincode/shim/ext/statebased",
     "core/comm",
     "core/config",
@@ -200,10 +206,11 @@
     "protos/ledger/rwset/kvrwset",
     "protos/msp",
     "protos/peer",
+    "protos/token",
     "protos/utils",
   ]
   pruneopts = "UT"
-  revision = "5b7e86acad90323bfc6e77641b7b8dea526aadaf"
+  revision = "f7c5221d1bbae8e1ef0daa2efc8ff4b61cea2019"
 
 [[projects]]
   branch = "master"
@@ -254,7 +261,7 @@
   name = "github.com/miekg/pkcs11"
   packages = ["."]
   pruneopts = "UT"
-  revision = "79c216b7cb4d810ef51e2d89431d91f481a8a273"
+  revision = "da38ceded9c2f7bcc4cf53c4e48a0e600cac4e8e"
 
 [[projects]]
   digest = "1:53bc4cd4914cd7cd52139990d5170d6dc99067ae31c56530621b18b35fc30318"
@@ -350,6 +357,14 @@
   revision = "1967d93db724f4a5c0e101307e96d82ff520a067"
 
 [[projects]]
+  branch = "master"
+  digest = "1:05e8687cd2ac57a82e926f6ebbdf8ec10ed89f65a629ac91b7fb4bcadf1ff849"
+  name = "github.com/sykesm/zap-logfmt"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ccbdde42f96b57b635a2dfb32b342fe68df8003a"
+
+[[projects]]
   digest = "1:3c1a69cdae3501bf75e76d0d86dc6f2b0a7421bc205c0cb7b96b19eed464a34d"
   name = "go.uber.org/atomic"
   packages = ["."]
@@ -383,18 +398,18 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:79c0cc65a52d3c366944549e30b57543cb7c9752bda66d57bd79c57ecfc71246"
+  digest = "1:8d51440d7c6ea45d9d752e1638305c1cd5dd745ff1e9a0e4eef1919746aa060b"
   name = "golang.org/x/crypto"
   packages = [
     "sha3",
     "ssh/terminal",
   ]
   pruneopts = "UT"
-  revision = "ff983b9c42bc9fbf91556e191cc8efb585c16908"
+  revision = "a4c6cb3142f211c99e4bf4cd769535b29a9b616f"
 
 [[projects]]
   branch = "master"
-  digest = "1:293d03d721a8bebb909ff16dad088981a995204f67df318456f92ffe13e8e8cd"
+  digest = "1:fc7b6b4384e1e849d99eab58eca4f8c0a76bad4699117d5077a9a5c3c83e289e"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -406,18 +421,18 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "915654e7eabcea33ae277abbecf52f0d8b7a9fdc"
+  revision = "3a22650c66bd7f4fb6d1e8072ffd7b75c8a27898"
 
 [[projects]]
   branch = "master"
-  digest = "1:43cde116ff48f299eddb7e6515677e6d0a2c915854bb05a333877f07c3bb3033"
+  digest = "1:a3970d9d7cb61ebdb9db882d8950c20fad0e19bbad8f6e688334756f18aec597"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "11f53e03133963fb11ae0588e08b5e0b85be8be5"
+  revision = "ec7b60b042fd2c54ad5ceaac0c891bd88843f4a2"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -448,10 +463,10 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "db91494dd46c1fdcbbde05e5ff5eb56df8f7d79a"
+  revision = "082222b4a5c572e33e82ee9162d1352c7cf38682"
 
 [[projects]]
-  digest = "1:2dab32a43451e320e49608ff4542fdfc653c95dcc35d0065ec9c6c3dd540ed74"
+  digest = "1:ab8e92d746fb5c4c18846b0879842ac8e53b3d352449423d0924a11f1020ae1b"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -467,7 +482,9 @@
     "internal",
     "internal/backoff",
     "internal/channelz",
+    "internal/envconfig",
     "internal/grpcrand",
+    "internal/transport",
     "keepalive",
     "metadata",
     "naming",
@@ -478,11 +495,10 @@
     "stats",
     "status",
     "tap",
-    "transport",
   ]
   pruneopts = "UT"
-  revision = "168a6198bcb0ef175f7dacec0b8691fc141dc9b8"
-  version = "v1.13.0"
+  revision = "8dea3dc473e90c8179e519d91302d0597c0ca1d1"
+  version = "v1.15.0"
 
 [[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
