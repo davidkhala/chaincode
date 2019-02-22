@@ -44,12 +44,18 @@ func (t tokenChaincode) getToken(token string) *TokenData {
 	}
 	return &tokenData
 }
-func (t tokenChaincode) history(tokenID string) []byte {
+func (t tokenChaincode) history(tokenID string) []TokenData {
 	var filter = func(modification interface{}) bool {
 		return true
 	}
 	var history = ParseHistory(t.GetHistoryForKey(tokenID), filter)
-	return ToJson(history)
+	var result []TokenData
+	for _, modification := range history {
+		var tokenData TokenData
+		FromJson([]byte(modification.Value), &tokenData)
+		result = append(result, tokenData)
+	}
+	return result
 
 }
 func accessRight(identity ClientIdentity, tokenRaw string, data TokenData) {
@@ -83,7 +89,7 @@ func (t tokenChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer.
 		tokenData = *t.getToken(tokenID)
 		responseBytes = ToJson(tokenData)
 	case Fcn_tokenHistory:
-		responseBytes = t.history(tokenID)
+		responseBytes = ToJson(t.history(tokenID))
 	case Fcn_deleteToken:
 		var tokenDataPtr = t.getToken(tokenID)
 		if tokenDataPtr == nil {
