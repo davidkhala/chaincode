@@ -23,7 +23,7 @@ func (t SideChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	return shim.Success(nil)
 }
 func (t SideChaincode) newTokenGetter() string {
-	var key1 = RandString(4, "abcd")
+	var key1 = RandString(4, "abcd")//FIXME random token should not be here
 	var args = ArgsBuilder("get")
 	args.AppendArg(key1)
 	var responseBytes = t.InvokeChaincode(mainCC, args.Get(), "").Payload
