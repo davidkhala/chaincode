@@ -54,7 +54,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2cad10c499d92d82132367f96f210e9e566442cd822f11e7846bc06bc4313edf"
+  digest = "1:302d56de1af2be44b336f255c5c9ec1c75491ad9c96a4a21aa48e60b8f48de98"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
@@ -62,18 +62,18 @@
     "ext",
   ]
   pruneopts = "UT"
-  revision = "bd03757a56b50946ce4dc8fecf3db015eacf1e24"
+  revision = "c0f20940d8f3d1465b2984d51d002bcaf8e9182d"
 
 [[projects]]
   branch = "master"
-  digest = "1:2ce6dfe3870aa15c5335acf6b454213ffd008de409daa38639fb84075b662fb9"
+  digest = "1:0dfcd4356ee1cd1d9c74bbfb95bb90c957ba91f68aea20b8c3e989447d4c1b78"
   name = "github.com/davidkhala/goutils"
   packages = [
     ".",
     "crypto",
   ]
   pruneopts = "UT"
-  revision = "eaa5110e6e368c10809d076813f213947c622819"
+  revision = "6526ac2aba88f2ec84a99d05204449572b494f27"
 
 [[projects]]
   digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
@@ -141,7 +141,7 @@
   version = "v1.2.1"
 
 [[projects]]
-  digest = "1:5ac24c0ad5dc117fb2b6d90d205c876ec599c09cccb702a36586680e09cb20b5"
+  digest = "1:2624ed1a47149456f5e9bb48ae8fabf66a8b772d0a5430abba34cb527c4830e3"
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
@@ -152,8 +152,8 @@
     "ptypes/timestamp",
   ]
   pruneopts = "UT"
-  revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
-  version = "v1.2.0"
+  revision = "b5d812f8a3706043e23a9cd5babf2e5423744d30"
+  version = "v1.3.1"
 
 [[projects]]
   digest = "1:1168584a5881d371e96cb0e66ef6db71d7cef0856cc7f311490bc856627f8328"
@@ -165,7 +165,7 @@
 
 [[projects]]
   branch = "release-1.4"
-  digest = "1:fa9b793b35ea8ec98b9e1051316bc47987611e902c262d03f3102b968d7f24e9"
+  digest = "1:2e35ca80cc9b8d831ee3fa32f2d9e62b2345296da76ad38427a81d76bd74773d"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -210,7 +210,7 @@
     "protos/utils",
   ]
   pruneopts = "UT"
-  revision = "f7c5221d1bbae8e1ef0daa2efc8ff4b61cea2019"
+  revision = "dce0e5d8e7bbce5315d0895e5d1460640700285b"
 
 [[projects]]
   branch = "master"
@@ -224,12 +224,12 @@
   revision = "5ccba6eab8d6b39aa2cdd88db202bba0e25da5d7"
 
 [[projects]]
-  digest = "1:0a69a1c0db3591fcefb47f115b224592c8dfa4368b7ba9fae509d5e16cdc95c8"
+  digest = "1:31e761d97c76151dde79e9d28964a812c46efc5baee4085b86f68f0c654450de"
   name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
   pruneopts = "UT"
-  revision = "5c8c8bd35d3832f5d134ae1e1e375b69a4d25242"
-  version = "v1.0.1"
+  revision = "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e"
+  version = "v1.0.2"
 
 [[projects]]
   digest = "1:ca955a9cd5b50b0f43d2cc3aeb35c951473eeca41b34eb67507f1dbcc0542394"
@@ -257,11 +257,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:5ae265eb6d780f3560f0f937fa6eb1b6488c58217e632be45d0c30da2832a90e"
+  digest = "1:b39bad8820b5fa1a8e4a618cc9f3e74b72cd5ace3d3431d4c11aac20651f314b"
   name = "github.com/miekg/pkcs11"
   packages = ["."]
   pruneopts = "UT"
-  revision = "da38ceded9c2f7bcc4cf53c4e48a0e600cac4e8e"
+  revision = "074fd7a1ed1993670ce41e6256599452720b3177"
 
 [[projects]]
   digest = "1:53bc4cd4914cd7cd52139990d5170d6dc99067ae31c56530621b18b35fc30318"
@@ -318,12 +318,12 @@
   version = "v0.8.1"
 
 [[projects]]
-  digest = "1:87c2e02fb01c27060ccc5ba7c5a407cc91147726f8f40b70cceeedbc52b1f3a8"
+  digest = "1:e4c72127d910a96daf869a44f3dd563b86dbe6931a172863a0e99c5ff04b59e4"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
   pruneopts = "UT"
-  revision = "e1e72e9de974bd926e5c56f83753fba2df402ce5"
-  version = "v1.3.0"
+  revision = "dae0fa8d5b0c810a8ab733fbd5510c7cae84eca4"
+  version = "v1.4.0"
 
 [[projects]]
   digest = "1:08d65904057412fc0270fc4812a1c90c594186819243160dc779a402d4b6d0bc"
@@ -334,12 +334,12 @@
   version = "v1.3.0"
 
 [[projects]]
-  digest = "1:68ea4e23713989dc20b1bded5d9da2c5f9be14ff9885beef481848edd18c26cb"
+  digest = "1:1b753ec16506f5864d26a28b43703c58831255059644351bbcb019b843950900"
   name = "github.com/spf13/jwalterweatherman"
   packages = ["."]
   pruneopts = "UT"
-  revision = "4a4406e478ca629068e7768fc33f3f044173c0a6"
-  version = "v1.0.0"
+  revision = "94f6ae3ed3bceceafa716478c5fbf8d29ca601a1"
+  version = "v1.1.0"
 
 [[projects]]
   digest = "1:c1b1102241e7f645bc8e0c22ae352e8f0dc6484b6cb4d132fa9f24174e0119e2"
@@ -398,18 +398,18 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8d51440d7c6ea45d9d752e1638305c1cd5dd745ff1e9a0e4eef1919746aa060b"
+  digest = "1:b1741ce291001005aa512360a992d5cc9a79dc1d2c73b4c96ceb532891fb5cc8"
   name = "golang.org/x/crypto"
   packages = [
     "sha3",
     "ssh/terminal",
   ]
   pruneopts = "UT"
-  revision = "a4c6cb3142f211c99e4bf4cd769535b29a9b616f"
+  revision = "a5d413f7728c81fb97d96a2b722368945f651e78"
 
 [[projects]]
   branch = "master"
-  digest = "1:fc7b6b4384e1e849d99eab58eca4f8c0a76bad4699117d5077a9a5c3c83e289e"
+  digest = "1:4512c74e2c934a151fa9246cdc565d29611f53295bfb05e7a6275e80ee540a0c"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -421,18 +421,19 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "3a22650c66bd7f4fb6d1e8072ffd7b75c8a27898"
+  revision = "e3b2ff56ed879efa686c9d09ed74f9bfe42f1a1d"
 
 [[projects]]
   branch = "master"
-  digest = "1:a3970d9d7cb61ebdb9db882d8950c20fad0e19bbad8f6e688334756f18aec597"
+  digest = "1:78ed3d0c6d5b4996ef2867e280f39ea7b44438558c6331721740ab9061db532c"
   name = "golang.org/x/sys"
   packages = [
+    "cpu",
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "ec7b60b042fd2c54ad5ceaac0c891bd88843f4a2"
+  revision = "f49334f85ddcf0f08d7fb6dd7363e9e6d6b777eb"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -459,11 +460,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:077c1c599507b3b3e9156d17d36e1e61928ee9b53a5b420f10f28ebd4a0b275c"
+  digest = "1:c3076e7defee87de1236f1814beb588f40a75544c60121e6eb38b3b3721783e2"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "082222b4a5c572e33e82ee9162d1352c7cf38682"
+  revision = "e79c0c59cdb5e117ef82a6f885294df3d74065d5"
 
 [[projects]]
   digest = "1:ab8e92d746fb5c4c18846b0879842ac8e53b3d352449423d0924a11f1020ae1b"
