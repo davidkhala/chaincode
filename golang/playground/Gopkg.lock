@@ -21,14 +21,6 @@
   version = "v0.3.1"
 
 [[projects]]
-  digest = "1:5d3e23515e7916c152cc665eda0f7eaf6fdf8fdfe7c3dbac97049bcbd649b33f"
-  name = "github.com/Knetic/govaluate"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "d216395917cc49052c7c7094cf57f09657ca08a8"
-  version = "v3.0.0"
-
-[[projects]]
   digest = "1:f9ae348e1f793dcf9ed930ed47136a67343dbd6809c5c91391322267f4476892"
   name = "github.com/Microsoft/go-winio"
   packages = ["."]
@@ -54,29 +46,30 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:556b34d95d4e9a28f11e3d7ab3897210bf2fe48c349e94e37bc62fd9a8c8ac85"
+  digest = "1:3385590fba9c0b415550171fdbdf64518ab1d084f35260c1c4e70c7dd2d82242"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
-  packages = [
-    ".",
-    "cid",
-    "ext",
-  ]
+  packages = ["."]
   pruneopts = "UT"
   revision = "c15fd53f6e7e3cb6b0b005fdfc1620ce7d7f4921"
 
 [[projects]]
   branch = "master"
-  digest = "1:9d8479490e95e368f7e5feff92ee06ae9381cb7750bb5ab216f3133e065c6f09"
+  digest = "1:2e30d9a714e81254504054d6368956bc7e860120713d51851810a1c650ce1454"
   name = "github.com/davidkhala/goutils"
-  packages = [
-    ".",
-    "crypto",
-  ]
+  packages = ["."]
   pruneopts = "UT"
   revision = "4a24543a5b35322cf78a0b1a9422f50e451c5fec"
 
 [[projects]]
-  digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
+  digest = "1:de4a141036d93a75ae89ed0868ab7759c1f1b74131cd3a6a7ce4071bce006fd6"
+  name = "github.com/docker/distribution"
+  packages = ["registry/api/errcode"]
+  pruneopts = "UT"
+  revision = "0d3efadf0154c2b8a4e7b6621fff9809655cc580"
+
+[[projects]]
+  branch = "master"
+  digest = "1:3368e7f2a516b9999a9c282cf501747fce5b43073ac03c972f51451f342ffe62"
   name = "github.com/docker/docker"
   packages = [
     "api/types",
@@ -90,23 +83,20 @@
     "api/types/swarm",
     "api/types/swarm/runtime",
     "api/types/versions",
+    "errdefs",
     "opts",
-    "pkg/archive",
     "pkg/fileutils",
     "pkg/homedir",
     "pkg/idtools",
     "pkg/ioutils",
-    "pkg/jsonmessage",
     "pkg/longpath",
     "pkg/mount",
     "pkg/pools",
     "pkg/stdcopy",
     "pkg/system",
-    "pkg/term",
-    "pkg/term/windows",
   ]
   pruneopts = "UT"
-  revision = "a422774e593b33bd287d9890544ad9e09b380d8c"
+  revision = "f7ec606fc1ce5d547662af485acd78eb732eedfe"
 
 [[projects]]
   digest = "1:ade935c55cd6d0367c843b109b09c9d748b1982952031414740750fdf94747eb"
@@ -125,20 +115,33 @@
   version = "v0.3.3"
 
 [[projects]]
-  digest = "1:ed17414a259d9c62eb01cf8c2b0231e6310948337197ebd01161121a36be3759"
-  name = "github.com/fsouza/go-dockerclient"
-  packages = ["."]
+  branch = "master"
+  digest = "1:3b4afe788202e2911355e54c30323ec56617c52015fcdff23380058f4cee8540"
+  name = "github.com/docker/libnetwork"
+  packages = ["ipamutils"]
   pruneopts = "UT"
-  revision = "51bd33c0c7792b2566054672a4915b406d988cc6"
-  version = "v1.2.1"
+  revision = "48f846327bbe6a0dce0c556e8dc9f5bb939d5c16"
 
 [[projects]]
-  digest = "1:48092bf6632f55839850666c33469f546f6d45fdbd59a66759ec12e84d853dc2"
+  digest = "1:730879a0d2bfbe16e6d36c4e57e308e46babe0453f013be71d98f09fda5d1cf5"
+  name = "github.com/fsouza/go-dockerclient"
+  packages = [
+    ".",
+    "internal/archive",
+    "internal/jsonmessage",
+    "internal/term",
+  ]
+  pruneopts = "UT"
+  revision = "1b33efcb40bef3494af8bc6a1f73600f37a3c9d1"
+  version = "v1.3.0"
+
+[[projects]]
+  digest = "1:d059a146ab350e553c2687d3e17f198eb5b27c7cf55fe6ba0e2d21349df63388"
   name = "github.com/gogo/protobuf"
   packages = ["proto"]
   pruneopts = "UT"
-  revision = "ba06b47c162d49f2af050fb4c75bcbc86a159d5c"
-  version = "v1.2.1"
+  revision = "4cbf7e384e768b4e01799441fdf2a706a5635ae7"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:2624ed1a47149456f5e9bb48ae8fabf66a8b772d0a5430abba34cb527c4830e3"
@@ -165,7 +168,7 @@
 
 [[projects]]
   branch = "release-1.4"
-  digest = "1:2e35ca80cc9b8d831ee3fa32f2d9e62b2345296da76ad38427a81d76bd74773d"
+  digest = "1:f7c008986de385e90a6e3c4bbfac521226c14d3b3e9662fd249c389c36b075cb"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -177,24 +180,17 @@
     "bccsp/signer",
     "bccsp/sw",
     "bccsp/utils",
-    "common/attrmgr",
-    "common/cauthdsl",
     "common/crypto",
     "common/flogging",
     "common/flogging/fabenc",
     "common/ledger",
     "common/metadata",
     "common/metrics",
-    "common/policies",
     "common/semaphore",
     "common/util",
     "core/chaincode/platforms",
     "core/chaincode/platforms/ccmetadata",
     "core/chaincode/shim",
-    "core/chaincode/shim/ext/attrmgr",
-    "core/chaincode/shim/ext/cid",
-    "core/chaincode/shim/ext/entities",
-    "core/chaincode/shim/ext/statebased",
     "core/comm",
     "core/config",
     "core/container/util",
@@ -299,15 +295,12 @@
   version = "v1.0.1"
 
 [[projects]]
-  digest = "1:1869683e323ebff2bdf8adcb560f82bf6f8d94019d35099e3403f7df12e9c07e"
+  branch = "master"
+  digest = "1:eecbbd6bfbfbe1acdad4b22c4fd530ab569df1634deef359e40d2ee4f85057f9"
   name = "github.com/opencontainers/runc"
-  packages = [
-    "libcontainer/system",
-    "libcontainer/user",
-  ]
+  packages = ["libcontainer/user"]
   pruneopts = "UT"
-  revision = "baf6536d6259209c3edfa2b22237af82942d3dfa"
-  version = "v0.1.1"
+  revision = "029124da7af7360afa781a0234d1b083550f797c"
 
 [[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
@@ -365,12 +358,12 @@
   revision = "ccbdde42f96b57b635a2dfb32b342fe68df8003a"
 
 [[projects]]
-  digest = "1:3c1a69cdae3501bf75e76d0d86dc6f2b0a7421bc205c0cb7b96b19eed464a34d"
+  digest = "1:777e729b475d3895c7229552aa10076f0d177daf37c0a72258006d046d329960"
   name = "go.uber.org/atomic"
   packages = ["."]
   pruneopts = "UT"
-  revision = "1ea20fb1cbb1cc08cbd0d913a96dead89aa18289"
-  version = "v1.3.2"
+  revision = "4e336646b2ef9fc6e47be8e21594178f98e5ebcf"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:60bf2a5e347af463c42ed31a493d817f8a72f102543060ed992754e689805d1a"
@@ -511,11 +504,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/davidkhala/fabric-common-chaincode-golang",
-    "github.com/davidkhala/fabric-common-chaincode-golang/cid",
-    "github.com/davidkhala/fabric-common-chaincode-golang/ext",
-    "github.com/davidkhala/goutils",
     "github.com/hyperledger/fabric/core/chaincode/shim",
-    "github.com/hyperledger/fabric/protos/msp",
     "github.com/hyperledger/fabric/protos/peer",
   ]
   solver-name = "gps-cdcl"
