@@ -75,6 +75,11 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	case "getRaw":
 		var key = params[0]
 		responseBytes = t.GetState(key)
+	case "history":
+		var key = params[0]
+		var iter = t.GetHistoryForKey(key)
+		var modifications = ParseHistory(iter, nil)
+		responseBytes = ToJson(modifications)
 	case "put":
 		var key = params[0]
 		var value = params[1]
