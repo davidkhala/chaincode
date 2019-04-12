@@ -130,6 +130,9 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		}
 	case "chaincodeId":
 		responseBytes = []byte(t.GetChaincodeID())
+	case "getCertID":
+		var certID = cid.NewClientIdentity(stub).GetID()
+		responseBytes = []byte(certID)
 	}
 	return shim.Success(responseBytes)
 }

@@ -54,7 +54,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:302d56de1af2be44b336f255c5c9ec1c75491ad9c96a4a21aa48e60b8f48de98"
+  digest = "1:556b34d95d4e9a28f11e3d7ab3897210bf2fe48c349e94e37bc62fd9a8c8ac85"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
@@ -62,7 +62,7 @@
     "ext",
   ]
   pruneopts = "UT"
-  revision = "c0f20940d8f3d1465b2984d51d002bcaf8e9182d"
+  revision = "c15fd53f6e7e3cb6b0b005fdfc1620ce7d7f4921"
 
 [[projects]]
   branch = "master"
@@ -73,7 +73,7 @@
     "crypto",
   ]
   pruneopts = "UT"
-  revision = "6526ac2aba88f2ec84a99d05204449572b494f27"
+  revision = "0847038c95592bf0f558698899a051a952495146"
 
 [[projects]]
   digest = "1:49a2a779b1af8f02547b5a505eb1382f9d42299ec7215f34a32535e6af9a1c9e"
@@ -210,7 +210,7 @@
     "protos/utils",
   ]
   pruneopts = "UT"
-  revision = "dce0e5d8e7bbce5315d0895e5d1460640700285b"
+  revision = "86c3f76dc3cf7a1af203a402b3a2fa8ce71962d4"
 
 [[projects]]
   branch = "master"
@@ -409,7 +409,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4512c74e2c934a151fa9246cdc565d29611f53295bfb05e7a6275e80ee540a0c"
+  digest = "1:a7550c619a7f9701bc2f0b2c866668a207cfb693a2834796f723d2c78b514372"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -421,7 +421,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "e3b2ff56ed879efa686c9d09ed74f9bfe42f1a1d"
+  revision = "74de082e2cca95839e88aa0aeee5aadf6ce7710f"
 
 [[projects]]
   branch = "master"
@@ -464,7 +464,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "e79c0c59cdb5e117ef82a6f885294df3d74065d5"
+  revision = "d831d65fe17df2e52bcc4316d4a9f7a418701f43"
 
 [[projects]]
   digest = "1:ab8e92d746fb5c4c18846b0879842ac8e53b3d352449423d0924a11f1020ae1b"
