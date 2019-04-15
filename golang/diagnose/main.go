@@ -138,6 +138,11 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	case "getCertID":
 		var certID = cid.NewClientIdentity(stub).GetID()
 		responseBytes = []byte(certID)
+	case "createComposite":
+		var objectType = params[0]
+		var attr1 = params[1:]
+		var compositeKey = t.CreateCompositeKey(objectType, attr1)
+		responseBytes = []byte(compositeKey)
 	}
 	return shim.Success(responseBytes)
 }
