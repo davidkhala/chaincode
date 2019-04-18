@@ -5,6 +5,9 @@
     "start": "node chaincode.js"
   },
   "dependencies": {
-    "fabric-common-chaincode": "^0.0.141"
+    "fabric-common-chaincode": "^0.0.144"
+  },
+  "devDependencies": {
+    "log4js": "^4.1.0"
   }
 }

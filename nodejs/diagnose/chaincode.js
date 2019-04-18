@@ -19,8 +19,8 @@ class Chaincode extends CommonChaincode {
 	 */
 	async invoke(stub) {
 		const {fcn, params} = stub.getFunctionAndParameters();
-		this.Logger.info('Invoke', fcn);
-
+		this.logger.info('Invoke', fcn);
+		this.logger.debug('params', params);
 		let response;
 		switch (fcn) {
 			case 'panic':
@@ -35,8 +35,9 @@ class Chaincode extends CommonChaincode {
 			// case "worldStates":
 			// 	var states = t.WorldStates("", nil)
 			// 	response = ToJson(states)
-			// case "whoami":
-			// 	response = ToJson(cid.NewClientIdentity(stub))
+			case 'whoami':
+				response = (new ClientIdentity(stub)).toString();
+				break;
 			case 'put':
 				await stub.putState(params[0], params[1]);
 				break;

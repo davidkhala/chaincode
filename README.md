@@ -12,3 +12,4 @@ See also in https://github.com/hyperledger/fabric/commit/8a705b75070b7a7021ec6f8
 
 ### TODO
 - dep 
+- does devDependencies work in nodejs chaincode?
