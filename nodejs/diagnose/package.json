@@ -1,6 +1,4 @@
 {
-  "name": "node-diagnose",
-  "version": "1.0.1",
   "scripts": {
     "start": "node chaincode.js"
   },

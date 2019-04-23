@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "node chaincode.js"
+  },
+  "dependencies": {
+    "fabric-shim": "^1.4.1",
+    "fabric-shim-crypto": "^1.4.1"
+  }
+}
