@@ -45,6 +45,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
 	fcn, params := stub.GetFunctionAndParameters()
+	var args = stub.GetArgs()
 	t.Logger.Info("Invoke", fcn, params)
 	t.printTransient()
 	var responseBytes []byte
@@ -70,8 +71,8 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	case "putRaw":
 		//for leveldb hacker analyzer
 		var key = params[0]
-		var value = params[1]
-		t.PutState(key, []byte(value))
+		var value = args[2]
+		t.PutState(key, value)
 	case "getRaw":
 		var key = params[0]
 		responseBytes = t.GetState(key)
