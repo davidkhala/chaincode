@@ -21,3 +21,4 @@ See also in https://github.com/hyperledger/fabric/commit/8a705b75070b7a7021ec6f8
 - dep 
 - does devDependencies work in nodejs chaincode?
 - replace winstonjs with log4js in fabric-chaincode
+- how to use fabric-contract-api
