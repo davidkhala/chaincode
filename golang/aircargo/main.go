@@ -30,9 +30,13 @@ func (t AirCargoChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Respons
 	case "create":
 		var req createAirCargo
 		FromJson(params[0], &req)
-		t.PutStateObj(req.AirCargoID, req)
+		var newCargo = req.AirCargo
+
+		t.PutStateObj(req.AirCargoID, newCargo)
 		break;
 	case "handler":
+		var req handleAirCargo
+		FromJson(params[0], &req)
 		break;
 	case "transfer":
 		break;

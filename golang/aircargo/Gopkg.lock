@@ -504,6 +504,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/davidkhala/fabric-common-chaincode-golang",
+    "github.com/davidkhala/goutils",
     "github.com/hyperledger/fabric/core/chaincode/shim",
     "github.com/hyperledger/fabric/protos/peer",
   ]

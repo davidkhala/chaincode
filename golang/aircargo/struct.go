@@ -1,5 +1,7 @@
 package main
 
+import . "github.com/davidkhala/goutils"
+
 const (
 	Accepted = iota
 	Transferred
@@ -18,16 +20,23 @@ type Package struct {
 	Content     string
 }
 
+type CargoStatus struct {
+	Status int
+	CurrentOwner string
+
+}
 type AirCargo struct {
 	Package
-	Status    int
-	ShipperID string
+	Status     CargoStatus
+	ShipperID  string
+	CreateTime TimeLong
+	ImageUrls  map[string][]string
 }
 
 type createAirCargo struct {
 	AirCargo
-	EntityID  string
-	ImageUrls []string
+	EntityID   string
+	ImageUrls  []string
 	AirCargoID string
 }
 
