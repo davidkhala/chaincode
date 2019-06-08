@@ -28,6 +28,7 @@ type createAirCargo struct {
 	AirCargo
 	EntityID  string
 	ImageUrls []string
+	AirCargoID string
 }
 
 type transferAirCargo struct {
