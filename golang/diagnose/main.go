@@ -144,6 +144,10 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var attr1 = params[1:]
 		var compositeKey = t.CreateCompositeKey(objectType, attr1)
 		responseBytes = []byte(compositeKey)
+	case "setEvent":
+		var eventName = params[0]
+		var event = params[1]
+		t.SetEvent(eventName, []byte(event))
 	}
 	return shim.Success(responseBytes)
 }
