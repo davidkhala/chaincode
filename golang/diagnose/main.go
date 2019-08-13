@@ -69,7 +69,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		t.GetStateObj(key, &tx)
 		responseBytes = tx.Value
 	case "putRaw":
-		//for leveldb hacker analyzer
+		// for leveldb hacker analyzer
 		var key = params[0]
 		var value = args[2]
 		t.PutState(key, value)
@@ -148,6 +148,8 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var eventName = params[0]
 		var event = params[1]
 		t.SetEvent(eventName, []byte(event))
+	default:
+		panic("fcn not found:" + fcn)
 	}
 	return shim.Success(responseBytes)
 }
