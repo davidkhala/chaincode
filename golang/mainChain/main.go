@@ -20,7 +20,7 @@ func (t MainChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.Res
 	t.Prepare(stub)
 	var fcn, params = stub.GetFunctionAndParameters()
 	t.Logger.Info("Init", fcn, params)
-	if fcn != "" {
+	if fcn != "init" {
 		t.PutState(fcn, []byte(params[0]))
 	}
 	return shim.Success(nil)
