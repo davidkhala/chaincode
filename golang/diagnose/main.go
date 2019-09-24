@@ -129,6 +129,11 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 			MetaData QueryResponseMetadata
 		}
 		responseBytes = ToJson(Response{ParseStates(iter, nil), metaData})
+	case "GetStateByRange":
+		var startKey = params[0]
+		var endKey = params[1]
+		var iter = t.GetStateByRange(startKey, endKey)
+		responseBytes = ToJson(ParseStates(iter, nil))
 	case "putBatch":
 		var batch map[string]string
 		FromJson([]byte(params[0]), &batch)
