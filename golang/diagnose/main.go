@@ -84,8 +84,9 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	case "put":
 		var key = params[0]
 		var value = params[1]
+		var time TimeLong
 		t.PutStateObj(key, txData{
-			UnixMilliSecond(t.GetTxTime()),
+			time.FromTimeStamp(t.GetTxTimestamp()),
 			[]byte(value),
 		})
 	case "putEndorsement":
