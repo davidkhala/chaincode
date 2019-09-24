@@ -134,6 +134,10 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var endKey = params[1]
 		var iter = t.GetStateByRange(startKey, endKey)
 		responseBytes = ToJson(ParseStates(iter, nil))
+	case "GetCompositeStateByRange":
+		var objectType = params[0]
+		var iter = t.GetStateByPartialCompositeKey(objectType, nil)
+		responseBytes = ToJson(ParseStates(iter, nil))
 	case "putBatch":
 		var batch map[string]string
 		FromJson([]byte(params[0]), &batch)
@@ -150,6 +154,20 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var attr1 = params[1:]
 		var compositeKey = t.CreateCompositeKey(objectType, attr1)
 		responseBytes = []byte(compositeKey)
+	case "putComposite":
+		var objectType = params[0]
+		var attr1 = params[1:]
+		var transient = t.GetTransient()
+		var value = transient["value"]
+		var compositeKey = t.CreateCompositeKey(objectType, attr1)
+		t.PutState(compositeKey, value)
+	case "putCompositeBatch":
+		var objectType = params[0]
+		var batch = t.GetTransient()
+		for k, v := range batch {
+			var compositeKey = t.CreateCompositeKey(objectType, []string{k})
+			t.PutState(compositeKey, []byte(v))
+		}
 	case "setEvent":
 		var eventName = params[0]
 		var event = params[1]
