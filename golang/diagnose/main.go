@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	name = "diagnose"
+	name              = "diagnose"
+	collectionPrivate = "private"
 )
 
 type diagnoseChaincode struct {
@@ -47,7 +48,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	fcn, params := stub.GetFunctionAndParameters()
 	var args = stub.GetArgs()
 	t.Logger.Info("Invoke", fcn, params)
-	t.printTransient()
+	var transient = t.GetTransient()
 	var responseBytes []byte
 	switch fcn {
 	case "panic":
@@ -68,6 +69,15 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var tx txData
 		t.GetStateObj(key, &tx)
 		responseBytes = tx.Value
+	case "putPrivate":
+		for k, v := range transient {
+			t.PutPrivateData(collectionPrivate, k, v)
+		}
+	case "getPrivate":
+		for k, _ := range transient {
+			responseBytes = t.GetPrivateData(collectionPrivate, k)
+			break;
+		}
 	case "putRaw":
 		// for leveldb hacker analyzer
 		var key = params[0]
