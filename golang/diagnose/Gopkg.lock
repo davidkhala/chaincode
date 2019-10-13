@@ -168,7 +168,7 @@
 
 [[projects]]
   branch = "release-1.4"
-  digest = "1:3732d99d5381a2b818dd5d805d02ab621f587ee0c27f000776382165ced7d4e7"
+  digest = "1:333b818eb6f51aadc212c77a94ce6384a6c1ba408d51e035d02c70099b2f8b55"
   name = "github.com/hyperledger/fabric"
   packages = [
     "bccsp",
@@ -213,7 +213,7 @@
     "protos/utils",
   ]
   pruneopts = "UT"
-  revision = "fcfd12e5f361f75e9c13761df67c32cfd08c49d4"
+  revision = "81953e5fd568d524c2045460075162e8b28c6091"
 
 [[projects]]
   branch = "master"
@@ -376,12 +376,12 @@
   version = "v1.4.0"
 
 [[projects]]
-  digest = "1:60bf2a5e347af463c42ed31a493d817f8a72f102543060ed992754e689805d1a"
+  digest = "1:ed14edb4b5ec8eff801b1e8217ffaf021729c5a1dee9d940af5bb3302ab7297d"
   name = "go.uber.org/multierr"
   packages = ["."]
   pruneopts = "UT"
-  revision = "3c4937480c32f4c13a875a1829af76c98ca3d40a"
-  version = "v1.1.0"
+  revision = "71e610a0e48dbda460d9c18adca8b5f2de04a7c1"
+  version = "v1.2.0"
 
 [[projects]]
   digest = "1:ecd62b854fc2a3c6583720380e8518730a4f45ffe878a0f9628f0e2454faacf6"
@@ -405,11 +405,11 @@
   name = "golang.org/x/crypto"
   packages = ["sha3"]
   pruneopts = "UT"
-  revision = "9ee001bba392397c76f100a2d5b13afc86f167f1"
+  revision = "87dc89f01550277dc22b74ffcf4cd89fa2f40f4c"
 
 [[projects]]
   branch = "master"
-  digest = "1:970a34b46fc4d6dcea441fb2f1419c40fa47fd53fc800bbf0951efda11d99df7"
+  digest = "1:9e1085fe48bb560fb37a4baf05f766c16971fed7e47f7210c2408c30811b98bf"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -421,11 +421,11 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "aa69164e4478b84860dc6769c710c699c67058a3"
+  revision = "491137f692577e390404f177a0515c9f86f79754"
 
 [[projects]]
   branch = "master"
-  digest = "1:8f389e6462af41a708f74e09d4a07b62404d7e00debf9121aef6f4cb7f7ca82a"
+  digest = "1:a21b8f13c27bde42c8b28fde8f4d3099ec4566747f398eeb8f4326db78baafc2"
   name = "golang.org/x/sys"
   packages = [
     "cpu",
@@ -433,7 +433,7 @@
     "windows",
   ]
   pruneopts = "UT"
-  revision = "2aa67d56cdd77167a5fb51358e8c3ce04bad68bb"
+  revision = "b09406accb4736d857a32bf9444cd7edae2ffa79"
 
 [[projects]]
   digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
@@ -466,7 +466,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "f660b865573183437d2d868f703fe88bb8af0b55"
+  revision = "548a555dbc03994223efbaba0090152849259498"
 
 [[projects]]
   digest = "1:ab8e92d746fb5c4c18846b0879842ac8e53b3d352449423d0924a11f1020ae1b"
@@ -504,12 +504,12 @@
   version = "v1.15.0"
 
 [[projects]]
-  digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
+  digest = "1:59f10c1537d2199d9115d946927fe31165959a95190849c82ff11e05803528b0"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   pruneopts = "UT"
-  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
-  version = "v2.2.2"
+  revision = "f221b8435cfb71e54062f6c6e99e9ade30b124d5"
+  version = "v2.2.4"
 
 [solve-meta]
   analyzer-name = "dep"
