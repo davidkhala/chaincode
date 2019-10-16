@@ -6,6 +6,7 @@ import (
 	"github.com/davidkhala/fabric-common-chaincode-golang/ext"
 	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric/core/scc/lscc"
 	"github.com/hyperledger/fabric/protos/msp"
 	"github.com/hyperledger/fabric/protos/peer"
 )
@@ -59,6 +60,26 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var queryIter = t.GetQueryResult(query)
 		var states = ParseStates(queryIter, nil)
 		responseBytes = ToJson(states)
+	case "lscc":
+		var action = params[0];
+		switch action {
+
+		case lscc.INSTALL:
+		case lscc.DEPLOY:
+		case lscc.UPGRADE:
+		case "start":
+		case "stop":
+		case lscc.CCEXISTS, lscc.CHAINCODEEXISTS, lscc.GETDEPSPEC, lscc.GETDEPLOYMENTSPEC, lscc.GETCCDATA, lscc.GETCHAINCODEDATA:
+			builder := ArgsBuilder(action)
+			channel := params[1]
+			ccname := params[2]
+			builder.AppendArg(channel)
+			builder.AppendArg(ccname)
+			t.InvokeChaincode("lscc", builder.Get(), "")
+		default:
+			PanicString("lscc: unsupported action")
+		}
+
 	case "worldStates":
 		var states = t.WorldStates("", nil)
 		responseBytes = ToJson(states)
