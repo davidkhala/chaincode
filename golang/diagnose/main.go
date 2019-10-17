@@ -75,7 +75,8 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 			ccname := params[2]
 			builder.AppendArg(channel)
 			builder.AppendArg(ccname)
-			t.InvokeChaincode("lscc", builder.Get(), "")
+			crossInvokeResponse := t.InvokeChaincode("lscc", builder.Get(), "")
+			return crossInvokeResponse
 		default:
 			PanicString("lscc: unsupported action")
 		}
