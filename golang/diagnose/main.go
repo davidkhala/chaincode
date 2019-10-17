@@ -69,14 +69,20 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		case lscc.UPGRADE:
 		case "start":
 		case "stop":
+
 		case lscc.CCEXISTS, lscc.CHAINCODEEXISTS, lscc.GETDEPSPEC, lscc.GETDEPLOYMENTSPEC, lscc.GETCCDATA, lscc.GETCHAINCODEDATA:
-			builder := ArgsBuilder(action)
-			channel := params[1]
-			ccname := params[2]
-			builder.AppendArg(channel)
-			builder.AppendArg(ccname)
-			crossInvokeResponse := t.InvokeChaincode("lscc", builder.Get(), "")
-			return crossInvokeResponse
+			var operationChannel = params[1]
+			var channel = params[2]
+			var ccname = params[3]
+			switch action {
+			case lscc.CCEXISTS, lscc.CHAINCODEEXISTS:
+				if t.ChaincodeExist(operationChannel, channel, ccname) {
+					responseBytes = []byte("true")
+				} else {
+					responseBytes = []byte("false")
+				}
+			}
+
 		default:
 			PanicString("lscc: unsupported action")
 		}
