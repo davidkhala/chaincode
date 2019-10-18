@@ -76,11 +76,8 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 			var ccname = params[3]
 			switch action {
 			case lscc.CCEXISTS, lscc.CHAINCODEEXISTS:
-				if t.ChaincodeExist(operationChannel, channel, ccname) {
-					responseBytes = ToJson(map[string]bool{ccname: true})
-				} else {
-					responseBytes = ToJson(map[string]bool{ccname: false})
-				}
+				var args = [][]byte{[]byte("ChaincodeExists"), []byte(channel), []byte(ccname)}
+				return t.InvokeChaincode("lscc", args, operationChannel) // TODO could we specify another channel?
 			}
 
 		default:
