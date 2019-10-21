@@ -73,7 +73,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e196cf9bbb062cb8588f1e732a9474936ade78710fccaafef405e5a44189a755"
+  digest = "1:95eb7eb1700e069d5abfae6eb4f843c9e5ab468707c3d2790887542f40a9a1ea"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
@@ -81,7 +81,7 @@
     "ext",
   ]
   pruneopts = "UT"
-  revision = "7753fd1fffc033d2447773b84d10d39ca41688d3"
+  revision = "f4dcc533d70e80f37e9e06f529629b523b71ad80"
 
 [[projects]]
   branch = "master"
@@ -392,7 +392,7 @@
     "token/transaction",
   ]
   pruneopts = "UT"
-  revision = "59d4adce36d2ed1a8c22b1ea0de9f77879a9f53e"
+  revision = "76efd6d96ede33c31c860905e6856a504093abcd"
 
 [[projects]]
   branch = "master"
@@ -773,7 +773,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:a21b8f13c27bde42c8b28fde8f4d3099ec4566747f398eeb8f4326db78baafc2"
+  digest = "1:2d4ef744498218d6d0e966e7094911d9a76616ed49c78b54d0697e482fb69b1c"
   name = "golang.org/x/sys"
   packages = [
     "cpu",
@@ -781,7 +781,7 @@
     "windows",
   ]
   pruneopts = "UT"
-  revision = "b09406accb4736d857a32bf9444cd7edae2ffa79"
+  revision = "3e7259c5e7c2076bb2728047a3df75adb1bad8e5"
 
 [[projects]]
   digest = "1:28deae5fe892797ff37a317b5bcda96d11d1c90dadd89f1337651df3bc4c586e"

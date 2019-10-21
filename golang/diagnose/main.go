@@ -71,13 +71,19 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		case "stop":
 
 		case lscc.CCEXISTS, lscc.CHAINCODEEXISTS, lscc.GETDEPSPEC, lscc.GETDEPLOYMENTSPEC, lscc.GETCCDATA, lscc.GETCHAINCODEDATA:
-			var operationChannel = params[1]
-			var channel = params[2]
-			var ccname = params[3]
+			var channel = params[1]
+			var ccname = params[2]
 			switch action {
 			case lscc.CCEXISTS, lscc.CHAINCODEEXISTS:
-				var args = [][]byte{[]byte("ChaincodeExists"), []byte(channel), []byte(ccname)}
-				return t.InvokeChaincode("lscc", args, operationChannel) // TODO could we specify another channel?
+				if t.ChaincodeExist(channel, ccname) {
+					responseBytes = []byte("true")
+				} else {
+					responseBytes = []byte("false")
+				}
+			case lscc.GETCHAINCODEDATA, lscc.GETCCDATA:
+				var chaincodeData = t.GetChaincodeData(channel, ccname)
+				t.Logger.Info(chaincodeData)
+
 			}
 
 		default:
