@@ -84,7 +84,10 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 				var chaincodeData = t.GetChaincodeData(channel, ccname)
 				t.Logger.Info(chaincodeData)
 				responseBytes = ToJson(chaincodeData)
-
+			case lscc.GETDEPLOYMENTSPEC, lscc.GETDEPSPEC:
+				var spec = t.GetDeploymentSpec(channel, ccname)
+				t.Logger.Info(spec)
+				responseBytes = ToJson(spec)
 			}
 
 		default:
