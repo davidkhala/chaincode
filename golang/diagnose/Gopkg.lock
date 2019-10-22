@@ -73,7 +73,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:95eb7eb1700e069d5abfae6eb4f843c9e5ab468707c3d2790887542f40a9a1ea"
+  digest = "1:ca404a41f46e6db3b24b8e361b74fcf6bab4180b2650a52f0b6a14c8371b5e7a"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
@@ -81,7 +81,7 @@
     "ext",
   ]
   pruneopts = "UT"
-  revision = "f4dcc533d70e80f37e9e06f529629b523b71ad80"
+  revision = "ca245efe7ffa781d0b1640bac4fa157ae6b8ddba"
 
 [[projects]]
   branch = "master"
@@ -392,7 +392,7 @@
     "token/transaction",
   ]
   pruneopts = "UT"
-  revision = "76efd6d96ede33c31c860905e6856a504093abcd"
+  revision = "f71cfc74cc7f13a6bd8920752b8ebfe32fa64cdf"
 
 [[projects]]
   branch = "master"
@@ -715,7 +715,7 @@
   version = "v1.2.0"
 
 [[projects]]
-  digest = "1:ecd62b854fc2a3c6583720380e8518730a4f45ffe878a0f9628f0e2454faacf6"
+  digest = "1:bbf868e6bb0d98a7e1d08dc6c7f9af756ea71adb9f3451dbb90dce33c972a016"
   name = "go.uber.org/zap"
   packages = [
     ".",
@@ -727,8 +727,8 @@
     "zapgrpc",
   ]
   pruneopts = "UT"
-  revision = "27376062155ad36be76b0f12cf1572a221d3a48c"
-  version = "v1.10.0"
+  revision = "0065243e7bbd958fab35324e41201f5eb682c527"
+  version = "v1.11.0"
 
 [[projects]]
   branch = "master"
@@ -761,7 +761,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "da9a3fd4c5820e74b24a6cb7fb438dc9b0dd377c"
+  revision = "ec77196f6094c3492a8b61f2c11cf937f78992ae"
 
 [[projects]]
   branch = "master"

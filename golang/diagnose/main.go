@@ -61,7 +61,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var states = ParseStates(queryIter, nil)
 		responseBytes = ToJson(states)
 	case "lscc":
-		var action = params[0];
+		var action = params[0]
 		switch action {
 
 		case lscc.INSTALL:
@@ -83,6 +83,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 			case lscc.GETCHAINCODEDATA, lscc.GETCCDATA:
 				var chaincodeData = t.GetChaincodeData(channel, ccname)
 				t.Logger.Info(chaincodeData)
+				responseBytes = ToJson(chaincodeData)
 
 			}
 
@@ -107,7 +108,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	case "getPrivate":
 		for k, _ := range transient {
 			responseBytes = t.GetPrivateData(collectionPrivate, k)
-			break;
+			break
 		}
 	case "putRaw":
 		// for leveldb hacker analyzer
