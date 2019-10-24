@@ -73,7 +73,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:dfe1df6c9f47d2eab3aea891ca20db0bffb08d6996e4fa0871bca7df1b3663ee"
+  digest = "1:090d7018c00f547ca3ba47dee4d2014bb7d9356b3719fc81f49af5251d064ed2"
   name = "github.com/davidkhala/fabric-common-chaincode-golang"
   packages = [
     ".",
@@ -81,7 +81,7 @@
     "ext",
   ]
   pruneopts = "UT"
-  revision = "ed61665bbd6455af2227d4791985d61d19dce6ff"
+  revision = "c7ee18c2fec22b9764c620d016ff70922bbb0c58"
 
 [[projects]]
   branch = "master"

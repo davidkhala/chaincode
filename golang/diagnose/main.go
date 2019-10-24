@@ -89,6 +89,9 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 				t.Logger.Info(spec)
 				responseBytes = ToJson(spec)
 			}
+		case lscc.GETCHAINCODES,lscc.GETCHAINCODESALIAS:
+			var chaincodes = t.GetInstantiatedChaincode()
+			responseBytes = ToJson(chaincodes)
 
 		default:
 			PanicString("lscc: unsupported action")
