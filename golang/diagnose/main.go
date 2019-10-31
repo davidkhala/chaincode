@@ -89,7 +89,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 				t.Logger.Info(spec)
 				responseBytes = ToJson(spec)
 			}
-		case lscc.GETCHAINCODES,lscc.GETCHAINCODESALIAS:
+		case lscc.GETCHAINCODES, lscc.GETCHAINCODESALIAS:
 			var chaincodes = t.GetInstantiatedChaincode()
 			responseBytes = ToJson(chaincodes)
 
@@ -115,6 +115,11 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		for k, _ := range transient {
 			responseBytes = t.GetPrivateData(collectionPrivate, k)
 			break
+		}
+	case "readWritePrivate":
+		for k, v := range transient {
+			t.GetPrivateData(collectionPrivate, k)
+			t.PutPrivateData(collectionPrivate, k, v)
 		}
 	case "putRaw":
 		// for leveldb hacker analyzer
