@@ -10,7 +10,7 @@ See also in https://github.com/hyperledger/fabric/commit/8a705b75070b7a7021ec6f8
 - System chaincodes are intended to be invoked by a client rather than by a user chaincode
 ## Version Map
 - 1.4.2: golang: 1.11.x
-
+- 1.4.4: golang: 1.12.x
 
 ### TODO
 

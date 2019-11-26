@@ -4,7 +4,7 @@
     "start": "fabric-chaincode-node start"
   },
   "dependencies": {
-    "fabric-contract-api": "^1.4.1",
-    "fabric-shim": "^1.4.1"
+    "fabric-contract-api": "^1.4.2",
+    "fabric-shim": "^1.4.2"
   }
 }

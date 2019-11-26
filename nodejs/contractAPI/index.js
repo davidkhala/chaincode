@@ -1,1 +1,1 @@
-module.exports.contracts = [require('./contract')];
+module.exports.contracts = [require('./stress')];

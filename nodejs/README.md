@@ -7,3 +7,4 @@
 ## TODO
 - replace winstonjs with log4js in fabric-chaincode
 - how to use fabric-contract-api
+    - multiple contract instance in one index.js
