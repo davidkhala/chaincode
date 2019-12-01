@@ -1,16 +1,19 @@
-const {Contract} = require('fabric-contract-api');
+const {Contract, Context} = require('fabric-contract-api');
 
 
 class StressContract extends Contract {
 
 	constructor() {
-		super('stress');
+		super('-');
 	}
 
 	async invoke(context) {
-		this.logger.info('invoke', this.getName());
+		console.log('overlapping invoke');
 	}
 
+	async init(context) {
+		console.log('overlapping init');
+	}
 }
 
 module.exports = StressContract;

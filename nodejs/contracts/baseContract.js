@@ -2,10 +2,10 @@ const {Contract, Context} = require('fabric-contract-api');
 
 class BaseContract extends Contract {
 
-	constructor() {
+	constructor(name = '-') {
 		// Supplying a name is required, otherwize init function could not be discovered
 		// name could be got by getName()
-		super('-');
+		super(name);
 	}
 
 	/**
@@ -24,6 +24,7 @@ class BaseContract extends Contract {
 	 * @param {string} [label]
 	 */
 	createLogger(label) {
+		console.log(`creating logger[label=${label}]`);
 		this.logger = this.context.logging.getLogger(label); // contract name has been added as tag before label
 	}
 
@@ -33,7 +34,9 @@ class BaseContract extends Contract {
 	 * @returns {Promise<void>}
 	 */
 	async beforeTransaction(context) {
-		this.createLogger();
+		if (!this.logger) {
+			this.createLogger();
+		}
 		await super.beforeTransaction(context);
 	}
 
@@ -69,9 +72,13 @@ class BaseContract extends Contract {
 	 * @param {Context} context the transaction context
 	 */
 	async init(context) {
-		this.logger.debug(context);
+		this.logger.info(context);
 	}
 
+	/**
+	 * 'invoke' as a default fcn in sdk-node
+	 * @param {Context} context the transaction context
+	 */
 	async invoke(context) {
 		this.logger.info('invoke', this.getName());
 	}
