@@ -4,9 +4,9 @@
         "node": true,
         "mocha": true
     },
-	"extends": "eslint:recommended",
+    "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 8,
+        "ecmaVersion": 2017,
         "sourceType": "module"
     },
     "rules": {
@@ -19,12 +19,12 @@
         "eqeqeq": ["error"],
         "indent": [
             "error",
-            4,
+            "tab",
             {
                 "SwitchCase": 1
             }
         ],
-        "keyword-spacing":"error",
+        "keyword-spacing": ["error"],
         "linebreak-style": ["error", "unix"],
         "max-len": [
             "error",
@@ -38,6 +38,7 @@
             }
         ],
         "no-console": ["warn"],
+        "no-mixed-spaces-and-tabs": ["error"],
         "no-shadow": ["error"],
         "no-throw-literal": ["error"],
         "no-trailing-spaces": ["error"],
@@ -52,6 +53,7 @@
         "no-with": ["error"],
         "object-curly-spacing": ["error", "never"],
         "operator-linebreak": ["error"],
+        "prefer-arrow-callback": ["error"],
         "prefer-const": ["error"],
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
@@ -66,6 +68,6 @@
         ],
         "space-infix-ops": ["error"],
         "space-in-parens": ["error", "never"],
-        "yoda": "error"
+        "yoda": ["error"]
     }
 }

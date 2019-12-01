@@ -1,11 +1,11 @@
 const {Contract, Context} = require('fabric-contract-api');
 
-class StressContract extends Contract {
+class BaseContract extends Contract {
 
 	constructor() {
-		// Supplying a name within the constructor is also option and will default to ''
+		// Supplying a name is required, otherwize init function could not be discovered
 		// name could be got by getName()
-		super('stressContract');
+		super('-');
 	}
 
 	/**
@@ -69,8 +69,12 @@ class StressContract extends Contract {
 	 * @param {Context} context the transaction context
 	 */
 	async init(context) {
-		console.log(context);
+		this.logger.debug(context);
+	}
+
+	async invoke(context) {
+		this.logger.info('invoke', this.getName());
 	}
 }
 
-module.exports = StressContract;
+module.exports = BaseContract;
