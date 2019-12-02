@@ -1,19 +1,16 @@
-const {Contract, Context} = require('fabric-contract-api');
+const BaseContract = require('khala-fabric-contract-api/baseContract');
 
 
-class StressContract extends Contract {
+class StressContract extends BaseContract {
 
 	constructor() {
-		super('-');
-	}
-
-	async invoke(context) {
-		console.log('overlapping invoke');
+		super('stress');
 	}
 
 	async init(context) {
-		console.log('overlapping init');
+		super.init(context);
 	}
+
 }
 
 module.exports = StressContract;
