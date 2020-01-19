@@ -21,16 +21,18 @@ class Chaincode extends CommonChaincode {
 		const {fcn, params} = stub.getFunctionAndParameters();
 		this.logger.info('Invoke', fcn);
 		this.logger.debug('params', params);
-		const transient = stub.transient;
-		for (const [key, value] of Object.entries(transient)) {
-			this.logger.info(key, value);
-		}
 
 		let response;
 		switch (fcn) {
 			case 'panic':
 				throw Error('test panic');
+			case 'transient':
+				const key = params[0];
+				const value = stub.getTransient(key);
+				response = JSON.stringify({[key]: value});
 
+
+				break;
 			// case "richQuery":
 			// 	const query = params[0];
 			// 	this.Logger.Info("Query string", query)
@@ -50,6 +52,7 @@ class Chaincode extends CommonChaincode {
 				response = await stub.getState(params[0]);
 				break;
 			default:
+				this.logger.info('fcn:default');
 				response = '';
 			// case "putEndorsement":
 			// 	var key = params[0]
