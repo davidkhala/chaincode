@@ -21,6 +21,11 @@ class Chaincode extends CommonChaincode {
 		const {fcn, params} = stub.getFunctionAndParameters();
 		this.logger.info('Invoke', fcn);
 		this.logger.debug('params', params);
+		const transient = stub.transient;
+		for (const [key, value] of Object.entries(transient)) {
+			this.logger.info(key, value);
+		}
+
 		let response;
 		switch (fcn) {
 			case 'panic':
@@ -36,7 +41,7 @@ class Chaincode extends CommonChaincode {
 			// 	var states = t.WorldStates("", nil)
 			// 	response = ToJson(states)
 			case 'whoami':
-				response = (new ClientIdentity(stub)).toString();
+				response = (new ClientIdentity(stub.stub)).toString();
 				break;
 			case 'put':
 				await stub.putState(params[0], params[1]);
@@ -44,6 +49,8 @@ class Chaincode extends CommonChaincode {
 			case 'get':
 				response = await stub.getState(params[0]);
 				break;
+			default:
+				response = '';
 			// case "putEndorsement":
 			// 	var key = params[0]
 			// 	var orgs = params[1:]
