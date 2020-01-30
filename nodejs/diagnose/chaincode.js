@@ -22,13 +22,13 @@ class Chaincode extends CommonChaincode {
 		this.logger.info('Invoke', fcn);
 		this.logger.debug('params', params);
 
-		let response;
+		let response, key, value,iterator;
 		switch (fcn) {
 			case 'panic':
 				throw Error('test panic');
 			case 'transient':
-				const key = params[0];
-				const value = stub.getTransient(key);
+				key = params[0];
+				value = stub.getTransient(key);
 				response = JSON.stringify({[key]: value});
 
 
@@ -39,9 +39,14 @@ class Chaincode extends CommonChaincode {
 			// 	const queryIter = this.stub.GetQueryResult(query)
 			// 	const states = ParseStates(queryIter)
 			// 	response = JSON.stringify(states)
-			// case "worldStates":
-			// 	var states = t.WorldStates("", nil)
-			// 	response = ToJson(states)
+			case 'worldStates':
+
+				iterator = await stub.getStateByRange();
+				const states = await ParseStates(iterator);
+
+				response = JSON.stringify(states);
+
+				break;
 			case 'whoami':
 				response = (new ClientIdentity(stub.stub)).toString();
 				break;
