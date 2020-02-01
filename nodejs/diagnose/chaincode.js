@@ -22,16 +22,15 @@ class Chaincode extends CommonChaincode {
 		this.logger.info('Invoke', fcn);
 		this.logger.debug('params', params);
 
-		let response, key, value,iterator;
+		let response;
 		switch (fcn) {
 			case 'panic':
 				throw Error('test panic');
-			case 'transient':
-				key = params[0];
-				value = stub.getTransient(key);
+			case 'transient': {
+				const key = params[0];
+				const value = stub.getTransient(key);
 				response = JSON.stringify({[key]: value});
-
-
+			}
 				break;
 			// case "richQuery":
 			// 	const query = params[0];
@@ -39,13 +38,18 @@ class Chaincode extends CommonChaincode {
 			// 	const queryIter = this.stub.GetQueryResult(query)
 			// 	const states = ParseStates(queryIter)
 			// 	response = JSON.stringify(states)
-			case 'worldStates':
-
-				iterator = await stub.getStateByRange();
+			case 'putBatch': {
+				const batch = JSON.parse(params[0]);
+				for (const [key, value] of Object.entries(batch)) {
+					await stub.putState(key, value);
+				}
+			}
+				break;
+			case 'worldStates': {
+				const iterator = await stub.getStateByRange();
 				const states = await ParseStates(iterator);
-
 				response = JSON.stringify(states);
-
+			}
 				break;
 			case 'whoami':
 				response = (new ClientIdentity(stub.stub)).toString();
@@ -99,12 +103,8 @@ class Chaincode extends CommonChaincode {
 			// 	MetaData QueryResponseMetadata
 			// }
 			// 	response = ToJson(Response{ParseStates(iter, nil), metaData})
-			// case "putBatch":
-			// 	var batch map[string]string
-			// 	FromJson([]byte(params[0]), &batch)
-			// 	for k, v := range batch {
-			// 	t.PutState(k, []byte(v))
-			// }
+
+
 			// case "chaincodeId":
 			// 	response = []byte(t.GetChaincodeID())
 			// case "getCertID":
