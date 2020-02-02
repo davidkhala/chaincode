@@ -60,6 +60,13 @@ class Chaincode extends CommonChaincode {
 			case 'get':
 				response = await stub.getState(params[0]);
 				break;
+			case 'history': {
+				const key = params[0];
+				const iterator = await stub.stub.getHistoryForKey(key);
+				const history = await ParseHistory(iterator);
+				response = JSON.stringify(history);
+			}
+				break;
 			default:
 				this.logger.info('fcn:default');
 				response = '';
