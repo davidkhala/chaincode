@@ -5,10 +5,10 @@ import (
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	"github.com/davidkhala/fabric-common-chaincode-golang/ext"
 	. "github.com/davidkhala/goutils"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/hyperledger/fabric/core/scc/lscc"
-	"github.com/hyperledger/fabric/protos/msp"
-	"github.com/hyperledger/fabric/protos/peer"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/hyperledger/fabric-protos-go/msp"
+	"github.com/hyperledger/fabric-protos-go/peer"
+	logger "github.com/sirupsen/logrus"
 )
 
 const (
@@ -24,18 +24,18 @@ func (t diagnoseChaincode) Init(stub shim.ChaincodeStubInterface) (response peer
 	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
 	var fcn, params = stub.GetFunctionAndParameters()
-	t.Logger.Info("Init", fcn, params)
+	logger.Info("Init", fcn, params)
 	t.printTransient()
 	return shim.Success(nil)
 
 }
 func (t diagnoseChaincode) printTransient() {
 	var transientMap = t.GetTransient()
-	t.Logger.Debug("==[start]transientMap")
+	logger.Debug("==[start]transientMap")
 	for k, v := range transientMap {
-		t.Logger.Debug(k, ":", string(v))
+		logger.Debug(k, ":", string(v))
 	}
-	t.Logger.Debug("==[end]transientMap")
+	logger.Debug("==[end]transientMap")
 }
 
 type txData struct {
@@ -48,7 +48,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	t.Prepare(stub)
 	fcn, params := stub.GetFunctionAndParameters()
 	var args = stub.GetArgs()
-	t.Logger.Info("Invoke", fcn, params)
+	logger.Info("Invoke", fcn, params)
 	var transient = t.GetTransient()
 	var responseBytes []byte
 	switch fcn {
@@ -56,46 +56,10 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		PanicString("test panic")
 	case "richQuery":
 		var query = params[0]
-		t.Logger.Info("Query string", query)
+		logger.Info("Query string", query)
 		var queryIter = t.GetQueryResult(query)
 		var states = ParseStates(queryIter, nil)
 		responseBytes = ToJson(states)
-	case "lscc":
-		var action = params[0]
-		switch action {
-
-		case lscc.INSTALL:
-		case lscc.DEPLOY:
-		case lscc.UPGRADE:
-		case "start":
-		case "stop":
-
-		case lscc.CCEXISTS, lscc.CHAINCODEEXISTS, lscc.GETDEPSPEC, lscc.GETDEPLOYMENTSPEC, lscc.GETCCDATA, lscc.GETCHAINCODEDATA:
-			var channel = params[1]
-			var ccname = params[2]
-			switch action {
-			case lscc.CCEXISTS, lscc.CHAINCODEEXISTS:
-				if t.ChaincodeExist(channel, ccname) {
-					responseBytes = []byte("true")
-				} else {
-					responseBytes = []byte("false")
-				}
-			case lscc.GETCHAINCODEDATA, lscc.GETCCDATA:
-				var chaincodeData = t.GetChaincodeData(channel, ccname)
-				t.Logger.Info(chaincodeData)
-				responseBytes = ToJson(chaincodeData)
-			case lscc.GETDEPLOYMENTSPEC, lscc.GETDEPSPEC:
-				var spec = t.GetDeploymentSpec(channel, ccname)
-				t.Logger.Info(spec)
-				responseBytes = ToJson(spec)
-			}
-		case lscc.GETCHAINCODES, lscc.GETCHAINCODESALIAS:
-			var chaincodes = t.GetInstantiatedChaincode()
-			responseBytes = ToJson(chaincodes)
-
-		default:
-			PanicString("lscc: unsupported action")
-		}
 
 	case "worldStates":
 		var states = t.WorldStates("", nil)
@@ -166,7 +130,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var args = ArgsBuilder(paramInput.Fcn)
 		for i, element := range paramInput.Args {
 			args.AppendArg(element)
-			t.Logger.Debug("delegated Arg", i, element)
+			logger.Debug("delegated Arg", i, element)
 		}
 		var pb = t.InvokeChaincode(paramInput.ChaincodeName, args.Get(), paramInput.Channel)
 		responseBytes = pb.Payload
@@ -233,6 +197,5 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 
 func main() {
 	var cc = diagnoseChaincode{}
-	cc.SetLogger(name)
 	ChaincodeStart(cc)
 }

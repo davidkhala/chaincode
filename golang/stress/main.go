@@ -1,15 +1,14 @@
 package main
 
 import (
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/hyperledger/fabric/protos/peer"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/hyperledger/fabric-protos-go/peer"
+	logger "github.com/sirupsen/logrus"
 )
 
 const (
 	name = "stress"
 )
-
-var logger = shim.NewLogger(name)
 
 type StressChaincode struct {
 }
