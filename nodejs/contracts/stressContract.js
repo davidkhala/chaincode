@@ -11,6 +11,14 @@ class StressContract extends BaseContract {
 		super.init(context);
 	}
 
+	async panic(context) {
+		throw Error('panic');
+	}
+
+	async unknownTransaction(context) {
+		super.unknownTransaction(context);
+		throw Error('unknownTransaction');
+	}
 }
 
 module.exports = StressContract;
