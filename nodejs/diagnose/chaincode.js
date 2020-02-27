@@ -1,4 +1,7 @@
-const {CommonChaincode, shim, ClientIdentity, format: {ParseHistory, ParseStates}} = require('fabric-common-chaincode');
+const CommonChaincode = require('fabric-common-chaincode/base');
+const ClientIdentity = require('fabric-common-chaincode/CID');
+const {ParseHistory, ParseStates} = require('fabric-common-chaincode/format');
+
 
 const name = 'nodeDiagnose';
 
@@ -122,4 +125,4 @@ class Chaincode extends CommonChaincode {
 	}
 }
 
-shim.start(new Chaincode());
+Chaincode.Start(new Chaincode());
