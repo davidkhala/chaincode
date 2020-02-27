@@ -53,7 +53,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	var responseBytes []byte
 	switch fcn {
 	case "panic":
-		PanicString("test panic")
+		PanicString("panic")
 	case "richQuery":
 		var query = params[0]
 		t.Logger.Info("Query string", query)
