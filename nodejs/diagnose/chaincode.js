@@ -28,7 +28,7 @@ class Chaincode extends CommonChaincode {
 		let response;
 		switch (fcn) {
 			case 'panic':
-				throw Error('test panic');
+				throw Error('panic');
 			case 'transient': {
 				const key = params[0];
 				const value = stub.getTransient(key);

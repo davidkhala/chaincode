@@ -3,8 +3,8 @@
     "start": "node chaincode.js"
   },
   "dependencies": {
-    "fabric-common-chaincode": "^1.4.5-0.1.0",
-    "fabric-shim": "1.4.5"
+    "fabric-common-chaincode": "^1.4.5-0.1.4",
+    "fabric-shim": "^1.4.5"
   },
   "devDependencies": {
     "log4js": "^4.1.0"
