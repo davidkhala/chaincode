@@ -197,5 +197,6 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 
 func main() {
 	var cc = diagnoseChaincode{}
+	logger.Info("chaincode", name, "start")
 	ChaincodeStart(cc)
 }
