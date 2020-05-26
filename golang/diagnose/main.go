@@ -106,6 +106,9 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 			time.FromTimeStamp(t.GetTxTimestamp()),
 			[]byte(value),
 		})
+	case "deleteEndorsement":
+		var key = params[0]
+		t.SetStateValidationParameter(key, nil)
 	case "putEndorsement":
 		var key = params[0]
 		var orgs = params[1:]
