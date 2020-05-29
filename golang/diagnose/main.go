@@ -76,10 +76,12 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 			t.PutPrivateData(collectionPrivate, k, v)
 		}
 	case "getPrivate":
+		var privateKV = map[string]string{}
 		for k, _ := range transient {
-			responseBytes = t.GetPrivateData(collectionPrivate, k)
-			break
+			var valueBytes = t.GetPrivateData(collectionPrivate, k)
+			privateKV[k] = string(valueBytes)
 		}
+		responseBytes = ToJson(privateKV)
 	case "readWritePrivate":
 		for k, v := range transient {
 			t.GetPrivateData(collectionPrivate, k)
