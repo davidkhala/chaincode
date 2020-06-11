@@ -4,8 +4,8 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/davidkhala/fabric-common-chaincode-golang v0.0.0-20200611054454-cc1fd506ccc7 h1:Le7nwcnzoQeVgH0QUzFDY9Z4OagGRhXtsCUwQyQpLmQ=
-github.com/davidkhala/fabric-common-chaincode-golang v0.0.0-20200611054454-cc1fd506ccc7/go.mod h1:knV5jSYBftqj1POeprBsStY06EyxmxpNj/KCLjHJE+8=
+github.com/davidkhala/fabric-common-chaincode-golang v0.0.0-20200611081348-34fd2737a5d3 h1:S8AXJ9mKyLQFtTM5w8F61pcSA8MG8MTM8QLmBa52CVg=
+github.com/davidkhala/fabric-common-chaincode-golang v0.0.0-20200611081348-34fd2737a5d3/go.mod h1:knV5jSYBftqj1POeprBsStY06EyxmxpNj/KCLjHJE+8=
 github.com/davidkhala/goutils v0.0.0-20200611043306-b80f7b624c1b h1:Q+AlU8kvHMtWeMa74yqUyfWA+P+hOx/exTX1zVbBnQs=
 github.com/davidkhala/goutils v0.0.0-20200611043306-b80f7b624c1b/go.mod h1:2TnryJhGwobGIVm3fLN1/1nOWKGLFrzdObri9JdtPsk=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b h1:VKtxabqXZkF25pY9ekfRL6a582T4P37/31XEstQ5p58=

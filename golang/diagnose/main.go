@@ -66,6 +66,8 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		responseBytes = ToJson(states)
 	case "whoami":
 		responseBytes = ToJson(cid.NewClientIdentity(stub))
+	case "peerMSPID":
+		responseBytes = []byte(GetMSPID())
 	case "get":
 		var key = params[0]
 		var tx txData
@@ -77,7 +79,15 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		for k, v := range transient {
 			t.PutPrivateData(collection, k, v)
 		}
-
+	case "getImplicit":
+		var mspid = params[0]
+		var collection = ImplicitCollection(mspid)
+		var privateKV = map[string]string{}
+		for k, _ := range transient {
+			var valueBytes = t.GetPrivateData(collection, k)
+			privateKV[k] = string(valueBytes)
+		}
+		responseBytes = ToJson(privateKV)
 	case "putPrivate":
 		for k, v := range transient {
 			t.PutPrivateData(collectionPrivate, k, v)
