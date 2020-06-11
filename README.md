@@ -8,4 +8,3 @@ See in [about Hyperledger fabric chaincode](https://github.com/davidkhala/fabric
 - 1.4.4+: golang: 1.12.x
 
 ### TODO
-- use go mod to get rid of GOROOT limitation 
