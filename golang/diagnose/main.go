@@ -13,11 +13,11 @@ import (
 )
 
 const (
-	name              = "diagnose"
 	collectionPrivate = "private"
 )
 
 var Logger = logger.SetupLogrus()
+
 type diagnoseChaincode struct {
 	CommonChaincode
 }
