@@ -12,114 +12,97 @@ class Chaincode extends CommonChaincode {
 		return '';
 	}
 
-	/**
-	 *
-	 * @param {ChaincodeStub} stub
-	 * @returns {Promise<string>}
-	 */
-	async invoke(stub) {
-		const {fcn, params} = stub.getFunctionAndParameters();
-		this.logger.info('Invoke', fcn);
-		this.logger.debug('params', params);
-
-		let response;
-		switch (fcn) {
-			case 'panic':
-				throw Error('test panic');
-			case 'transient': {
-				const key = params[0];
-				const value = stub.getTransient(key);
-				response = JSON.stringify({[key]: value});
-			}
-				break;
-			// case "richQuery":
-			// 	const query = params[0];
-			// 	this.Logger.Info("Query string", query)
-			// 	const queryIter = this.stub.GetQueryResult(query)
-			// 	const states = ParseStates(queryIter)
-			// 	response = JSON.stringify(states)
-			case 'putBatch': {
-				const batch = JSON.parse(params[0]);
-				for (const [key, value] of Object.entries(batch)) {
-					await stub.putState(key, value);
-				}
-			}
-				break;
-			case 'worldStates': {
-				const iterator = await stub.getStateByRange();
-				const states = await ParseStates(iterator);
-				response = JSON.stringify(states);
-			}
-				break;
-			case 'whoami':
-				response = (new ClientIdentity(stub.stub)).toString();
-				break;
-			case 'put':
-				await stub.putState(params[0], params[1]);
-				break;
-			case 'get':
-				response = await stub.getState(params[0]);
-				break;
-			case 'history': {
-				const key = params[0];
-				const iterator = await stub.stub.getHistoryForKey(key);
-				const history = await ParseHistory(iterator);
-				response = JSON.stringify(history);
-			}
-				break;
-			default:
-				this.logger.info('fcn:default');
-				response = '';
-			// case "putEndorsement":
-			// 	var key = params[0]
-			// 	var orgs = params[1:]
-			// 	var policy = ext.NewKeyEndorsementPolicy(nil)
-			// 	policy.AddOrgs(msp.MSPRole_MEMBER, orgs...)
-			// 	t.SetStateValidationParameter(key, policy.Policy())
-			// case "getEndorsement":
-			// 	var key = params[0]
-			// 	var policyBytes = t.GetStateValidationParameter(key)
-			// 	var policy = ext.NewKeyEndorsementPolicy(policyBytes)
-			// 	var orgs = policy.ListOrgs()
-			// 	response = ToJson(orgs)
-			// case "delegate":
-			// 	type crossChaincode struct {
-			// 	ChaincodeName string
-			// 	Fcn           string
-			// 	Args          []string
-			// 	Channel       string
-			// }
-			// 	var paramInput crossChaincode
-			// 	FromJson([]byte(params[0]), &paramInput)
-			// 	var args = ArgsBuilder(paramInput.Fcn)
-			// 	for i, element := range paramInput.Args {
-			// 	args.AppendArg(element)
-			// 	t.Logger.Debug("delegated Arg", i, element)
-			// }
-			// 	var pb = t.InvokeChaincode(paramInput.ChaincodeName, args.Get(), paramInput.Channel)
-			// 	response = pb.Payload
-			// case "listPage":
-			// 	var startKey = params[0]
-			// 	var endKey = params[1]
-			// 	var pageSize = Atoi(params[2])
-			// 	var bookMark = params[3]
-			// 	var iter, metaData = t.GetStateByRangeWithPagination(startKey, endKey, pageSize, bookMark)
-			//
-			// 	type Response struct {
-			// 	States   []StateKV
-			// 	MetaData QueryResponseMetadata
-			// }
-			// 	response = ToJson(Response{ParseStates(iter, nil), metaData})
-
-
-			// case "chaincodeId":
-			// 	response = []byte(t.GetChaincodeID())
-			// case "getCertID":
-			// 	var certID = cid.NewClientIdentity(stub).GetID()
-			// 	response = []byte(certID)
-		}
-		return response;
+	async panic() {
+		throw Error('test panic');
 	}
+
+	async transient(stub, key) {
+		const value = this.getTransient(key);
+		return {[key]: value};
+	}
+
+	// TODO
+	async richQuery(stub, query) {
+		this.logger.info('Query string', query);
+		const queryIter = stub.getQueryResult(query);
+		const states = await ParseStates(queryIter);
+		return states;
+	}
+
+	async putBatch(stub, batch) {
+		for (const [key, value] of Object.entries(JSON.parse(batch))) {
+			await this.putState(key, value);
+		}
+	}
+
+	async worldStates(stub) {
+		const iterator = await stub.getStateByRange();
+		const states = await ParseStates(iterator);
+		return states;
+	}
+
+	async whoami(stub) {
+		return new ClientIdentity(stub).toString();
+	}
+
+	async put(stub, key, value) {
+		await this.putState(key, value);
+	}
+
+	async get(stub, key) {
+		return await stub.getState(key);
+	}
+
+	async history(stub, key) {
+		const iterator = await stub.getHistoryForKey(key);
+		const history = await ParseHistory(iterator);
+		return history;
+	}
+
+	// TODO
+	// case "putEndorsement":
+	// 	var key = params[0]
+	// 	var orgs = params[1:]
+	// 	var policy = ext.NewKeyEndorsementPolicy(nil)
+	// 	policy.AddOrgs(msp.MSPRole_MEMBER, orgs...)
+	// 	t.SetStateValidationParameter(key, policy.Policy())
+	// case "getEndorsement":
+	// 	var key = params[0]
+	// 	var policyBytes = t.GetStateValidationParameter(key)
+	// 	var policy = ext.NewKeyEndorsementPolicy(policyBytes)
+	// 	var orgs = policy.ListOrgs()
+	// 	response = ToJson(orgs)
+	// case "delegate":
+	// 	type crossChaincode struct {
+	// 	ChaincodeName string
+	// 	Fcn           string
+	// 	Args          []string
+	// 	Channel       string
+	// }
+	// 	var paramInput crossChaincode
+	// 	FromJson([]byte(params[0]), &paramInput)
+	// 	var args = ArgsBuilder(paramInput.Fcn)
+	// 	for i, element := range paramInput.Args {
+	// 	args.AppendArg(element)
+	// 	t.Logger.Debug("delegated Arg", i, element)
+	// }
+	// 	var pb = t.InvokeChaincode(paramInput.ChaincodeName, args.Get(), paramInput.Channel)
+	// 	response = pb.Payload
+	// case "listPage":
+	// 	var startKey = params[0]
+	// 	var endKey = params[1]
+	// 	var pageSize = Atoi(params[2])
+	// 	var bookMark = params[3]
+	// 	var iter, metaData = t.GetStateByRangeWithPagination(startKey, endKey, pageSize, bookMark)
+	//
+	// 	type Response struct {
+	// 	States   []StateKV
+	// 	MetaData QueryResponseMetadata
+	// }
+	// 	response = ToJson(Response{ParseStates(iter, nil), metaData})
+	// case "chaincodeId":
+	// 	response = []byte(t.GetChaincodeID())
+
 }
 
 shim.start(new Chaincode());
