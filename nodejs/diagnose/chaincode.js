@@ -8,7 +8,7 @@ class Chaincode extends CommonChaincode {
 		super(name);
 	}
 
-	async init(stub) {
+	async init() {
 		return '';
 	}
 
@@ -16,47 +16,50 @@ class Chaincode extends CommonChaincode {
 		throw Error('test panic');
 	}
 
-	async transient(stub, key) {
+	async transient(key) {
 		const value = this.getTransient(key);
 		return {[key]: value};
 	}
 
 	// TODO
-	async richQuery(stub, query) {
+	async richQuery(query) {
 		this.logger.info('Query string', query);
-		const queryIter = stub.getQueryResult(query);
+		const queryIter = this.stub.getQueryResult(query);
 		const states = await ParseStates(queryIter);
 		return states;
 	}
 
-	async putBatch(stub, batch) {
+	async putBatch(batch) {
 		for (const [key, value] of Object.entries(JSON.parse(batch))) {
 			await this.putState(key, value);
 		}
 	}
 
-	async worldStates(stub) {
-		const iterator = await stub.getStateByRange();
-		const states = await ParseStates(iterator);
-		return states;
+	async worldStates() {
+		const iterator = await this.stub.getStateByRange();
+		return await ParseStates(iterator);
 	}
 
-	async whoami(stub) {
-		return new ClientIdentity(stub).toString();
+	async whoami() {
+		return new ClientIdentity(this.stub).toString();
 	}
 
-	async put(stub, key, value) {
+	async put(key, value) {
 		await this.putState(key, value);
 	}
 
-	async get(stub, key) {
-		return await stub.getState(key);
+	async get(key) {
+		return await this.stub.getState(key);
 	}
 
-	async history(stub, key) {
-		const iterator = await stub.getHistoryForKey(key);
+	async history(key) {
+		const iterator = await this.stub.getHistoryForKey(key);
 		const history = await ParseHistory(iterator);
 		return history;
+	}
+
+	async timeStamp() {
+		return this.stub.getTxTimestamp(true);
 	}
 
 	// TODO
