@@ -4,8 +4,8 @@ import (
 	. "github.com/davidkhala/fabric-common-chaincode-golang"
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	. "github.com/davidkhala/goutils"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/hyperledger/fabric/protos/peer"
+	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/hyperledger/fabric-protos-go/peer"
 	"strconv"
 )
 
@@ -20,7 +20,6 @@ const (
 )
 
 func (t *PrivateDataCC) Init(stub shim.ChaincodeStubInterface) peer.Response {
-	t.Logger.Info(" Init ")
 	t.Prepare(stub)
 	t.PutState(counterKey, []byte(strconv.Itoa(0)))
 	return shim.Success(nil)
@@ -32,14 +31,14 @@ func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.
 
 	t.Prepare(stub)
 	var fcn, params = stub.GetFunctionAndParameters()
-	t.Logger.Info("Invoke", fcn)
-	t.Logger.Debug(fcn, "params", params)
 	var responseBytes []byte
 	switch fcn {
 	case "putPrivate":
 		var id = cid.NewClientIdentity(stub).GetID()
-		var txTime = UnixMilliSecond(t.GetTxTime()).String()
-		t.PutPrivateData(collection, collection, []byte(id+"|"+txTime))
+
+		var txTime TimeLong
+		txTime = txTime.FromTimeStamp(t.GetTxTimestamp())
+		t.PutPrivateData(collection, collection, []byte(id+"|"+txTime.String()))
 	case "getPrivate":
 		responseBytes = t.GetPrivateData(collection, collection)
 	case "increase":
@@ -66,6 +65,5 @@ func (t *PrivateDataCC) Invoke(stub shim.ChaincodeStubInterface) (response peer.
 
 func main() {
 	var cc = PrivateDataCC{}
-	cc.SetLogger(name)
 	ChaincodeStart(&cc)
 }

@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric-chaincode-go/shimtest"
 	"testing"
 )
 
 var cc = new(PrivateDataCC)
-var mock = shim.NewMockStub(name, cc)
+var mock = shimtest.NewMockStub(name, cc)
 
 func TestStressChaincode_Init(t *testing.T) {
 
