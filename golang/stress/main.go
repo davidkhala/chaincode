@@ -25,7 +25,7 @@ func (t *StressChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response
 }
 
 func main() {
-	err := shim.Start(new(StressChaincode))
+	err := shim.Start(StressChaincode{})
 	if err != nil {
 		panic(err)
 	}
