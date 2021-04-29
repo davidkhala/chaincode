@@ -5,6 +5,7 @@ import (
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	"github.com/davidkhala/fabric-common-chaincode-golang/ext"
 	. "github.com/davidkhala/goutils"
+	httputil "github.com/davidkhala/goutils/http"
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric-protos-go/msp"
 	"github.com/hyperledger/fabric-protos-go/peer"
@@ -83,7 +84,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var mspid = params[0]
 		var collection = ImplicitCollection(mspid)
 		var privateKV = map[string]string{}
-		for k, _ := range transient {
+		for k := range transient {
 			var valueBytes = t.GetPrivateData(collection, k)
 			privateKV[k] = string(valueBytes)
 		}
@@ -94,7 +95,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		}
 	case "getPrivate":
 		var privateKV = map[string]string{}
-		for k, _ := range transient {
+		for k := range transient {
 			var valueBytes = t.GetPrivateData(collectionPrivate, k)
 			privateKV[k] = string(valueBytes)
 		}
@@ -205,12 +206,15 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		var batch = t.GetTransient()
 		for k, v := range batch {
 			var compositeKey = t.CreateCompositeKey(objectType, []string{k})
-			t.PutState(compositeKey, []byte(v))
+			t.PutState(compositeKey, v)
 		}
 	case "setEvent":
 		var eventName = params[0]
 		var event = params[1]
 		t.SetEvent(eventName, []byte(event))
+	case "external":
+		resp := httputil.Get("http://www.google.com", nil)
+		responseBytes = []byte(resp.Status)
 	default:
 		panic("fcn not found:" + fcn)
 	}
