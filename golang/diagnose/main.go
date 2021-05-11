@@ -25,6 +25,7 @@ type diagnoseChaincode struct {
 func (t diagnoseChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.Response) {
 	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
+	// TODO tagging fabric-common-chaincode-golang
 	var fcn, params = stub.GetFunctionAndParameters()
 	Logger.Info("Init", fcn, params)
 	t.printTransient()

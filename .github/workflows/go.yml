@@ -1,0 +1,26 @@
+name: Go
+
+on:
+  push:
+    branches: [ release-1.4 ]
+defaults:
+  run:
+    working-directory: golang
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+
+      - name: Build Diagnose
+        run: go build
+        working-directory: diagnose # TODO overlapping?
+
+      - name: Build Stress
+        run: go build
+        working-directory: stress
