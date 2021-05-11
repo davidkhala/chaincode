@@ -8,8 +8,8 @@ github.com/davidkhala/fabric-common-chaincode-golang v0.0.0-20200716004449-9c469
 github.com/davidkhala/fabric-common-chaincode-golang v0.0.0-20200716004449-9c4697691ada/go.mod h1:knV5jSYBftqj1POeprBsStY06EyxmxpNj/KCLjHJE+8=
 github.com/davidkhala/goutils v0.0.0-20200611043306-b80f7b624c1b h1:Q+AlU8kvHMtWeMa74yqUyfWA+P+hOx/exTX1zVbBnQs=
 github.com/davidkhala/goutils v0.0.0-20200611043306-b80f7b624c1b/go.mod h1:2TnryJhGwobGIVm3fLN1/1nOWKGLFrzdObri9JdtPsk=
-github.com/davidkhala/goutils v0.0.0-20210429032627-2597180bb926 h1:E0sHaAoz9Zol4OEXL89z85Askl6dxDp7VBIJvdkvz3g=
-github.com/davidkhala/goutils v0.0.0-20210429032627-2597180bb926/go.mod h1:2TnryJhGwobGIVm3fLN1/1nOWKGLFrzdObri9JdtPsk=
+github.com/davidkhala/goutils v0.0.0-20210429154340-8cbf4e28a85c h1:AhzCGgvjPW3MafigWlXaVzr2IfyA0ZBq8wP1K7meYQo=
+github.com/davidkhala/goutils v0.0.0-20210429154340-8cbf4e28a85c/go.mod h1:2TnryJhGwobGIVm3fLN1/1nOWKGLFrzdObri9JdtPsk=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b h1:VKtxabqXZkF25pY9ekfRL6a582T4P37/31XEstQ5p58=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/mock v1.1.1/go.mod h1:oTYuIxOrZwtPieC+H1uAHpcLFnEyAGVDL/k47Jfbm0A=

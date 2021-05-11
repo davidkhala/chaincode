@@ -1,8 +1,8 @@
 module github.com/davidkhala/chaincode/golang/stress
 
-go 1.12
+go 1.15
 
 require (
-	github.com/hyperledger/fabric-chaincode-go v0.0.0-20200128192331-2d899240a7ed
-	github.com/hyperledger/fabric-protos-go v0.0.0-20200124220212-e9cfc186ba7b
+	github.com/hyperledger/fabric-chaincode-go v0.0.0-20201119163726-f8ef75b17719
+	github.com/hyperledger/fabric-protos-go v0.0.0-20210318103044-13fdee960194
 )
