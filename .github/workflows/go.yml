@@ -3,15 +3,19 @@ name: Go
 on:
   push:
     branches: [ release-1.4 ]
-defaults:
-  run:
-    working-directory: golang
+
 jobs:
 
   golang:
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
     env:
       GO111MODULE: "on"
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: [golang/diagnose, golang/stress]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Go
@@ -19,10 +23,11 @@ jobs:
         with:
           go-version: 1.14
         
-      - name: Build Diagnose
-        run: go mod vendor; go build
-        working-directory: golang/diagnose # overlapping defaults.run.working-directory
-
-      - name: Build Stress
-        run: go mod vendor; go build
-        working-directory: golang/stress
+      - name: Vendor
+        run: go mod vendor
+        
+      - name: Build
+        run: go build;
+      - name: Test
+        run: go test
+        
