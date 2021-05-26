@@ -4,14 +4,18 @@ on:
   push:
     branches: [ master ]
   
-defaults:
-  run:
-    working-directory: golang
+
 jobs:
-  golang:
+  sanCheck:
     env:
       GO111MODULE: "on"
+    defaults:
+      run:
+        working-directory: ${{matrix.directory}}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: [golang/diagnose, golang/stress]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Go
@@ -19,9 +23,8 @@ jobs:
       with:
         go-version: 1.15
 
-    - name: Build diagnose
+    - name: Build
       run: go mod vendor; go build -v ./...
-      working-directory: golang/diagnose
-    - name: Build Stress
-      run: go mod vendor; go build -v ./...
-      working-directory: golang/stress
+    - name: Test
+      run: go test
+  
