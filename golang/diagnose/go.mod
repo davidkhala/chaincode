@@ -3,7 +3,7 @@ module github.com/davidkhala/chaincode/golang/diagnose
 go 1.14
 
 require (
-	github.com/davidkhala/fabric-common-chaincode-golang v0.0.1
+	github.com/davidkhala/fabric-common-chaincode-golang v0.0.2-0.20210526045510-ec776669b41e
 	github.com/davidkhala/goutils v1.4.0
 	github.com/davidkhala/goutils/logger v0.0.0-20210429154340-8cbf4e28a85c
 	github.com/hyperledger/fabric v1.4.12

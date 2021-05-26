@@ -14,12 +14,12 @@ var logger = shim.NewLogger(name)
 type StressChaincode struct {
 }
 
-func (t *StressChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
+func (t StressChaincode) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("Init")
 	return shim.Success(nil)
 }
 
-func (t *StressChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+func (t StressChaincode) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	logger.Info("Invoke")
 	return shim.Success(nil)
 }
