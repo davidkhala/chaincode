@@ -21,8 +21,8 @@ jobs:
         
       - name: Build Diagnose
         run: go mod vendor; go build
-        working-directory: diagnose # TODO overlapping?
+        working-directory: golang/diagnose # overlapping defaults.run.working-directory
 
       - name: Build Stress
         run: go mod vendor; go build
-        working-directory: stress
+        working-directory: golang/stress
