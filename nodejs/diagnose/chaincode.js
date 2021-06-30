@@ -1,4 +1,4 @@
-const {CommonChaincode, shim, ClientIdentity, format: {ParseHistory, ParseStates}} = require('fabric-common-chaincode');
+const {CommonChaincode, shim, ClientIdentity, format: {parseHistory, parseStates}} = require('fabric-common-chaincode');
 
 /**
  *
@@ -27,23 +27,21 @@ class Chaincode extends CommonChaincode {
 		return {[key]: value};
 	}
 
-	// TODO
 	async richQuery(query) {
 		this.logger.info('Query string', query);
-		const queryIter = this.stub.getQueryResult(query);
-		const states = await ParseStates(queryIter);
-		return states;
+		const queryIterator = await this.stub.getQueryResult(query);
+		return await parseStates(queryIterator);
 	}
 
 	async putBatch(batch) {
 		for (const [key, value] of Object.entries(JSON.parse(batch))) {
-			await this.putState(key, value);
+			await this.putRaw(key, value);
 		}
 	}
 
 	async worldStates() {
 		const iterator = await this.stub.getStateByRange();
-		return await ParseStates(iterator);
+		return await parseStates(iterator);
 	}
 
 	async whoami() {
@@ -68,8 +66,7 @@ class Chaincode extends CommonChaincode {
 
 	async history(key) {
 		const iterator = await this.stub.getHistoryForKey(key);
-		const history = await ParseHistory(iterator);
-		return history;
+		return await parseHistory(iterator);
 	}
 
 	timeStamp() {
