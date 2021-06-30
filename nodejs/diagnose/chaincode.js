@@ -1,11 +1,17 @@
 const {CommonChaincode, shim, ClientIdentity, format: {ParseHistory, ParseStates}} = require('fabric-common-chaincode');
 
-const name = 'nodeDiagnose';
+/**
+ *
+ * @typedef {Object} TxData
+ * @property {number} Time
+ * @property {byte[]} Value
+ */
+
 
 class Chaincode extends CommonChaincode {
 
 	constructor() {
-		super(name);
+		super();
 	}
 
 	async init() {
@@ -17,7 +23,7 @@ class Chaincode extends CommonChaincode {
 	}
 
 	async transient(key) {
-		const value = this.getTransient(key);
+		const value = this.stub.getTransient(key);
 		return {[key]: value};
 	}
 
@@ -41,15 +47,23 @@ class Chaincode extends CommonChaincode {
 	}
 
 	async whoami() {
-		return new ClientIdentity(this.stub).toString();
+		const cid = new ClientIdentity(this.stub.stub);
+		return cid.toString();
+	}
+
+	async putRaw(key, value) {
+		await this.stub.putState(key, value);
+	}
+
+	async getRaw(key) {
+		return await this.stub.getState(key);
 	}
 
 	async put(key, value) {
-		await this.putState(key, value);
-	}
-
-	async get(key) {
-		return await this.stub.getState(key);
+		const data = {
+			Time: this.timeStamp(), Value: value
+		};
+		await this.putRaw(key, JSON.stringify(data));
 	}
 
 	async history(key) {
@@ -58,7 +72,7 @@ class Chaincode extends CommonChaincode {
 		return history;
 	}
 
-	async timeStamp() {
+	timeStamp() {
 		return this.stub.getTxTimestamp(true);
 	}
 
@@ -103,8 +117,10 @@ class Chaincode extends CommonChaincode {
 	// 	MetaData QueryResponseMetadata
 	// }
 	// 	response = ToJson(Response{ParseStates(iter, nil), metaData})
-	// case "chaincodeId":
-	// 	response = []byte(t.GetChaincodeID())
+	async chaincodeId() {
+		return await this.stub.getChaincodeID();
+
+	}
 
 }
 
