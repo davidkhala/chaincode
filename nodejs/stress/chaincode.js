@@ -6,6 +6,7 @@ class Chaincode {
 	}
 
 	async Init(stub) {
+		// Init function should be implemented, even with init_required=false
 		return Shim.success();
 	}
 

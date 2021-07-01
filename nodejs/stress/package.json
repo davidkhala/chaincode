@@ -3,7 +3,6 @@
     "start": "node chaincode.js"
   },
   "dependencies": {
-    "fabric-shim": "latest",
-    "fabric-shim-crypto": "latest"
+    "fabric-shim": "latest"
   }
 }
