@@ -8,7 +8,6 @@ import (
 const (
 	FcnCreateToken  = "createToken"
 	FcnGetToken     = "getToken"
-	FcnRenewToken   = "renewToken"
 	FcnTokenHistory = "tokenHistory"
 	FcnDeleteToken  = "deleteToken"
 	FcnMoveToken    = "moveToken"
@@ -35,20 +34,20 @@ type TokenData struct {
 	Manager      string // uses MSP ID in ecosystem
 	OwnerType    OwnerType
 	IssuerClient cid.ClientIdentity
-	ExpiryDate   goutils.TimeLong
-	TransferDate goutils.TimeLong
+	MintTime     goutils.TimeLong
+	TransferTime goutils.TimeLong
 	Client       cid.ClientIdentity // latest Operator Client
 }
 
 type TokenCreateRequest struct {
-	Owner      string
-	ExpiryDate goutils.TimeLong
+	Owner    string
+	MintTime goutils.TimeLong
 }
 
 func (t TokenCreateRequest) Build() TokenData {
 	return TokenData{
-		Owner:      t.Owner,
-		ExpiryDate: t.ExpiryDate,
+		Owner:    t.Owner,
+		MintTime: t.MintTime,
 	}
 }
 

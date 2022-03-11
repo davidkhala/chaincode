@@ -63,7 +63,7 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 		}
 		tokenData = createRequest.Build()
 		tokenData.OwnerType = OwnerTypeMember
-		tokenData.TransferDate = TimeLong(0)
+		tokenData.TransferTime = TimeLong(0)
 		tokenData.Issuer = MspID
 		tokenData.Manager = MspID
 		tokenData.IssuerClient = clientID
@@ -75,15 +75,6 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 			break
 		}
 		responseBytes = ToJson(*tokenDataPtr)
-	case FcnRenewToken:
-		var newExpiryTime = time.FromString(params[1])
-		var tokenDataPtr = t.getToken(tokenID)
-		if tokenDataPtr == nil {
-			panicEcosystem("token", "token["+string(tokenRaw)+"] not found")
-		}
-		tokenData = *tokenDataPtr
-		tokenData.ExpiryDate = newExpiryTime
-		t.putToken(clientID, tokenID, tokenData)
 	case FcnTokenHistory:
 		responseBytes = t.history(tokenID)
 	case FcnDeleteToken:
@@ -109,14 +100,14 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 		if tokenData.OwnerType != OwnerTypeMember {
 			panicEcosystem("OwnerType", "original token OwnerType should be member, but got "+tokenData.OwnerType.To())
 		}
-		if tokenData.TransferDate != TimeLong(0) {
+		if tokenData.TransferTime != TimeLong(0) {
 			panicEcosystem("token", "token["+string(tokenRaw)+"] was transferred")
 		}
 
 		tokenData = transferReq.ApplyOn(tokenData)
 		tokenData.Manager = MspID
 		tokenData.OwnerType = OwnerTypeNetwork
-		tokenData.TransferDate = time.FromTimeStamp(t.GetTxTimestamp())
+		tokenData.TransferTime = time.FromTimeStamp(t.GetTxTimestamp())
 		t.putToken(clientID, tokenID, tokenData)
 	default:
 		panicEcosystem("unknown", "unknown fcn:"+fcn)
