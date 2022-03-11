@@ -3,7 +3,6 @@ module github.com/davidkhala/chaincode/golang/ecosystem
 go 1.16
 
 require (
-	github.com/MediConCenHK/go-chaincode-common v0.0.0-20200711085108-46fee61c1db5
 	github.com/davidkhala/fabric-common-chaincode-golang v0.0.2
 	github.com/davidkhala/goutils v1.5.4
 	github.com/hyperledger/fabric-chaincode-go v0.0.0-20220131132609-1476cf1d3206

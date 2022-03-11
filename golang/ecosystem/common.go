@@ -6,7 +6,6 @@ import (
 )
 
 const (
-	GlobalCCID      = "global"
 	FcnCreateToken  = "createToken"
 	FcnGetToken     = "getToken"
 	FcnRenewToken   = "renewToken"

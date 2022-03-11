@@ -44,11 +44,12 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 	var clientID = NewClientIdentity(stub)
 	var MspID = clientID.MspID
 	var responseBytes []byte
-	var tokenRaw = params[0]
-	if tokenRaw == "" {
+	var transient = t.GetTransient()
+	var tokenRaw = transient["token"]
+	if tokenRaw == nil {
 		panicEcosystem("token", "param:token is empty")
 	}
-	var tokenID = Hash([]byte(tokenRaw))
+	var tokenID = Hash(tokenRaw)
 
 	var tokenData TokenData
 	var time TimeLong
@@ -58,7 +59,7 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 		FromJson([]byte(params[1]), &createRequest)
 		var tokenDataPtr = t.getToken(tokenID)
 		if tokenDataPtr != nil {
-			panicEcosystem("token", "token["+tokenRaw+"] already exist")
+			panicEcosystem("token", "token["+string(tokenRaw)+"] already exist")
 		}
 		tokenData = createRequest.Build()
 		tokenData.OwnerType = OwnerTypeMember
@@ -78,7 +79,7 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 		var newExpiryTime = time.FromString(params[1])
 		var tokenDataPtr = t.getToken(tokenID)
 		if tokenDataPtr == nil {
-			panicEcosystem("token", "token["+tokenRaw+"] not found")
+			panicEcosystem("token", "token["+string(tokenRaw)+"] not found")
 		}
 		tokenData = *tokenDataPtr
 		tokenData.ExpiryDate = newExpiryTime
@@ -92,7 +93,7 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 		}
 		tokenData = *tokenDataPtr
 		if MspID != tokenData.Manager {
-			panicEcosystem("CID", "["+tokenRaw+"]Token Data Manager("+tokenData.Manager+") mismatched with tx creator MspID: "+MspID)
+			panicEcosystem("CID", "["+string(tokenRaw)+"]Token Data Manager("+tokenData.Manager+") mismatched with tx creator MspID: "+MspID)
 		}
 		t.DelState(tokenID)
 	case FcnMoveToken:
@@ -102,14 +103,14 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 
 		var tokenDataPtr = t.getToken(tokenID)
 		if tokenDataPtr == nil {
-			panicEcosystem("token", "token["+tokenRaw+"] not found")
+			panicEcosystem("token", "token["+string(tokenRaw)+"] not found")
 		}
 		tokenData = *tokenDataPtr
 		if tokenData.OwnerType != OwnerTypeMember {
 			panicEcosystem("OwnerType", "original token OwnerType should be member, but got "+tokenData.OwnerType.To())
 		}
 		if tokenData.TransferDate != TimeLong(0) {
-			panicEcosystem("token", "token["+tokenRaw+"] was transferred")
+			panicEcosystem("token", "token["+string(tokenRaw)+"] was transferred")
 		}
 
 		tokenData = transferReq.ApplyOn(tokenData)
