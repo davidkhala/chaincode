@@ -56,7 +56,7 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 	switch fcn {
 	case FcnCreateToken:
 		var createRequest TokenCreateRequest
-		FromJson([]byte(params[1]), &createRequest)
+		FromJson([]byte(params[0]), &createRequest)
 		var tokenDataPtr = t.getToken(tokenID)
 		if tokenDataPtr != nil {
 			panicEcosystem("token", "token["+string(tokenRaw)+"] already exist")
@@ -90,7 +90,7 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 	case FcnMoveToken:
 		var transferReq TokenTransferRequest
 
-		FromJson([]byte(params[1]), &transferReq)
+		FromJson([]byte(params[0]), &transferReq)
 
 		var tokenDataPtr = t.getToken(tokenID)
 		if tokenDataPtr == nil {
