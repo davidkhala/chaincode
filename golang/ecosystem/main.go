@@ -104,7 +104,7 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 			panicEcosystem("token", "token["+string(tokenRaw)+"] was transferred")
 		}
 
-		tokenData = transferReq.ApplyOn(tokenData)
+		tokenData.Apply(transferReq)
 		tokenData.Manager = MspID
 		tokenData.OwnerType = OwnerTypeNetwork
 		tokenData.TransferTime = time.FromTimeStamp(t.GetTxTimestamp())

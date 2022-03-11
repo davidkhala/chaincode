@@ -29,12 +29,11 @@ func (t OwnerType) To() string {
 }
 
 type TokenData struct {
-	Owner        string
+	TokenCreateRequest
 	Issuer       string // uses MSP ID in ecosystem
 	Manager      string // uses MSP ID in ecosystem
 	OwnerType    OwnerType
 	IssuerClient cid.ClientIdentity
-	MintTime     goutils.TimeLong
 	TransferTime goutils.TimeLong
 	Client       cid.ClientIdentity // latest Operator Client
 }
@@ -42,23 +41,29 @@ type TokenData struct {
 type TokenCreateRequest struct {
 	Owner    string
 	MintTime goutils.TimeLong
+	Content  []byte
 }
 
 func (t TokenCreateRequest) Build() TokenData {
 	return TokenData{
-		Owner:    t.Owner,
-		MintTime: t.MintTime,
+		TokenCreateRequest: t,
 	}
 }
 
 type TokenTransferRequest struct {
-	Owner    string
-	MetaData []byte
+	Owner        string
+	OwnerType    OwnerType
+	TransferTime goutils.TimeLong
 }
 
-func (t TokenTransferRequest) ApplyOn(data TokenData) TokenData {
-	if t.Owner != "" {
-		data.Owner = t.Owner
+func (data *TokenData) Apply(request TokenTransferRequest) *TokenData {
+
+	data.Owner = request.Owner
+	data.OwnerType = request.OwnerType
+	if data.TransferTime < request.TransferTime {
+		data.TransferTime = request.TransferTime
+	} else {
+		panic("invalid TransferTime")
 	}
 
 	return data
