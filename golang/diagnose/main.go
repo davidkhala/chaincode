@@ -75,13 +75,20 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		t.GetStateObj(key, &tx)
 		responseBytes = tx.Value
 	case "putImplicit":
-		var mspid = params[0]
+		var mspid = GetMSPID()
+		if len(params) == 1 {
+			mspid = params[0]
+		}
+
 		var collection = ImplicitCollection(mspid)
 		for k, v := range transient {
 			t.PutPrivateData(collection, k, v)
 		}
 	case "getImplicit":
-		var mspid = params[0]
+		var mspid = GetMSPID()
+		if len(params) == 1 {
+			mspid = params[0]
+		}
 		var collection = ImplicitCollection(mspid)
 		var privateKV = map[string]string{}
 		for k := range transient {
