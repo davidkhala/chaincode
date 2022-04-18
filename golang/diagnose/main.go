@@ -25,7 +25,7 @@ func (t diagnoseChaincode) Init(stub shim.ChaincodeStubInterface) (response peer
 	defer Deferred(DeferHandlerPeerResponse, &response)
 	t.Prepare(stub)
 	var fcn, params = stub.GetFunctionAndParameters()
-	logger.Info("Init", fcn, params)
+	logger.Info("Init ", fcn, params)
 	t.printTransient()
 	return shim.Success(nil)
 
@@ -49,7 +49,7 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 	t.Prepare(stub)
 	fcn, params := stub.GetFunctionAndParameters()
 	var args = stub.GetArgs()
-	logger.Info("Invoke", fcn, params)
+	logger.Info("Invoke ", fcn, params)
 	var transient = t.GetTransient()
 	var responseBytes []byte
 	switch fcn {
@@ -138,13 +138,16 @@ func (t diagnoseChaincode) Invoke(stub shim.ChaincodeStubInterface) (response pe
 		t.SetStateValidationParameter(key, nil)
 	case "putEndorsement":
 		var key = params[0]
-		var orgs = params[1:]
+		var MSPIDs = params[1:]
 		var policy = ext.NewKeyEndorsementPolicy(nil)
-		policy.AddOrgs(msp.MSPRole_MEMBER, orgs...)
-		t.SetStateValidationParameter(key, policy.Policy())
+		policy.AddOrgs(msp.MSPRole_MEMBER, MSPIDs...)
+		var policyBytes = policy.Policy()
+		logger.Info(policyBytes)
+		t.SetStateValidationParameter(key, policyBytes)
 	case "getEndorsement":
 		var key = params[0]
 		var policyBytes = t.GetStateValidationParameter(key)
+		logger.Info(policyBytes) // FIXME empty here
 		var policy = ext.NewKeyEndorsementPolicy(policyBytes)
 		var orgs = policy.ListOrgs()
 		responseBytes = ToJson(orgs)
