@@ -1,0 +1,16 @@
+#!/bin/bash
+set -euo pipefail
+CHAINCODE_SOURCE_DIR="$1"
+CHAINCODE_METADATA_DIR="$2"
+BUILD_OUTPUT_DIR="$3"
+
+# extract package path from metadata.json
+GO_PACKAGE_PATH="$(jq -r .path "$CHAINCODE_METADATA_DIR/metadata.json")"
+
+cd "$CHAINCODE_SOURCE_DIR/src"
+go build -v -mod=readonly -o "$BUILD_OUTPUT_DIR/chaincode" "$GO_PACKAGE_PATH"
+
+# save statedb index metadata to provide at release
+if [ -d "$CHAINCODE_SOURCE_DIR/META-INF" ]; then
+	cp -a "$CHAINCODE_SOURCE_DIR/META-INF" "$BUILD_OUTPUT_DIR/"
+fi

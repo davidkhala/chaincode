@@ -1,0 +1,9 @@
+{
+  "address": "your.chaincode.host.com:9999",
+  "dial_timeout": "10s",
+  "tls_required": "true",
+  "client_auth_required": "true",
+  "client_key": "-----BEGIN EC PRIVATE KEY----- ... -----END EC PRIVATE KEY-----",
+  "client_cert": "-----BEGIN CERTIFICATE----- ... -----END CERTIFICATE-----",
+  "root_cert": "-----BEGIN CERTIFICATE---- ... -----END CERTIFICATE-----"
+}
