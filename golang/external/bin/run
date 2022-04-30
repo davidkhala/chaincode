@@ -9,6 +9,7 @@ export CORE_PEER_TLS_ENABLED="true"
 export CORE_TLS_CLIENT_CERT_FILE="$RUN_METADATA_DIR/client.crt"
 export CORE_TLS_CLIENT_KEY_FILE="$RUN_METADATA_DIR/client.key"
 export CORE_PEER_TLS_ROOTCERT_FILE="$RUN_METADATA_DIR/root.crt"
+# feed value to shim.GetMSPID()
 export CORE_PEER_LOCALMSPID="$(jq -r .mspid "$RUN_METADATA_DIR/chaincode.json")"
 
 # populate the key and certificate material used by the go chaincode shim

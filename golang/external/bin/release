@@ -2,23 +2,16 @@
 
 set -euo pipefail
 
-BLD="$1"
-RELEASE="$2"
+BUILD_OUTPUT_DIR="$1"
+RELEASE_OUTPUT_DIR="$2"
 
-if [ -d "$BLD/metadata" ]; then
-   cp -a "$BLD/metadata/"* "$RELEASE/"
+# copy indexes from META-INF/* to the output directory
+if [ -d "$BUILD_OUTPUT_DIR/META-INF" ] ; then
+   cp -a "$BUILD_OUTPUT_DIR/META-INF/"* "$RELEASE_OUTPUT_DIR/"
 fi
 
-#external chaincodes expect artifacts to be placed under "$RELEASE"/chaincode/server
-if [ -f $BLD/connection.json ]; then
-   mkdir -p "$RELEASE"/chaincode/server
-   cp $BLD/connection.json "$RELEASE"/chaincode/server
-
-   #if tls_required is true, copy TLS files (using above example, the fully qualified path for these fils would be "$RELEASE"/chaincode/server/tls)
-
-   exit 0
-fi
-
-exit 1
-
+#jq -n --arg chaincode_id "chaincode_ID" \
+#	--arg peer_address "PEER_address" \
+#	'{chaincode_id: $chaincode_id,peer_address: $peer_address}' \
+#	>chaincode.json
 #sha256sum ${chaincodeArchive} | awk '{print $1}'
