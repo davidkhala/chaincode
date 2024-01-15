@@ -10,5 +10,5 @@ type SmartContract struct {
 }
 
 func (*SmartContract) Who(context contractapi.TransactionContextInterface) cid.ClientIdentity {
-	return FromInterface(context.GetClientIdentity())
+	return cid.NewClientIdentity(context.GetStub())
 }
