@@ -5,19 +5,13 @@ import (
 	. "github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	. "github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric-chaincode-go/shim"
+	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 	"github.com/hyperledger/fabric-protos-go/peer"
 )
 
 type GlobalChaincode struct {
-	CommonChaincode
 }
 
-func (t GlobalChaincode) Init(stub shim.ChaincodeStubInterface) (response peer.Response) {
-	defer Deferred(DeferHandlerPeerResponse, &response)
-	t.Prepare(stub)
-
-	return shim.Success(nil)
-}
 func (t GlobalChaincode) putToken(cid ClientIdentity, tokenID string, tokenData TokenData) {
 	tokenData.Client = cid
 	t.PutStateObj(tokenID, tokenData)
@@ -38,7 +32,6 @@ func (t GlobalChaincode) history(token string) []byte {
 
 func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer.Response) {
 	defer Deferred(DeferHandlerPeerResponse, &response)
-	t.Prepare(stub)
 
 	var fcn, params = stub.GetFunctionAndParameters()
 	var clientID = NewClientIdentity(stub)
@@ -52,7 +45,6 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 	var tokenID = Hash(tokenRaw)
 
 	var tokenData TokenData
-	var time TimeLong
 	switch fcn {
 	case FcnCreateToken:
 		var createRequest TokenCreateRequest
@@ -98,7 +90,7 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 		}
 		tokenData = *tokenDataPtr
 		if tokenData.OwnerType != OwnerTypeMember {
-			panicEcosystem("OwnerType", "original token OwnerType should be member, but got "+tokenData.OwnerType.To())
+			panicEcosystem("OwnerType", "original token OwnerType should be member, but got "+tokenData.OwnerType.String())
 		}
 		if tokenData.TransferTime != TimeLong(0) {
 			panicEcosystem("token", "token["+string(tokenRaw)+"] was transferred")
@@ -107,7 +99,8 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 		tokenData.Apply(transferReq)
 		tokenData.Manager = MspID
 		tokenData.OwnerType = OwnerTypeNetwork
-		tokenData.TransferTime = time.FromTimeStamp(t.GetTxTimestamp())
+		var time = t.GetTxTimestamp()
+		tokenData.TransferTime = TimeLong(time.AsTime().UnixNano())
 		t.putToken(clientID, tokenID, tokenData)
 	default:
 		panicEcosystem("unknown", "unknown fcn:"+fcn)
@@ -116,7 +109,18 @@ func (t GlobalChaincode) Invoke(stub shim.ChaincodeStubInterface) (response peer
 }
 
 func main() {
-	var cc = GlobalChaincode{}
 
-	ChaincodeStart(cc)
+	contracts := []contractapi.ContractInterface{&GlobalChaincode{}}
+	chaincode, err := contractapi.NewChaincode(contracts...)
+
+	PanicError(err)
+
+	err = chaincode.Start()
+
+	PanicError(err)
+
+}
+
+func panicEcosystem(Type, message string) {
+	PanicString("ECOSYSTEM|" + Type + "|" + message)
 }

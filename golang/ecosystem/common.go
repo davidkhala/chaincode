@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	"github.com/davidkhala/goutils"
+	"github.com/davidkhala/goutils/crypto"
 )
 
 const (
@@ -23,7 +24,7 @@ const (
 	OwnerTypeInsurance
 )
 
-func (t OwnerType) To() string {
+func (t OwnerType) String() string {
 	var enum = []string{"unknown", "member", "clinic", "network", "insurance"}
 	return enum[t]
 }
@@ -67,4 +68,8 @@ func (data *TokenData) Apply(request TokenTransferRequest) *TokenData {
 	}
 
 	return data
+}
+
+func Hash(data []byte) string {
+	return goutils.HexEncode(crypto.HashSha512(data))
 }
