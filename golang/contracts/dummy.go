@@ -16,7 +16,7 @@ func (*StupidContract) Panic() {
 	panic("StupidContract")
 }
 
-// PRE 1 param, return err
-func PRE() error {
+// P1E 1 param, return err
+func (*StupidContract) P1E() error {
 	return errors.New("StupidContract:PRE")
 }

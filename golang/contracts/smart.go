@@ -9,6 +9,6 @@ type SmartContract struct {
 	contractapi.Contract
 }
 
-func (*SmartContract) Who(context contractapi.TransactionContextInterface) cid.ClientIdentity {
-	return cid.NewClientIdentity(context.GetStub())
+func (*SmartContract) Who(context contractapi.TransactionContextInterface) string {
+	return cid.NewClientIdentity(context.GetStub()).GetID()
 }
