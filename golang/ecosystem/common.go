@@ -4,14 +4,7 @@ import (
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	"github.com/davidkhala/goutils"
 	"github.com/davidkhala/goutils/crypto"
-)
-
-const (
-	FcnCreateToken  = "createToken"
-	FcnGetToken     = "getToken"
-	FcnTokenHistory = "tokenHistory"
-	FcnDeleteToken  = "deleteToken"
-	FcnMoveToken    = "moveToken"
+	"time"
 )
 
 type OwnerType byte
@@ -35,14 +28,13 @@ type TokenData struct {
 	Manager      string // uses MSP ID in ecosystem
 	OwnerType    OwnerType
 	IssuerClient cid.ClientIdentity
-	TransferTime goutils.TimeLong
+	TransferTime time.Time
 	Client       cid.ClientIdentity // latest Operator Client
 }
 
 type TokenCreateRequest struct {
 	Owner    string
-	MintTime goutils.TimeLong
-	Content  []byte
+	MintTime time.Time
 }
 
 func (t TokenCreateRequest) Build() TokenData {
@@ -54,14 +46,14 @@ func (t TokenCreateRequest) Build() TokenData {
 type TokenTransferRequest struct {
 	Owner        string
 	OwnerType    OwnerType
-	TransferTime goutils.TimeLong
+	TransferTime time.Time
 }
 
 func (data *TokenData) Apply(request TokenTransferRequest) *TokenData {
 
 	data.Owner = request.Owner
 	data.OwnerType = request.OwnerType
-	if data.TransferTime < request.TransferTime {
+	if data.TransferTime.Before(request.TransferTime) {
 		data.TransferTime = request.TransferTime
 	} else {
 		panic("invalid TransferTime")
