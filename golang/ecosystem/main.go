@@ -107,10 +107,8 @@ func (t GlobalChaincode) MoveToken(contractInterface contractapi.TransactionCont
 
 func main() {
 
-	contracts := []contractapi.ContractInterface{&GlobalChaincode{}}
-
-	var chaincode = contract_api.NewChaincode(contracts...)
-	PanicError(chaincode.Start())
+	var chaincode = contract_api.NewChaincode(&GlobalChaincode{})
+	contract_api.Start(chaincode)
 
 }
 

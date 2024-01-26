@@ -16,7 +16,27 @@ func (*StupidContract) Panic() {
 	panic("StupidContract")
 }
 
-// P1E 1 param, return err
-func (*StupidContract) P1E() error {
-	return errors.New("StupidContract:PRE")
+// no param, return err
+func (*StupidContract) Error() error {
+	return errors.New("StupidContract:P1E")
+}
+func (*StupidContract) UnUsedContext(context contractapi.TransactionContextInterface) {
+	return
+}
+
+// OnlyParams is a dead function
+//
+//	Error: managing parameter param0. Conversion error. Value "..." was not passed in expected format []interface {}
+func (*StupidContract) OnlyParams(context contractapi.TransactionContextInterface, params ...interface{}) interface{} {
+	return params
+}
+func (*StupidContract) StringParam(context contractapi.TransactionContextInterface, p1 string) string {
+	return p1
+}
+
+// StringParams is a dead function
+//
+//	Error: Inconsistent type in JSPB repeated field array. Got array expected object
+func (*StupidContract) StringParams(context contractapi.TransactionContextInterface, p1 ...string) []string {
+	return p1
 }

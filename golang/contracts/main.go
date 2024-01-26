@@ -1,17 +1,13 @@
 package main
 
 import (
-	"github.com/davidkhala/goutils"
-	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+	"github.com/davidkhala/fabric-common-chaincode-golang/contract-api"
 )
 
 func main() {
 
-	contracts := []contractapi.ContractInterface{&SmartContract{}, &StupidContract{}}
-	chaincode, err := contractapi.NewChaincode(contracts...)
-	goutils.PanicError(err)
+	var chaincode = contract_api.NewChaincode(&SmartContract{}, &StupidContract{})
 
-	err = chaincode.Start()
+	contract_api.Start(chaincode)
 
-	goutils.PanicError(err)
 }
