@@ -13,7 +13,7 @@ type SmartContract struct {
 func (*SmartContract) Who(context contractapi.TransactionContextInterface) string {
 	return cid.NewClientIdentity(context.GetStub()).GetID()
 }
-func (*StupidContract) Standard(context contractapi.TransactionContextInterface, p1 string) (string, error) {
+func (*SmartContract) Standard(context contractapi.TransactionContextInterface, p1 string) (string, error) {
 	if len(p1) == 0 {
 		return "", errors.New("empty param")
 	} else {
