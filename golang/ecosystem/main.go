@@ -39,18 +39,13 @@ func (t GlobalChaincode) TokenHistory(contractInterface contractapi.TransactionC
 func (t GlobalChaincode) CreateToken(contractInterface contractapi.TransactionContextInterface, createRequest TokenCreateRequest) {
 	t.common.Prepare(contractInterface.GetStub())
 	var clientID = cid.NewClientIdentity(t.common.CCAPI)
-	var MspID = clientID.MspID
 	var tokenID = t.tokenId()
 	var tokenDataPtr = t.GetToken(contractInterface)
 	if tokenDataPtr != nil {
 		panicEcosystem("token", "token["+string(t.tokenRaw())+"] already exist")
 	}
 	var tokenData TokenData
-	tokenData = createRequest.Build()
-	tokenData.OwnerType = OwnerTypeMember
-	tokenData.Issuer = MspID
-	tokenData.Manager = MspID
-	tokenData.IssuerClient = clientID
+	tokenData = createRequest.Build(clientID)
 	t.putToken(clientID, tokenID, tokenData)
 }
 

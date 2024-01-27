@@ -37,9 +37,13 @@ type TokenCreateRequest struct {
 	MintTime time.Time
 }
 
-func (t TokenCreateRequest) Build() TokenData {
+func (t TokenCreateRequest) Build(identity cid.ClientIdentity) TokenData {
 	return TokenData{
 		TokenCreateRequest: t,
+		OwnerType:          OwnerTypeMember,
+		Issuer:             identity.MspID,
+		Manager:            identity.MspID,
+		IssuerClient:       identity,
 	}
 }
 
