@@ -4,54 +4,67 @@ import (
 	golang "github.com/davidkhala/fabric-common-chaincode-golang"
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	"github.com/davidkhala/fabric-common-chaincode-golang/contract-api"
-	. "github.com/davidkhala/goutils"
+	"github.com/davidkhala/goutils"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
 type GlobalChaincode struct {
-	golang.CommonChaincode
+	common golang.CommonChaincode
 	contractapi.Contract
 }
 
-func (t GlobalChaincode) GetToken(contractInterface contractapi.TransactionContextInterface) (data *TokenData, err error) {
+func (t GlobalChaincode) GetToken(contractInterface contractapi.TransactionContextInterface) (data TokenData, err error) {
 	defer contract_api.Deferred(contract_api.DefaultDeferHandler(&err))
-	t.Prepare(contractInterface.GetStub())
+	t.common.Prepare(contractInterface.GetStub())
 
-	data = t.getToken(t.tokenId())
+	data = *t.getToken(t.tokenId())
 	return
 }
-func (t GlobalChaincode) TokenHistory(contractInterface contractapi.TransactionContextInterface) (result string, err error) {
+
+func (t GlobalChaincode) TokenHistory(contractInterface contractapi.TransactionContextInterface) (result []TokenHistory, err error) {
 	defer contract_api.Deferred(contract_api.DefaultDeferHandler(&err))
-	t.Prepare(contractInterface.GetStub())
+	t.common.Prepare(contractInterface.GetStub())
 
 	var tokenId = t.tokenId()
-	var history = golang.ParseHistory(t.GetHistoryForKey(tokenId), nil)
-	result = string(ToJson(history))
+	var history = golang.ParseHistory(t.common.GetHistoryForKey(tokenId), nil)
+	for _, modification := range history {
+		var tokenData TokenData
+		if !modification.IsDelete {
+			goutils.FromJson(modification.Value, &tokenData)
+		}
+		var tokenHistory = TokenHistory{
+			TxId:      modification.TxId,
+			TokenData: tokenData,
+			IsDelete:  modification.IsDelete,
+		}
+		result = append(result, tokenHistory)
+	}
+
 	return
 
 }
 
 func (t GlobalChaincode) CreateToken(contractInterface contractapi.TransactionContextInterface, createRequest TokenCreateRequest) (err error) {
 	defer contract_api.Deferred(contract_api.DefaultDeferHandler(&err))
-	t.Prepare(contractInterface.GetStub())
+	t.common.Prepare(contractInterface.GetStub())
 
-	var clientID = cid.NewClientIdentity(t.CCAPI)
+	var clientID = cid.NewClientIdentity(t.common.CCAPI)
 	var tokenID = t.tokenId()
 	var tokenDataPtr = t.getToken(tokenID)
 	if tokenDataPtr != nil {
 		panicEcosystem("token", "token["+string(t.tokenRaw())+"] already exist")
 	}
 	var tokenData TokenData
-	tokenData = createRequest.Build(clientID, t.CommonChaincode)
+	tokenData = createRequest.Build(clientID, t.common)
 	t.putToken(clientID, tokenID, tokenData)
 	return
 }
 
 func (t GlobalChaincode) DeleteToken(contractInterface contractapi.TransactionContextInterface) (err error) {
 	defer contract_api.Deferred(contract_api.DefaultDeferHandler(&err))
-	t.Prepare(contractInterface.GetStub())
+	t.common.Prepare(contractInterface.GetStub())
 
-	var clientID = cid.NewClientIdentity(t.CCAPI)
+	var clientID = cid.NewClientIdentity(t.common.CCAPI)
 	var MspID = clientID.MspID
 	var tokenId = t.tokenId()
 	var tokenData = t.getToken(tokenId)
@@ -64,21 +77,21 @@ func (t GlobalChaincode) DeleteToken(contractInterface contractapi.TransactionCo
 	if MspID != tokenData.Manager {
 		panicEcosystem("CID", "["+string(t.tokenRaw())+"]Token Data Manager("+tokenData.Manager+") mismatched with tx creator MspID: "+MspID)
 	}
-	t.DelState(tokenId)
+	t.common.DelState(tokenId)
 	return
 }
 func (t GlobalChaincode) MoveToken(contractInterface contractapi.TransactionContextInterface, transferReq TokenTransferRequest) (err error) {
 	defer contract_api.Deferred(contract_api.DefaultDeferHandler(&err))
-	t.Prepare(contractInterface.GetStub())
+	t.common.Prepare(contractInterface.GetStub())
 
 	var tokenId = t.tokenId()
 	var tokenData = t.getToken(tokenId)
-	var clientID = cid.NewClientIdentity(t.CCAPI)
+	var clientID = cid.NewClientIdentity(t.common.CCAPI)
 	var MspID = clientID.MspID
 	if tokenData == nil {
 		panicEcosystem("token", "token["+string(t.tokenRaw())+"] not found")
 	}
-	tokenData.Apply(transferReq, t.CommonChaincode, MspID)
+	tokenData.Apply(transferReq, t.common, MspID)
 	t.putToken(clientID, tokenId, *tokenData)
 	return
 }

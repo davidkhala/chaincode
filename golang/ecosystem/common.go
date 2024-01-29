@@ -23,7 +23,7 @@ type TokenData struct {
 	IssuerClient string
 
 	TransferTime time.Time // latest operation time
-	Owner        string    // latest owner
+	Owner        string    // latest owner, any format
 	OwnerType    OwnerType // latest ownerType
 	Manager      cid.MSPID // latest manager
 	Client       string    // latest Operator
@@ -31,6 +31,11 @@ type TokenData struct {
 
 type TokenCreateRequest struct {
 	Owner string
+}
+type TokenHistory struct {
+	TxId string
+	TokenData
+	IsDelete bool
 }
 
 func (t TokenCreateRequest) Build(identity cid.ClientIdentity, c golang.CommonChaincode) TokenData {
