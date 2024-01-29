@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+	"time"
 )
 
 type SmartContract struct {
@@ -19,4 +20,9 @@ func (*SmartContract) Standard(context contractapi.TransactionContextInterface, 
 	} else {
 		return p1, nil
 	}
+}
+
+// Now It can be serialized in node client in format of `2024-01-29T01:55:45.000Z`
+func (*SmartContract) Now() time.Time {
+	return time.Now()
 }

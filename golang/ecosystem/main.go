@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	golang "github.com/davidkhala/fabric-common-chaincode-golang"
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	"github.com/davidkhala/fabric-common-chaincode-golang/contract-api"
@@ -9,87 +10,117 @@ import (
 )
 
 type GlobalChaincode struct {
-	common golang.CommonChaincode
 	contractapi.Contract
 }
 
 func (t GlobalChaincode) putToken(cid cid.ClientIdentity, tokenID string, tokenData TokenData) {
-	tokenData.Client = cid
+	tokenData.Client = cid.GetID()
 	t.common.PutStateObj(tokenID, tokenData)
 }
 
-func (t GlobalChaincode) GetToken(contractInterface contractapi.TransactionContextInterface) *TokenData {
-	t.common.Prepare(contractInterface.GetStub())
-	var tokenID = t.tokenId()
+func (t GlobalChaincode) getToken(tokenId string) (*TokenData, error) {
+
 	var tokenData TokenData
-	var exist = t.common.GetStateObj(tokenID, &tokenData)
+	var exist = t.common.GetStateObj(tokenId, &tokenData)
 	if !exist {
-		return nil
+		return nil, nil
+	} else {
+		return &tokenData, nil
 	}
-	return &tokenData
 }
-func (t GlobalChaincode) TokenHistory(contractInterface contractapi.TransactionContextInterface) string {
+func (t GlobalChaincode) GetToken(contractInterface contractapi.TransactionContextInterface) (*TokenData, error) {
 	t.common.Prepare(contractInterface.GetStub())
-	var tokenId = t.tokenId()
+	tokenId, err := t.tokenId()
+	if err != nil {
+		return nil, err
+	}
+	return t.getToken(tokenId)
+}
+func (t GlobalChaincode) TokenHistory(contractInterface contractapi.TransactionContextInterface) (string, error) {
+	t.common.Prepare(contractInterface.GetStub())
+	tokenId, err := t.tokenId()
+	if err != nil {
+		return "", err
+	}
 	var history = golang.ParseHistory(t.common.GetHistoryForKey(tokenId), nil)
-	return string(ToJson(history))
+	return string(ToJson(history)), nil
 
 }
 
-func (t GlobalChaincode) CreateToken(contractInterface contractapi.TransactionContextInterface, createRequest TokenCreateRequest) {
+func (t GlobalChaincode) CreateToken(contractInterface contractapi.TransactionContextInterface, createRequest TokenCreateRequest) error {
 	t.common.Prepare(contractInterface.GetStub())
+
 	var clientID = cid.NewClientIdentity(t.common.CCAPI)
-	var tokenID = t.tokenId()
-	var tokenDataPtr = t.GetToken(contractInterface)
+	tokenID, err := t.tokenId()
+	if err != nil {
+		return err
+	}
+	tokenDataPtr, err := t.getToken(tokenID)
+	if err != nil {
+		return err
+	}
 	if tokenDataPtr != nil {
-		panicEcosystem("token", "token["+string(t.tokenRaw())+"] already exist")
+		return panicEcosystem("token", "token["+string(t.tokenRaw())+"] already exist")
 	}
 	var tokenData TokenData
 	tokenData = createRequest.Build(clientID)
 	t.putToken(clientID, tokenID, tokenData)
+	return nil
 }
 
 func (t GlobalChaincode) tokenRaw() []byte {
 	var transient = t.common.GetTransient()
 	return transient["token"]
 }
-func (t GlobalChaincode) tokenId() string {
+func (t GlobalChaincode) tokenId() (string, error) {
 	var tokenRaw = t.tokenRaw()
 	if tokenRaw == nil {
-		panicEcosystem("token", "param:token is empty")
+		return "", panicEcosystem("token", "param:token is empty")
 	}
-	return Hash(tokenRaw)
+	return Hash(tokenRaw), nil
 }
 func (t GlobalChaincode) clientId() string {
 	var identity = cid.NewClientIdentity(t.common.CCAPI)
 	return identity.GetID()
 }
 
-func (t GlobalChaincode) DeleteToken(contractInterface contractapi.TransactionContextInterface) {
+func (t GlobalChaincode) DeleteToken(contractInterface contractapi.TransactionContextInterface) error {
 	t.common.Prepare(contractInterface.GetStub())
 	var clientID = cid.NewClientIdentity(t.common.CCAPI)
 	var MspID = clientID.MspID
-	var tokenData = t.GetToken(contractInterface)
+	tokenId, err := t.tokenId()
+	if err != nil {
+		return err
+	}
+	tokenData, err := t.getToken(tokenId)
+	if err != nil {
+		return err
+	}
 	if tokenData == nil {
-		return // not exist, skip
+		return nil
 	}
 	if MspID != tokenData.Manager {
-		panicEcosystem("CID", "["+string(t.tokenRaw())+"]Token Data Manager("+tokenData.Manager+") mismatched with tx creator MspID: "+MspID)
+		return panicEcosystem("CID", "["+string(t.tokenRaw())+"]Token Data Manager("+tokenData.Manager+") mismatched with tx creator MspID: "+MspID)
 	}
-	t.common.DelState(t.tokenId())
+
+	t.common.DelState(tokenId)
+	return nil
 }
-func (t GlobalChaincode) MoveToken(contractInterface contractapi.TransactionContextInterface, transferReq TokenTransferRequest) {
-	var tokenData = t.GetToken(contractInterface)
+func (t GlobalChaincode) MoveToken(contractInterface contractapi.TransactionContextInterface, transferReq TokenTransferRequest) error {
+	tokenData, err := t.GetToken(contractInterface)
+	if err != nil {
+		return err
+	}
 	var clientID = cid.NewClientIdentity(t.common.CCAPI)
 	var MspID = clientID.MspID
 	if tokenData == nil {
-		panicEcosystem("token", "token["+string(t.tokenRaw())+"] not found")
+		return panicEcosystem("token", "token["+string(t.tokenRaw())+"] not found")
 	}
 	if tokenData.OwnerType != OwnerTypeMember {
-		panicEcosystem("OwnerType", "original token OwnerType should be member, but got "+tokenData.OwnerType.String())
+		return panicEcosystem("OwnerType", "original token OwnerType should be member, but got "+string(tokenData.OwnerType))
 	}
 	if !tokenData.TransferTime.IsZero() {
-		panicEcosystem("token", "token["+string(t.tokenRaw())+"] was transferred")
+		return panicEcosystem("token", "token["+string(t.tokenRaw())+"] was transferred")
 	}
 
 	tokenData.Apply(transferReq)
@@ -97,7 +128,12 @@ func (t GlobalChaincode) MoveToken(contractInterface contractapi.TransactionCont
 	tokenData.OwnerType = OwnerTypeNetwork
 	var time = t.common.GetTxTimestamp()
 	tokenData.TransferTime = time.AsTime()
-	t.putToken(clientID, t.tokenId(), *tokenData)
+	tokenId, err := t.tokenId()
+	if err != nil {
+		return err
+	}
+	t.putToken(clientID, tokenId, *tokenData)
+	return nil
 }
 
 func main() {
@@ -107,6 +143,6 @@ func main() {
 
 }
 
-func panicEcosystem(Type, message string) {
-	PanicString("ECOSYSTEM|" + Type + "|" + message)
+func panicEcosystem(Type, message string) error {
+	return errors.New("ECOSYSTEM|" + Type + "|" + message)
 }

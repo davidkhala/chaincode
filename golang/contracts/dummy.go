@@ -18,7 +18,7 @@ func (*StupidContract) Panic() {
 
 // no param, return err
 func (*StupidContract) Error() error {
-	return errors.New("StupidContract:P1E")
+	return errors.New("StupidContract:Error")
 }
 func (*StupidContract) UnUsedContext(context contractapi.TransactionContextInterface) {
 	return
@@ -39,4 +39,10 @@ func (*StupidContract) StringParam(context contractapi.TransactionContextInterfa
 //	Error: Inconsistent type in JSPB repeated field array. Got array expected object
 func (*StupidContract) StringParams(context contractapi.TransactionContextInterface, p1 ...string) []string {
 	return p1
+}
+
+func (*StupidContract) Defer() (err error) {
+	defer contractapi.Deferred(contractapi.DefaultDeferHandler(&err))
+	panic(errors.New("defer"))
+
 }

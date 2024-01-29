@@ -7,29 +7,23 @@ import (
 	"time"
 )
 
-type OwnerType byte
+type OwnerType string
 
 const (
-	_ = iota
-	OwnerTypeMember
-	OwnerTypeClinic
-	OwnerTypeNetwork
-	OwnerTypeInsurance
+	OwnerTypeMember    = OwnerType("member")
+	OwnerTypeClinic    = OwnerType("clinic")
+	OwnerTypeNetwork   = OwnerType("network")
+	OwnerTypeInsurance = OwnerType("insurance")
 )
-
-func (t OwnerType) String() string {
-	var enum = []string{"unknown", "member", "clinic", "network", "insurance"}
-	return enum[t]
-}
 
 type TokenData struct {
 	TokenCreateRequest
 	Issuer       string // uses MSP ID in ecosystem
 	Manager      string // uses MSP ID in ecosystem
 	OwnerType    OwnerType
-	IssuerClient cid.ClientIdentity
+	IssuerClient string
 	TransferTime time.Time
-	Client       cid.ClientIdentity // latest Operator Client
+	Client       string // latest Operator Client
 }
 
 type TokenCreateRequest struct {
@@ -43,7 +37,7 @@ func (t TokenCreateRequest) Build(identity cid.ClientIdentity) TokenData {
 		OwnerType:          OwnerTypeMember,
 		Issuer:             identity.MspID,
 		Manager:            identity.MspID,
-		IssuerClient:       identity,
+		IssuerClient:       identity.GetID(),
 	}
 }
 
