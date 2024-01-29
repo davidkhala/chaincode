@@ -1,6 +1,7 @@
 package main
 
 import (
+	golang "github.com/davidkhala/fabric-common-chaincode-golang"
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	"github.com/davidkhala/goutils"
 	"github.com/davidkhala/goutils/crypto"
@@ -17,45 +18,46 @@ const (
 )
 
 type TokenData struct {
-	TokenCreateRequest
-	Issuer       string // uses MSP ID in ecosystem
-	Manager      string // uses MSP ID in ecosystem
-	OwnerType    OwnerType
+	MintTime     time.Time
+	Issuer       cid.MSPID
 	IssuerClient string
-	TransferTime time.Time
-	Client       string // latest Operator Client
+
+	TransferTime time.Time // latest operation time
+	Owner        string    // latest owner
+	OwnerType    OwnerType // latest ownerType
+	Manager      cid.MSPID // latest manager
+	Client       string    // latest Operator
 }
 
 type TokenCreateRequest struct {
-	Owner    string
-	MintTime time.Time
+	Owner string
 }
 
-func (t TokenCreateRequest) Build(identity cid.ClientIdentity) TokenData {
+func (t TokenCreateRequest) Build(identity cid.ClientIdentity, c golang.CommonChaincode) TokenData {
+
+	timestamp := c.GetTxTimestamp()
 	return TokenData{
-		TokenCreateRequest: t,
-		OwnerType:          OwnerTypeMember,
-		Issuer:             identity.MspID,
-		Manager:            identity.MspID,
-		IssuerClient:       identity.GetID(),
+		Owner:        t.Owner,
+		MintTime:     timestamp.AsTime(),
+		OwnerType:    OwnerTypeMember,
+		Issuer:       identity.MspID,
+		Manager:      identity.MspID,
+		IssuerClient: identity.GetID(),
 	}
 }
 
 type TokenTransferRequest struct {
-	Owner        string
-	OwnerType    OwnerType
-	TransferTime time.Time
+	Owner     string
+	OwnerType OwnerType
 }
 
-func (data *TokenData) Apply(request TokenTransferRequest) *TokenData {
+func (data *TokenData) Apply(request TokenTransferRequest, c golang.CommonChaincode, mspid cid.MSPID) *TokenData {
 
 	data.Owner = request.Owner
 	data.OwnerType = request.OwnerType
-	if data.TransferTime.Before(request.TransferTime) {
-		data.TransferTime = request.TransferTime
-	} else {
-		panic("invalid TransferTime")
-	}
+	timestamp := c.GetTxTimestamp()
+	data.TransferTime = timestamp.AsTime()
+	data.Manager = mspid
 
 	return data
 }

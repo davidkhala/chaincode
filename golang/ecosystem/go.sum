@@ -9,10 +9,10 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/davidkhala/fabric-common-chaincode-golang v0.0.7 h1:9NthL/yvPAvZkJICLx8LTx+OOBISFYltzwow6nDfdkc=
-github.com/davidkhala/fabric-common-chaincode-golang v0.0.7/go.mod h1:R38N0uBYaArbqwNWoKoUwuIl6bqwQwisnj51S+NtZfo=
-github.com/davidkhala/fabric-common-chaincode-golang/contract-api v0.0.1 h1:AjiFmSUcd+h1ORxvfK6qYpVlTUs3aXEiDgvELeX5AsA=
-github.com/davidkhala/fabric-common-chaincode-golang/contract-api v0.0.1/go.mod h1:UktM50+PyRYd7eEn0eMSjXnG+RdNqSZsB7KRTkOBxWs=
+github.com/davidkhala/fabric-common-chaincode-golang v0.0.8 h1:GG0m6f2WMW5fpjz0gl6WPGYpkIKSH1exU1O2uYyxC50=
+github.com/davidkhala/fabric-common-chaincode-golang v0.0.8/go.mod h1:JIbJ8PcbudcJYUWPNA5iu1QPuuCJHrYBwPtrKM8J+xQ=
+github.com/davidkhala/fabric-common-chaincode-golang/contract-api v0.0.3 h1:xmSUXVFd78pF1FmQtwYu+Exfxny3wFT0WdPjt4LixkM=
+github.com/davidkhala/fabric-common-chaincode-golang/contract-api v0.0.3/go.mod h1:IWvTtWtYldm4acF6/dIitJMuCKpcBoWm2XCCEgBTaqc=
 github.com/davidkhala/goutils v1.6.0 h1:uDjfyEiRUf/FQSfX3W5xUrQuNrX95iAb41r+/6FGqzI=
 github.com/davidkhala/goutils v1.6.0/go.mod h1:vUEFyO8rG7HzRhaL413vZZfngC8146L4Qqf75Buvw2M=
 github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMoQvtojpjFo=
@@ -49,8 +49,8 @@ github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/
 github.com/google/go-cmp v0.5.9 h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=
 github.com/hashicorp/hcl v1.0.0 h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=
 github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T20WEQ=
-github.com/hyperledger/fabric-chaincode-go v0.0.0-20231108144948-3542320d76a7 h1:BlagzP2rH7C55p6ubmRHDITAaboHo8L4r2u0Zuv8tU4=
-github.com/hyperledger/fabric-chaincode-go v0.0.0-20231108144948-3542320d76a7/go.mod h1:PHyCFFXvJ+HL1JqtPIe/cyqLUuQ5J36NcC5fnrOhRkM=
+github.com/hyperledger/fabric-chaincode-go v0.0.0-20240124143825-7dec3c7e7d45 h1:tZeJCTwbAE3cwi6XId+dYd/gTtfTKzZ3uEb1ksvQf7I=
+github.com/hyperledger/fabric-chaincode-go v0.0.0-20240124143825-7dec3c7e7d45/go.mod h1:YZBt6/ZlJCzyPoWecbfFp34G+ZIYKodTQA46c0sxHIk=
 github.com/hyperledger/fabric-contract-api-go v1.2.2 h1:zun9/BmaIWFSSOkfQXikdepK0XDb7MkJfc/lb5j3ku8=
 github.com/hyperledger/fabric-contract-api-go v1.2.2/go.mod h1:UnFLlRFn8GvXE7mXxWtU+bESM7fb5YzsKo1DA16vvaE=
 github.com/hyperledger/fabric-protos-go v0.3.3 h1:0nssqz8QWJNVNBVQz+IIfAd2j1ku7QPKFSM/1anKizI=

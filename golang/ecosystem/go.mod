@@ -3,8 +3,8 @@ module github.com/davidkhala/chaincode/golang/ecosystem
 go 1.20
 
 require (
-	github.com/davidkhala/fabric-common-chaincode-golang v0.0.7
-	github.com/davidkhala/fabric-common-chaincode-golang/contract-api v0.0.1
+	github.com/davidkhala/fabric-common-chaincode-golang v0.0.8
+	github.com/davidkhala/fabric-common-chaincode-golang/contract-api v0.0.3
 	github.com/davidkhala/goutils v1.6.0
 	github.com/hyperledger/fabric-contract-api-go v1.2.2
 )
@@ -19,7 +19,7 @@ require (
 	github.com/gobuffalo/packd v1.0.2 // indirect
 	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/hyperledger/fabric-chaincode-go v0.0.0-20231108144948-3542320d76a7 // indirect
+	github.com/hyperledger/fabric-chaincode-go v0.0.0-20240124143825-7dec3c7e7d45 // indirect
 	github.com/hyperledger/fabric-protos-go v0.3.3 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
