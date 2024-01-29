@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"github.com/davidkhala/fabric-common-chaincode-golang/contract-api"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
@@ -42,7 +43,7 @@ func (*StupidContract) StringParams(context contractapi.TransactionContextInterf
 }
 
 func (*StupidContract) Defer() (err error) {
-	defer contractapi.Deferred(contractapi.DefaultDeferHandler(&err))
+	defer contract_api.Deferred(contract_api.DefaultDeferHandler(&err))
 	panic(errors.New("defer"))
 
 }
