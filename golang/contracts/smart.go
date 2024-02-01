@@ -11,6 +11,10 @@ type SmartContract struct {
 	contractapi.Contract
 }
 
+func (*SmartContract) GetEvaluateTransactions() []string {
+	return []string{"Who", "Standard", "Now"} // Must be Heading with UpperCase
+}
+
 func (*SmartContract) Who(context contractapi.TransactionContextInterface) string {
 	return cid.NewClientIdentity(context.GetStub()).GetID()
 }
