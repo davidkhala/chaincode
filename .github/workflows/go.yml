@@ -15,11 +15,11 @@ jobs:
       matrix:
         directory: [golang/contracts, golang/diagnose, golang/ecosystem, golang/external]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@main
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@main
       with:
-        go-version: 1.20
+        go-version: "1.20"
     - name: Build
       run: go mod vendor; go build -v ./...
     - name: Test
