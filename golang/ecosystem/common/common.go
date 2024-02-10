@@ -3,6 +3,7 @@ package common
 import (
 	golang "github.com/davidkhala/fabric-common-chaincode-golang"
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
+	"github.com/davidkhala/fabric-common/golang/format"
 	"github.com/davidkhala/goutils"
 	"github.com/davidkhala/goutils/crypto"
 	"time"
@@ -19,14 +20,14 @@ const (
 
 type TokenData struct {
 	MintTime     time.Time
-	Issuer       cid.MSPID
+	Issuer       format.MSPID
 	IssuerClient string
 
-	TransferTime time.Time // latest operation time
-	Owner        string    // latest owner, any format
-	OwnerType    OwnerType // latest ownerType
-	Manager      cid.MSPID // latest manager
-	Client       string    // latest Operator
+	TransferTime time.Time    // latest operation time
+	Owner        string       // latest owner, any format
+	OwnerType    OwnerType    // latest ownerType
+	Manager      format.MSPID // latest manager
+	Client       string       // latest Operator
 }
 
 type TokenCreateRequest struct {
@@ -56,7 +57,7 @@ type TokenTransferRequest struct {
 	OwnerType OwnerType
 }
 
-func (data *TokenData) Apply(request TokenTransferRequest, c golang.CommonChaincode, mspid cid.MSPID) *TokenData {
+func (data *TokenData) Apply(request TokenTransferRequest, c golang.CommonChaincode, mspid format.MSPID) *TokenData {
 
 	data.Owner = request.Owner
 	data.OwnerType = request.OwnerType
