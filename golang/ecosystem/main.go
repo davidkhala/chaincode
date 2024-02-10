@@ -1,6 +1,7 @@
 package main
 
 import (
+	. "github.com/davidkhala/chaincode/golang/ecosystem/common"
 	golang "github.com/davidkhala/fabric-common-chaincode-golang"
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 	"github.com/davidkhala/fabric-common-chaincode-golang/contract-api"

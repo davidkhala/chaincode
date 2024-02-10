@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	. "github.com/davidkhala/chaincode/golang/ecosystem/common"
 	"github.com/davidkhala/fabric-common-chaincode-golang/cid"
 )
 

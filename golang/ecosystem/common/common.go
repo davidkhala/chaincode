@@ -1,4 +1,4 @@
-package main
+package common
 
 import (
 	golang "github.com/davidkhala/fabric-common-chaincode-golang"
