@@ -5,12 +5,12 @@ go 1.20
 require (
 	github.com/davidkhala/fabric-common-chaincode-golang v0.0.10
 	github.com/davidkhala/fabric-common-chaincode-golang/contract-api v0.0.3
+	github.com/davidkhala/fabric-common/golang v0.0.10
 	github.com/davidkhala/goutils v1.6.4
 	github.com/hyperledger/fabric-contract-api-go v1.2.2
 )
 
 require (
-	github.com/davidkhala/fabric-common/golang v0.0.10 // indirect
 	github.com/go-openapi/jsonpointer v0.20.0 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/spec v0.20.9 // indirect
@@ -34,6 +34,6 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231212172506-995d672761c0 // indirect
 	google.golang.org/grpc v1.61.0 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
